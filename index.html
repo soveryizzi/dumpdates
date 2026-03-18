@@ -1394,7 +1394,7 @@
       <path d="M13 15 Q9.5 13.5 7.5 11" stroke="#3A7D44" stroke-width="0.9"/>
     </svg>
     <span class="logo-text">dump dates</span>
-    <span style="font-size:10px;color:var(--ink-ghost);font-family:'Jost',sans-serif;font-weight:400;margin-left:4px;align-self:flex-end;padding-bottom:4px;" title="last updated">2026-03-18 13:43:38 ET</span>
+    <span style="font-size:10px;color:var(--ink-ghost);font-family:'Jost',sans-serif;font-weight:400;margin-left:4px;align-self:flex-end;padding-bottom:4px;" title="last updated">2026-03-18 14:06:23 ET</span>
   </a>
   <div class="header-right" style="position:relative;">
     <span class="month-badge" id="current-month-badge">—</span>
@@ -2259,8 +2259,11 @@ Return ONLY the question string, no quotes, no punctuation other than the questi
   // ── APP BOOTSTRAP ─────────────────────────────────────────
 
   async function loadGroup(groupId) {
-    const { data: group } = await sb.from('groups').select('*').eq('id', groupId).single();
-    const { data: member } = await sb.from('group_members').select('*').eq('group_id', groupId).eq('user_id', currentUser.id).single();
+    console.log('loadGroup called with:', groupId);
+    const { data: group, error: ge } = await sb.from('groups').select('*').eq('id', groupId).single();
+    console.log('group:', group, 'error:', ge);
+    const { data: member, error: mbe } = await sb.from('group_members').select('*').eq('group_id', groupId).eq('user_id', currentUser.id).single();
+    console.log('member:', member, 'error:', mbe);
     currentGroup = group;
     currentMember = member;
 
@@ -2437,18 +2440,24 @@ Return ONLY the question string, no quotes, no punctuation other than the questi
 
   // Listen for auth state changes
   sb.auth.onAuthStateChange(async (event, session) => {
+    console.log('auth state change:', event, session?.user?.email);
     if (session?.user) {
       currentUser = session.user;
+      console.log('user found, checking group membership...');
 
       // Check if user is in a group
-      const { data: memberships } = await sb.from('group_members')
+      const { data: memberships, error: me } = await sb.from('group_members')
         .select('group_id')
         .eq('user_id', currentUser.id)
         .limit(1);
 
+      console.log('memberships:', memberships, 'error:', me);
+
       if (memberships && memberships.length > 0) {
+        console.log('loading group:', memberships[0].group_id);
         await loadGroup(memberships[0].group_id);
       } else {
+        console.log('no group found, showing group screen');
         // Show group setup
         document.getElementById('auth-screen').classList.add('hidden');
         document.getElementById('group-screen').classList.remove('hidden');
