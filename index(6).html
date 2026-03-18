@@ -1,0 +1,2455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>dump dates</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:          #E8F0E3;
+      --bg-mid:      #DDE8D7;
+      --surface:     #F0F5EC;
+      --surface-alt: #E4EDE0;
+      --border:      #C6D9BE;
+      --border-mid:  #B0C9A6;
+      --ink:         #1E2A1A;
+      --ink-mid:     #4A5E44;
+      --ink-faint:   #7A9170;
+      --ink-ghost:   #A8BFA0;
+      --green:       #3A7D44;
+      --green-light: #D4EBDA;
+      --bloom:       #B85C38;
+      --bloom-light: #F5E4DC;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Jost', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    /* HEADER */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 62px;
+    }
+
+    .logo { display: flex; align-items: center; gap: 9px; text-decoration: none; }
+    .logo-text {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 24px;
+      color: var(--ink);
+      letter-spacing: -0.5px;
+    }
+
+    .month-badge {
+      font-size: 12px;
+      font-weight: 500;
+      background: var(--green-light);
+      color: var(--green);
+      padding: 4px 13px;
+      border-radius: 20px;
+      letter-spacing: 0.03em;
+      border: 1px solid var(--border);
+    }
+
+    .header-right { display: flex; align-items: center; gap: 12px; }
+    .avatar-row   { display: flex; }
+
+    .avatar {
+      width: 30px; height: 30px; border-radius: 50%;
+      border: 2px solid var(--surface);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 500;
+      margin-left: -8px; flex-shrink: 0;
+    }
+    .avatar:first-child { margin-left: 0; }
+    .av-1 { background: #D8EED4; color: #2A5C26; }
+    .av-2 { background: #D0E8E0; color: #1A5A48; }
+    .av-3 { background: #EDE0D4; color: #5C3820; }
+    .av-4 { background: #EDE8D0; color: #5C4A18; }
+
+    /* TABS */
+    .nav-tabs {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      display: flex;
+      overflow-x: auto;
+    }
+
+    .tab-btn {
+      padding: 14px 22px; border: none; background: none;
+      font-family: 'Jost', sans-serif; font-size: 14px; font-weight: 400;
+      color: var(--ink-ghost); cursor: pointer;
+      border-bottom: 2px solid transparent; margin-bottom: -1px;
+      transition: color 0.2s, border-color 0.2s;
+      white-space: nowrap; letter-spacing: 0.02em;
+    }
+    .tab-btn:hover  { color: var(--ink-mid); }
+    .tab-btn.active { color: var(--ink); border-bottom-color: var(--green); font-weight: 500; }
+
+    /* MAIN */
+    main {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 6rem;
+    }
+
+    #questions, #letter {
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .section { display: none; }
+    .section.active { display: block; animation: grow 0.28s ease; }
+    @keyframes grow {
+      from { opacity: 0; transform: translateY(7px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 14px;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 24px; font-weight: 400;
+      margin-bottom: 4px; letter-spacing: -0.3px;
+    }
+    .section-sub { font-size: 14px; color: var(--ink-faint); margin-bottom: 1.5rem; }
+
+    /* COUNTDOWN */
+    .countdown-strip {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; padding: 1.1rem 1.5rem;
+      margin-bottom: 2rem;
+      display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;
+    }
+    .countdown-days {
+      font-family: 'Playfair Display', serif;
+      font-size: 38px; color: var(--green); line-height: 1; font-style: italic;
+    }
+    .countdown-detail { font-size: 13px; color: var(--ink-faint); margin-top: 2px; }
+    .countdown-main   { font-size: 15px; color: var(--ink-mid); margin-bottom: 2px; }
+
+    /* ── THIS ISSUE SLOTS ── */
+    .slots-label {
+      font-size: 11px; font-weight: 500; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--ink-ghost);
+      margin-bottom: 10px;
+    }
+
+    .issue-slots { display: flex; flex-direction: column; gap: 8px; margin-bottom: 2.5rem; }
+
+    .issue-slot {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: border-color 0.2s, background 0.2s;
+      min-height: 56px;
+    }
+    .issue-slot.filled { border-color: var(--border-mid); background: var(--surface); }
+    .issue-slot.empty  { background: var(--bg); border-style: dashed; }
+
+    .slot-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px; color: var(--ink-ghost);
+      min-width: 20px; font-style: italic; line-height: 1;
+      flex-shrink: 0;
+    }
+    .issue-slot.filled .slot-num { color: var(--green); }
+
+    .slot-body { flex: 1; min-width: 0; }
+    .slot-text {
+      font-size: 15px; color: var(--ink-faint); font-style: italic; line-height: 1.35;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .issue-slot.filled .slot-text { color: var(--ink); font-style: normal; }
+    .slot-hint { font-size: 12px; color: var(--ink-ghost); margin-top: 1px; }
+
+    .slot-remove {
+      width: 28px; height: 28px; border-radius: 50%;
+      border: 1px solid transparent; background: transparent;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; transition: all 0.15s; color: var(--ink-ghost);
+      opacity: 0; pointer-events: none;
+    }
+    .issue-slot.filled:hover .slot-remove { opacity: 1; pointer-events: auto; }
+    .slot-remove:hover { background: var(--bloom-light); border-color: #e0a898; color: var(--bloom); }
+
+    /* ── GARDEN PAPER SHEET ── */
+
+    .garden-paper {
+      background: #f8fdf4;
+      border-radius: 3px;
+      box-shadow:
+        0 2px 4px rgba(30,42,26,0.07),
+        0 8px 24px rgba(30,42,26,0.11),
+        0 1px 0 rgba(255,255,255,0.8) inset;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+
+    .garden-paper .sheet-ruled {
+      position: absolute; inset: 0;
+      background: repeating-linear-gradient(transparent, transparent 31px, #d5e8f0 31px, #d5e8f0 32px);
+      background-position: 0 80px;
+      pointer-events: none;
+    }
+    .garden-paper .sheet-margin {
+      position: absolute; left: 72px; top: 0; bottom: 0;
+      width: 1.5px; background: rgba(210,80,70,0.28); pointer-events: none;
+    }
+    .garden-paper .sheet-holes {
+      position: absolute; left: 0; top: 0; bottom: 0; width: 36px;
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: space-evenly; pointer-events: none;
+    }
+    .garden-paper .sheet-hole {
+      width: 16px; height: 16px; border-radius: 50%;
+      background: var(--bg); border: 1px solid rgba(30,42,26,0.10);
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.12); flex-shrink: 0;
+    }
+
+    .garden-paper-content {
+      position: relative;
+      padding: 2rem 2rem 2.5rem 5.5rem;
+    }
+
+    .garden-paper-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px; font-weight: 400; font-style: italic;
+      color: #243020; margin-bottom: 4px;
+    }
+    .garden-paper-sub {
+      font-size: 13px; color: #8aad88; margin-bottom: 1.5rem;
+    }
+
+    /* Add row sits on the paper */
+    .garden-add-row {
+      display: flex; gap: 8px; margin-bottom: 1.5rem;
+    }
+    .garden-add-row input {
+      flex: 1; padding: 9px 13px;
+      border: 1px solid rgba(180,210,170,0.7); border-radius: 4px;
+      font-size: 14px; background: rgba(255,255,255,0.7); color: #243020;
+      font-family: 'Jost', sans-serif; outline: none;
+      transition: border-color 0.2s, background 0.2s;
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.04);
+    }
+    .garden-add-row input:focus {
+      border-color: rgba(90,140,80,0.6); background: rgba(255,255,255,0.95);
+    }
+    .garden-add-row input::placeholder { color: #b0c8a8; font-style: italic; }
+
+    .btn-ghost {
+      padding: 9px 18px; border: 1px solid rgba(90,140,80,0.4); border-radius: 4px;
+      background: rgba(255,255,255,0.6); font-size: 13px; color: #3A7D44;
+      cursor: pointer; font-family: 'Jost', sans-serif; font-weight: 500;
+      transition: background 0.15s, border-color 0.15s; white-space: nowrap;
+    }
+    .btn-ghost:hover { background: rgba(255,255,255,0.9); border-color: rgba(90,140,80,0.7); }
+
+    /* Filter pills sit on the paper */
+    .garden-filters {
+      display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1.5rem;
+    }
+    .filter-btn {
+      padding: 4px 12px; border-radius: 3px;
+      border: 1px solid rgba(180,210,170,0.6); background: rgba(255,255,255,0.5);
+      font-size: 11px; color: #7a9a72; cursor: pointer;
+      font-family: 'Jost', sans-serif; transition: all 0.15s;
+      letter-spacing: 0.03em;
+    }
+    .filter-btn:hover  { background: rgba(255,255,255,0.85); color: #3A7D44; }
+    .filter-btn.active { background: #DCEDC8; color: #3A7D44; border-color: rgba(90,140,80,0.5); font-weight: 500; }
+
+    /* Sticky grid on the paper */
+    .garden-stickies {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 14px;
+    }
+
+    /* Each question is a sticky note */
+    .garden-sticky {
+      position: relative;
+      padding: 12px 12px 28px;
+      border-radius: 2px;
+      min-height: 120px;
+      display: flex;
+      flex-direction: column;
+      cursor: default;
+      transition: transform 0.18s, box-shadow 0.18s;
+      box-shadow: 2px 3px 8px rgba(30,42,26,0.13), 0 1px 0 rgba(255,255,255,0.5) inset;
+    }
+    .garden-sticky::after {
+      content: '';
+      position: absolute; bottom: 0; right: 0;
+      width: 16px; height: 16px;
+      background: linear-gradient(225deg, rgba(0,0,0,0.09) 50%, transparent 50%);
+      border-radius: 0 0 2px 0;
+    }
+
+    .garden-sticky:nth-child(3n+1) { transform: rotate(-1.2deg); }
+    .garden-sticky:nth-child(3n+2) { transform: rotate(0.7deg);  }
+    .garden-sticky:nth-child(3n+3) { transform: rotate(-0.4deg); }
+    .garden-sticky:nth-child(3n+4) { transform: rotate(1.1deg);  }
+
+    .garden-sticky:hover {
+      transform: rotate(0deg) translateY(-3px) scale(1.02);
+      box-shadow: 3px 6px 18px rgba(30,42,26,0.18), 0 1px 0 rgba(255,255,255,0.5) inset;
+      z-index: 2;
+    }
+
+    /* Colour palette — same as answer stickies */
+    .gs-yellow { background: #FFF9C4; }
+    .gs-green  { background: #DCEDC8; }
+    .gs-blue   { background: #C8E6FA; }
+    .gs-pink   { background: #FADADD; }
+    .gs-peach  { background: #FFE0CC; }
+    .gs-lavender { background: #E8DAFF; }
+
+    /* In-issue sticky gets a green tint overlay */
+    .garden-sticky.in-issue { opacity: 0.5; }
+    .garden-sticky.in-issue::before {
+      content: '';
+      position: absolute; inset: 0; border-radius: 2px;
+      background: rgba(58,125,68,0.08);
+    }
+
+    .gs-tag {
+      font-size: 10px; font-weight: 500; letter-spacing: 0.06em;
+      text-transform: uppercase; color: rgba(30,42,26,0.38);
+      margin-bottom: 7px;
+    }
+    .gs-text {
+      font-family: 'Jost', sans-serif;
+      font-size: 13px; line-height: 1.55; color: #2a2a1a;
+      flex: 1;
+    }
+
+    /* Action buttons — float at bottom of sticky */
+    .gs-actions {
+      position: absolute; bottom: 7px; left: 10px; right: 20px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+
+    .gs-btn {
+      width: 22px; height: 22px; border-radius: 50%;
+      border: none; background: transparent;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      color: rgba(30,42,26,0.3); transition: all 0.15s; flex-shrink: 0;
+      opacity: 0;
+    }
+    .garden-sticky:hover .gs-btn { opacity: 1; }
+    .gs-btn.add:hover { color: #3A7D44; background: rgba(58,125,68,0.15); }
+    .gs-btn.del:hover { color: #B85C38; background: rgba(184,92,56,0.12); }
+    .gs-btn.added { opacity: 1; color: #3A7D44; background: rgba(58,125,68,0.15); cursor: default; }
+
+    .gs-in-badge {
+      font-size: 10px; font-weight: 500; color: #3A7D44;
+      letter-spacing: 0.04em; opacity: 0;
+    }
+    .garden-sticky.in-issue .gs-in-badge { opacity: 1; }
+
+    .garden-empty {
+      grid-column: 1 / -1;
+      padding: 2rem 0; text-align: center;
+      font-size: 14px; color: #9ab898; font-style: italic;
+    }
+
+    /* ── ANSWERS — paper + sticky notes ── */
+
+    #answer { max-width: none; }
+
+    .progress-wrap { margin-bottom: 2rem; max-width: 700px; margin-left: auto; margin-right: auto; }
+    .progress-label {
+      display: flex; justify-content: space-between;
+      font-size: 13px; color: var(--ink-faint); margin-bottom: 8px;
+    }
+    .progress-track { height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
+    .progress-bar   { height: 100%; background: var(--green); border-radius: 2px; transition: width 0.4s ease; }
+
+    .answer-section-header { max-width: 700px; margin: 0 auto 2rem; }
+
+    /* The sheet of paper for each question */
+    .paper-sheet {
+      background: #f8fdf4;
+      border-radius: 3px;
+      box-shadow:
+        0 2px 4px rgba(30,42,26,0.07),
+        0 8px 24px rgba(30,42,26,0.11),
+        0 1px 0 rgba(255,255,255,0.8) inset;
+      margin-bottom: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Ruled lines across the whole sheet */
+    .sheet-ruled {
+      position: absolute;
+      inset: 0;
+      background:
+        repeating-linear-gradient(
+          transparent,
+          transparent 31px,
+          #d5e8f0 31px,
+          #d5e8f0 32px
+        );
+      background-position: 0 72px;
+      pointer-events: none;
+    }
+
+    /* Red margin */
+    .sheet-margin {
+      position: absolute;
+      left: 72px; top: 0; bottom: 0;
+      width: 1.5px;
+      background: rgba(210, 80, 70, 0.3);
+      pointer-events: none;
+    }
+
+    /* Punch holes */
+    .sheet-holes {
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 36px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: space-evenly;
+      pointer-events: none;
+    }
+    .sheet-hole {
+      width: 16px; height: 16px; border-radius: 50%;
+      background: var(--bg);
+      border: 1px solid rgba(30,42,26,0.10);
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.12);
+      flex-shrink: 0;
+    }
+
+    /* The content area inside the sheet */
+    .sheet-content {
+      position: relative;
+      padding: 2rem 2.5rem 2.5rem 5.5rem;
+      min-height: 200px;
+    }
+
+    .sheet-q-label {
+      font-size: 11px; font-weight: 500; letter-spacing: 0.1em;
+      text-transform: uppercase; color: #a8c4a0;
+      margin-bottom: 10px; font-family: 'Jost', sans-serif;
+    }
+
+    .sheet-q-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px; font-weight: 400; line-height: 1.45;
+      color: #243020;
+      margin-bottom: 2rem;
+      max-width: 560px;
+    }
+
+    /* Grid for sticky notes */
+    .stickies-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 0.5rem;
+    }
+
+    @media (max-width: 600px) {
+      .stickies-grid { grid-template-columns: 1fr; }
+      .sheet-content { padding: 1.5rem 1.25rem 2rem 2rem; }
+      .sheet-margin  { left: 48px; }
+      .sheet-q-text  { font-size: 18px; }
+    }
+
+    /* "Your answer" sticky is always first — special editable sticky */
+    .sticky {
+      position: relative;
+      padding: 14px 14px 12px;
+      border-radius: 2px;
+      box-shadow:
+        2px 3px 8px rgba(30,42,26,0.13),
+        0 1px 0 rgba(255,255,255,0.6) inset;
+      display: flex;
+      flex-direction: column;
+      min-height: 160px;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+
+    /* Slightly random tilts via nth-child */
+    .sticky:nth-child(1) { transform: rotate(-0.8deg); }
+    .sticky:nth-child(2) { transform: rotate(0.6deg);  }
+    .sticky:nth-child(3) { transform: rotate(-0.4deg); }
+    .sticky:nth-child(4) { transform: rotate(0.9deg);  }
+    .sticky:nth-child(5) { transform: rotate(-1.1deg); }
+
+    .sticky:hover { box-shadow: 3px 5px 16px rgba(30,42,26,0.18), 0 1px 0 rgba(255,255,255,0.6) inset; transform: rotate(0deg) translateY(-2px); }
+
+    /* Folded corner effect */
+    .sticky::after {
+      content: '';
+      position: absolute;
+      bottom: 0; right: 0;
+      width: 18px; height: 18px;
+      background: linear-gradient(225deg, rgba(0,0,0,0.08) 50%, transparent 50%);
+      border-radius: 0 0 2px 0;
+    }
+
+    /* Colour variants */
+    .sticky-yellow { background: #FFF9C4; }
+    .sticky-green  { background: #DCEDC8; }
+    .sticky-blue   { background: #C8E6FA; }
+    .sticky-pink   { background: #FADADD; }
+    .sticky-peach  { background: #FFE0CC; }
+
+    /* The "your answer" sticky has a slightly different style */
+    .sticky-mine {
+      background: #fffde7;
+      border: 1.5px dashed rgba(150,130,0,0.25);
+      box-shadow: 2px 3px 8px rgba(30,42,26,0.10), 0 1px 0 rgba(255,255,255,0.6) inset;
+    }
+    .sticky-mine:hover { border-style: solid; }
+
+    .sticky-from {
+      font-size: 11px; font-weight: 500; letter-spacing: 0.06em;
+      text-transform: uppercase; color: rgba(30,42,26,0.45);
+      margin-bottom: 8px; display: flex; align-items: center; gap: 5px;
+    }
+
+    .sticky-avatar {
+      width: 18px; height: 18px; border-radius: 50%;
+      font-size: 8px; font-weight: 500;
+      display: inline-flex; align-items: center; justify-content: center;
+    }
+
+    .sticky-body {
+      font-family: 'Jost', sans-serif;
+      font-size: 14px; line-height: 1.6;
+      color: #2a2a1a;
+      flex: 1;
+    }
+
+    /* Editable textarea inside the "your answer" sticky */
+    .sticky-textarea {
+      flex: 1;
+      background: transparent;
+      border: none; outline: none;
+      resize: none;
+      font-family: 'Jost', sans-serif;
+      font-size: 14px; line-height: 1.6;
+      color: #2a2a1a;
+      width: 100%;
+      min-height: 80px;
+      caret-color: #8a7a00;
+    }
+    .sticky-textarea::placeholder { color: rgba(80,70,0,0.3); font-style: italic; }
+
+    .sticky-actions {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-top: 10px; padding-top: 8px;
+      border-top: 1px solid rgba(150,130,0,0.15);
+    }
+
+    .sticky-saved {
+      font-size: 11px; color: var(--green); opacity: 0;
+      transition: opacity 0.3s; display: flex; align-items: center; gap: 4px;
+    }
+    .sticky-saved.show { opacity: 1; }
+
+    .sticky-save-btn {
+      padding: 4px 14px; border-radius: 3px;
+      background: rgba(58,125,68,0.15); color: var(--green);
+      border: 1px solid rgba(58,125,68,0.25);
+      font-size: 12px; cursor: pointer; font-family: 'Jost', sans-serif;
+      font-weight: 500; transition: background 0.15s;
+    }
+    .sticky-save-btn:hover { background: rgba(58,125,68,0.25); }
+
+    /* Upload zone inside sticky */
+    .sticky-upload {
+      margin-top: 8px;
+      border: 1px dashed rgba(150,130,0,0.25);
+      border-radius: 3px;
+      padding: 7px;
+      text-align: center;
+      cursor: pointer;
+      font-size: 11px;
+      color: rgba(80,70,0,0.4);
+      transition: background 0.15s;
+      display: flex; align-items: center; justify-content: center; gap: 5px;
+    }
+    .sticky-upload:hover { background: rgba(255,255,255,0.5); color: rgba(80,70,0,0.65); }
+
+    .photo-grid { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+    .photo-thumb {
+      width: 56px; height: 56px; border-radius: 3px;
+      border: 1px solid rgba(30,42,26,0.12); overflow: hidden;
+    }
+    .photo-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+    /* Question generator at sheet bottom */
+    .sheet-generator {
+      margin-top: 2.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(200, 223, 232, 0.7);
+      position: relative;
+    }
+
+    .sheet-generator-label {
+      font-size: 11px; font-weight: 500; letter-spacing: 0.1em;
+      text-transform: uppercase; color: #a8c4a0;
+      margin-bottom: 1rem; font-family: 'Jost', sans-serif;
+      display: flex; align-items: center; gap: 7px;
+    }
+
+    .gen-suggestions {
+      display: flex; flex-wrap: wrap; gap: 8px;
+      min-height: 36px;
+    }
+
+    .gen-suggestion {
+      background: rgba(255,255,255,0.7);
+      border: 1px solid rgba(180, 210, 170, 0.6);
+      border-radius: 20px;
+      padding: 7px 14px;
+      font-size: 13px;
+      color: #3a5035;
+      cursor: pointer;
+      font-family: 'Jost', sans-serif;
+      line-height: 1.3;
+      transition: background 0.15s, border-color 0.15s, transform 0.1s;
+      text-align: left;
+      max-width: 100%;
+    }
+    .gen-suggestion:hover {
+      background: rgba(255,255,255,0.95);
+      border-color: rgba(90,130,80,0.5);
+      transform: translateY(-1px);
+    }
+
+    .gen-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 7px 16px;
+      background: transparent;
+      border: 1px solid rgba(150, 190, 140, 0.6);
+      border-radius: 20px;
+      font-size: 12px; color: #6a9060;
+      cursor: pointer; font-family: 'Jost', sans-serif;
+      transition: background 0.15s, border-color 0.15s;
+      font-weight: 500;
+    }
+    .gen-btn:hover { background: rgba(255,255,255,0.6); border-color: rgba(90,130,80,0.5); color: #3a5a30; }
+    .gen-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .gen-spinner {
+      width: 12px; height: 12px; border-radius: 50%;
+      border: 1.5px solid rgba(90,130,80,0.25);
+      border-top-color: #6a9060;
+      animation: spin 0.7s linear infinite;
+      display: none;
+    }
+    .gen-btn.loading .gen-spinner { display: block; }
+    .gen-btn.loading .gen-icon { display: none; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .gen-error {
+      font-size: 12px; color: rgba(180,80,60,0.7);
+      font-style: italic; margin-top: 4px;
+    }
+      text-align: center; padding: 2.5rem 0 2rem;
+      border-bottom: 1px solid var(--border); margin-bottom: 2.5rem;
+    }
+    .masthead-sprigs {
+      display: flex; justify-content: center; align-items: flex-end;
+      gap: 4px; margin-bottom: 1rem;
+    }
+    .letter-masthead h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 44px; font-style: italic; font-weight: 400;
+      letter-spacing: -1px; margin-bottom: 6px;
+    }
+    .letter-month {
+      font-size: 13px; color: var(--ink-faint); margin-bottom: 1.25rem;
+      letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .friend-chips { display: flex; justify-content: center; flex-wrap: wrap; gap: 6px; }
+    .friend-chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 20px; padding: 4px 12px 4px 5px;
+      font-size: 13px; color: var(--ink-mid);
+    }
+    .chip-av {
+      width: 22px; height: 22px; border-radius: 50%;
+      font-size: 9px; font-weight: 500;
+      display: inline-flex; align-items: center; justify-content: center;
+    }
+    .letter-entry { margin-bottom: 2.5rem; }
+    .letter-q-heading {
+      font-size: 11px; font-weight: 500; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--ink-ghost);
+      margin-bottom: 1.1rem; padding-bottom: 8px; border-bottom: 1px solid var(--border);
+    }
+    .letter-answer { margin-bottom: 1.5rem; }
+    .letter-from {
+      display: flex; align-items: center; gap: 7px;
+      font-size: 13px; font-weight: 500; color: var(--ink-mid); margin-bottom: 5px;
+    }
+    .letter-body { font-family: 'Playfair Display', serif; font-size: 16px; line-height: 1.8; }
+    .letter-divider { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+
+    .input-hidden { display: none; }
+
+    @media (max-width: 600px) {
+      header { padding: 0 1rem; }
+      .nav-tabs { padding: 0 1rem; }
+      main { padding: 2rem 1rem 5rem; }
+      .letter-masthead h1 { font-size: 34px; }
+      .countdown-days { font-size: 30px; }
+    }
+
+    /* ── ZINE ── */
+    #letter { max-width: none; padding: 0; }
+
+    .zine-wrap {
+      width: 100%;
+      min-height: calc(100vh - 130px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Each page */
+    .zine-page {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: stretch;
+      transition: transform 0.55s cubic-bezier(0.77,0,0.175,1), opacity 0.4s ease;
+      will-change: transform, opacity;
+    }
+
+    .zine-page.zine-active  { transform: translateX(0);     opacity: 1; pointer-events: auto; }
+    .zine-page.zine-next-page { transform: translateX(100%); opacity: 0; pointer-events: none; }
+    .zine-page.zine-prev-page { transform: translateX(-100%); opacity: 0; pointer-events: none; }
+
+    /* COVER */
+    .zine-cover {
+      background: #f0f5eb;
+      border-right: 4px solid #3A7D44;
+    }
+
+    .zine-cover-inner {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem 2rem 3rem;
+      text-align: center;
+      position: relative;
+      min-height: 520px;
+    }
+
+    .zine-cover-vol {
+      font-size: 11px; font-weight: 500; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--ink-faint);
+      margin-bottom: 2rem;
+    }
+
+    .zine-cover-deco {
+      margin-bottom: 1.5rem;
+      animation: sway 4s ease-in-out infinite;
+    }
+
+    @keyframes sway {
+      0%, 100% { transform: rotate(-2deg); }
+      50%       { transform: rotate(2deg); }
+    }
+
+    .zine-cover-leaf { width: 100px; height: 116px; }
+
+    .zine-cover-title {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 72px;
+      font-weight: 400;
+      letter-spacing: -3px;
+      line-height: 1;
+      color: var(--ink);
+      margin-bottom: 0.5rem;
+      animation: titlePop 0.8s cubic-bezier(0.34,1.56,0.64,1) forwards;
+    }
+
+    @keyframes titlePop {
+      from { opacity: 0; transform: scale(0.85); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    .zine-cover-sub {
+      font-size: 14px; color: var(--ink-faint);
+      letter-spacing: 0.05em; margin-bottom: 2rem;
+    }
+
+    .zine-cover-friends {
+      display: flex; gap: 8px; justify-content: center; margin-bottom: 1.5rem;
+    }
+
+    .zc-friend {
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 500;
+      animation: friendPop 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards;
+      opacity: 0;
+    }
+    .zc-friend:nth-child(1) { animation-delay: 0.3s; }
+    .zc-friend:nth-child(2) { animation-delay: 0.4s; }
+    .zc-friend:nth-child(3) { animation-delay: 0.5s; }
+    .zc-friend:nth-child(4) { animation-delay: 0.6s; }
+
+    @keyframes friendPop {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .zine-cover-qs {
+      font-size: 12px; color: var(--ink-ghost);
+      border: 1px solid var(--border); border-radius: 20px;
+      padding: 5px 16px; letter-spacing: 0.04em;
+    }
+
+    /* SPREAD */
+    .zine-spread { background: #f8fdf4; }
+
+    .zine-spread-inner {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1.6fr;
+      min-height: 520px;
+    }
+
+    @media (max-width: 650px) {
+      .zine-spread-inner { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
+    }
+
+    .zine-spread-left {
+      background: #f0f5eb;
+      border-right: 3px solid var(--border);
+      padding: 3rem 2rem 2rem;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      /* Ruled lines */
+      background-image:
+        repeating-linear-gradient(transparent, transparent 31px, #d5e8f0 31px, #d5e8f0 32px);
+      background-position: 0 72px;
+    }
+
+    .zine-q-num {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 13px;
+      color: var(--ink-ghost);
+      letter-spacing: 0.06em;
+      margin-bottom: 1rem;
+    }
+
+    .zine-q-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--ink);
+      flex: 1;
+    }
+
+    .zine-page-num {
+      position: absolute;
+      bottom: 1.5rem;
+      left: 2rem;
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 13px;
+      color: var(--ink-ghost);
+    }
+
+    .zine-spread-right {
+      padding: 2rem 1.5rem;
+      overflow-y: auto;
+    }
+
+    .zine-stickies-area {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      align-items: start;
+    }
+
+    @media (max-width: 480px) {
+      .zine-stickies-area { grid-template-columns: 1fr; }
+    }
+
+    /* Individual zine sticky */
+    .zine-sticky {
+      border-radius: 2px;
+      padding: 14px;
+      box-shadow: 2px 4px 12px rgba(30,42,26,0.13), 0 1px 0 rgba(255,255,255,0.5) inset;
+      position: relative;
+      opacity: 0;
+      transform: translateY(16px) rotate(var(--r, 0deg));
+      animation: stickyDrop 0.45s cubic-bezier(0.34,1.3,0.64,1) forwards;
+    }
+
+    @keyframes stickyDrop {
+      to { opacity: 1; transform: translateY(0) rotate(var(--r, 0deg)); }
+    }
+
+    /* stagger via animation-delay set inline */
+
+    .zine-sticky::after {
+      content: '';
+      position: absolute;
+      bottom: 0; right: 0;
+      width: 16px; height: 16px;
+      background: linear-gradient(225deg, rgba(0,0,0,0.07) 50%, transparent 50%);
+      border-radius: 0 0 2px 0;
+    }
+
+    .zine-sticky:hover {
+      transform: translateY(-3px) rotate(0deg) !important;
+      box-shadow: 3px 6px 20px rgba(30,42,26,0.18), 0 1px 0 rgba(255,255,255,0.5) inset;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      z-index: 10;
+    }
+
+    .zine-sticky-from {
+      display: flex; align-items: center; gap: 5px;
+      font-size: 11px; font-weight: 500; letter-spacing: 0.06em;
+      text-transform: uppercase; margin-bottom: 8px; opacity: 0.6;
+    }
+
+    .zine-sticky-av {
+      width: 18px; height: 18px; border-radius: 50%;
+      font-size: 8px; font-weight: 600;
+      display: inline-flex; align-items: center; justify-content: center;
+    }
+
+    .zine-sticky-text {
+      font-family: 'Jost', sans-serif;
+      font-size: 14px; line-height: 1.6; color: #2a2a1a;
+    }
+
+    /* BACK COVER */
+    .zine-back {
+      background: #1E2A1A;
+    }
+
+    .zine-back-inner {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem 2rem;
+      text-align: center;
+      min-height: 520px;
+    }
+
+    .zine-back-title {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 52px;
+      font-weight: 400;
+      color: #E8F0E3;
+      letter-spacing: -2px;
+      margin-bottom: 0.5rem;
+    }
+
+    .zine-back-sub {
+      font-size: 15px; color: #7A9170; margin-bottom: 2.5rem; letter-spacing: 0.03em;
+    }
+
+    .zine-back-deco { margin-bottom: 2rem; opacity: 0.6; }
+
+    .zine-back-issue {
+      font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+      color: #4A5E44;
+    }
+
+    /* ── PAST ISSUES SHELF ── */
+    .zine-shelf-wrap {
+      max-width: 860px;
+      margin: 0 auto 2rem;
+      padding: 0 1.5rem;
+    }
+
+    .zine-shelf-label {
+      font-size: 11px; font-weight: 500; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--ink-ghost);
+      margin-bottom: 0.9rem;
+      display: flex; align-items: center; gap: 6px;
+    }
+
+    .zine-shelf {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+    }
+
+    .zine-shelf-item {
+      flex-shrink: 0;
+      width: 90px;
+      cursor: pointer;
+      transition: transform 0.18s, opacity 0.18s;
+    }
+    .zine-shelf-item:hover { transform: translateY(-3px); }
+    .zine-shelf-item.active-issue { opacity: 0.45; cursor: default; transform: none; }
+
+    .zine-mini-cover {
+      width: 90px;
+      height: 118px;
+      border-radius: 3px;
+      border-left: 5px solid var(--green);
+      background: #f0f5eb;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 8px;
+      box-shadow: 2px 3px 10px rgba(30,42,26,0.14), 1px 0 0 var(--border) inset;
+      position: relative;
+      overflow: hidden;
+      transition: box-shadow 0.18s;
+    }
+    .zine-shelf-item:hover .zine-mini-cover {
+      box-shadow: 3px 6px 18px rgba(30,42,26,0.2);
+    }
+    .zine-shelf-item.active-issue .zine-mini-cover {
+      box-shadow: 0 0 0 2px var(--green);
+    }
+
+    .zine-mini-cover::before {
+      content: '';
+      position: absolute;
+      top: 0; right: 0; bottom: 0;
+      width: 8px;
+      background: linear-gradient(to right, transparent, rgba(255,255,255,0.5));
+    }
+
+    .zine-mini-title {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 17px;
+      color: var(--ink);
+      letter-spacing: -0.5px;
+      margin-bottom: 4px;
+    }
+
+    .zine-mini-vol {
+      font-size: 9px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      margin-bottom: 8px;
+    }
+
+    .zine-mini-dots {
+      display: flex; gap: 3px;
+    }
+    .zine-mini-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+    }
+
+    .zine-shelf-month {
+      font-size: 11px;
+      color: var(--ink-faint);
+      text-align: center;
+      margin-top: 6px;
+      letter-spacing: 0.02em;
+    }
+
+    /* Reading indicator badge */
+    .zine-reading-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      color: var(--green);
+      background: var(--green-light);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 3px 10px;
+      position: absolute;
+      top: -28px;
+      left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+    }
+
+    .zine-current-label {
+      max-width: 860px;
+      margin: 0 auto 0.75rem;
+      padding: 0 1.5rem;
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .zine-current-label::before {
+      content: '';
+      display: inline-block;
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--green);
+    }
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      padding: 1.25rem 2rem;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      position: sticky;
+      bottom: 0;
+      z-index: 50;
+    }
+
+    .zine-nav-btn {
+      width: 40px; height: 40px; border-radius: 50%;
+      border: 1px solid var(--border); background: var(--surface);
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      color: var(--ink-mid); transition: all 0.15s;
+    }
+    .zine-nav-btn:hover:not(:disabled) { background: var(--surface-alt); border-color: var(--border-mid); color: var(--ink); }
+    .zine-nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+    .zine-nav-counter {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 16px;
+      color: var(--ink-faint);
+      min-width: 80px;
+      text-align: center;
+    }
+
+    /* ── AUTH SCREEN ── */
+  #auth-screen {
+    position: fixed; inset: 0; background: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 1000; padding: 1.5rem;
+  }
+  #auth-screen.hidden { display: none; }
+
+  .auth-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; padding: 2.5rem 2rem;
+    width: 100%; max-width: 400px;
+    box-shadow: 0 8px 32px rgba(30,42,26,0.10);
+  }
+
+  .auth-logo {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 2rem; justify-content: center;
+  }
+  .auth-logo-text {
+    font-family: 'Playfair Display', serif; font-style: italic;
+    font-size: 26px; color: var(--ink);
+  }
+
+  .auth-tabs {
+    display: flex; gap: 0; margin-bottom: 1.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .auth-tab {
+    flex: 1; padding: 10px; text-align: center;
+    font-size: 14px; color: var(--ink-ghost); cursor: pointer;
+    border: none; background: none; font-family: 'Jost', sans-serif;
+    border-bottom: 2px solid transparent; margin-bottom: -1px;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .auth-tab.active { color: var(--ink); border-bottom-color: var(--green); font-weight: 500; }
+
+  .auth-field { margin-bottom: 1rem; }
+  .auth-field label { display: block; font-size: 13px; color: var(--ink-faint); margin-bottom: 5px; }
+  .auth-field input {
+    width: 100%; padding: 10px 14px;
+    border: 1px solid var(--border); border-radius: 8px;
+    font-size: 15px; background: var(--bg); color: var(--ink);
+    font-family: 'Jost', sans-serif; outline: none;
+    transition: border-color 0.2s;
+  }
+  .auth-field input:focus { border-color: var(--border-mid); background: var(--surface); }
+
+  .auth-btn {
+    width: 100%; padding: 11px; border-radius: 8px;
+    background: var(--green); color: #fff; border: none;
+    font-size: 15px; font-weight: 500; cursor: pointer;
+    font-family: 'Jost', sans-serif; margin-top: 0.5rem;
+    transition: opacity 0.15s;
+  }
+  .auth-btn:hover { opacity: 0.88; }
+  .auth-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .auth-error {
+    font-size: 13px; color: var(--bloom);
+    margin-top: 0.75rem; text-align: center; min-height: 20px;
+  }
+  .auth-note { font-size: 12px; color: var(--ink-ghost); text-align: center; margin-top: 1rem; }
+
+  /* ── GROUP SETUP SCREEN ── */
+  #group-screen {
+    position: fixed; inset: 0; background: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 999; padding: 1.5rem;
+  }
+  #group-screen.hidden { display: none; }
+
+  .group-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; padding: 2.5rem 2rem;
+    width: 100%; max-width: 420px;
+    box-shadow: 0 8px 32px rgba(30,42,26,0.10);
+  }
+  .group-title {
+    font-family: 'Playfair Display', serif; font-size: 22px;
+    margin-bottom: 6px;
+  }
+  .group-sub { font-size: 14px; color: var(--ink-faint); margin-bottom: 2rem; }
+
+  .group-option {
+    border: 1px solid var(--border); border-radius: 12px;
+    padding: 1.25rem 1.5rem; margin-bottom: 12px; cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .group-option:hover { border-color: var(--green); background: var(--green-light); }
+  .group-option-title { font-size: 15px; font-weight: 500; margin-bottom: 3px; }
+  .group-option-sub { font-size: 13px; color: var(--ink-faint); }
+
+  .group-form { display: none; margin-top: 1rem; }
+  .group-form.visible { display: block; }
+  .group-form input {
+    width: 100%; padding: 10px 14px;
+    border: 1px solid var(--border); border-radius: 8px;
+    font-size: 15px; background: var(--bg); color: var(--ink);
+    font-family: 'Jost', sans-serif; outline: none; margin-bottom: 10px;
+    transition: border-color 0.2s;
+  }
+  .group-form input:focus { border-color: var(--border-mid); }
+  .group-back {
+    font-size: 13px; color: var(--ink-ghost); cursor: pointer;
+    margin-top: 1rem; display: inline-block;
+  }
+  .group-back:hover { color: var(--ink-faint); }
+
+  /* ── USER MENU ── */
+  .user-menu-btn {
+    width: 32px; height: 32px; border-radius: 50%;
+    border: 1.5px solid var(--border-mid); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 500; background: var(--green-light);
+    color: var(--green); transition: opacity 0.15s;
+  }
+  .user-menu-btn:hover { opacity: 0.8; }
+
+  .user-dropdown {
+    position: absolute; top: 50px; right: 1rem;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 0.5rem;
+    box-shadow: 0 4px 16px rgba(30,42,26,0.12);
+    min-width: 180px; display: none; z-index: 200;
+  }
+  .user-dropdown.open { display: block; }
+  .user-dropdown-name { font-size: 13px; color: var(--ink-faint); padding: 6px 10px 8px; border-bottom: 1px solid var(--border); margin-bottom: 4px; }
+  .user-dropdown-item {
+    display: block; width: 100%; padding: 8px 10px;
+    font-size: 14px; color: var(--ink-mid); cursor: pointer;
+    border: none; background: none; text-align: left;
+    border-radius: 6px; font-family: 'Jost', sans-serif;
+    transition: background 0.1s;
+  }
+  .user-dropdown-item:hover { background: var(--surface-alt); }
+  .user-dropdown-item.danger { color: var(--bloom); }
+
+
+  </style>
+</head>
+<body>
+
+<!-- AUTH SCREEN -->
+<div id="auth-screen">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <svg width="24" height="24" viewBox="0 0 26 26" fill="none">
+        <path d="M13 23C13 23 4 17 4 10C4 6.13 7.13 3 11 3C12 3 13 3.2 13 3.2C13 3.2 14 3 15 3C18.87 3 22 6.13 22 10C22 17 13 23 13 23Z" fill="#3A7D44" fill-opacity="0.18" stroke="#3A7D44" stroke-width="1.1"/>
+        <path d="M13 4.5 Q15.5 10 13 23" stroke="#3A7D44" stroke-width="0.8" stroke-dasharray="1.5 2.5"/>
+        <path d="M13 11 Q16.5 9.5 18.5 7" stroke="#3A7D44" stroke-width="0.9"/>
+        <path d="M13 15 Q9.5 13.5 7.5 11" stroke="#3A7D44" stroke-width="0.9"/>
+      </svg>
+      <span class="auth-logo-text">dump dates</span>
+    </div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="setAuthTab('login')">log in</button>
+      <button class="auth-tab" onclick="setAuthTab('signup')">sign up</button>
+    </div>
+    <div class="auth-field">
+      <label>email</label>
+      <input type="email" id="auth-email" placeholder="you@example.com" />
+    </div>
+    <div class="auth-field">
+      <label>password</label>
+      <input type="password" id="auth-password" placeholder="••••••••" />
+    </div>
+    <div class="auth-field" id="auth-name-field" style="display:none;">
+      <label>your display name</label>
+      <input type="text" id="auth-displayname" placeholder="how friends will see you" />
+    </div>
+    <button class="auth-btn" id="auth-submit-btn" onclick="handleAuth()">log in</button>
+    <div class="auth-error" id="auth-error"></div>
+  </div>
+</div>
+
+<!-- GROUP SETUP SCREEN -->
+<div id="group-screen" class="hidden">
+  <div class="group-card">
+    <div id="group-choose">
+      <div class="group-title">welcome to dump dates</div>
+      <div class="group-sub">you're not in a group yet — create one or join with an invite code</div>
+      <div class="group-option" onclick="showGroupForm('create')">
+        <div class="group-option-title">create a new group</div>
+        <div class="group-option-sub">start fresh and invite your friends</div>
+      </div>
+      <div class="group-option" onclick="showGroupForm('join')">
+        <div class="group-option-title">join with an invite code</div>
+        <div class="group-option-sub">someone sent you a code to join their group</div>
+      </div>
+    </div>
+    <div class="group-form" id="group-create-form">
+      <div class="group-title" style="font-size:18px;margin-bottom:6px;">create a group</div>
+      <div class="group-sub">what do you want to call your group?</div>
+      <input type="text" id="group-name-input" placeholder="e.g. the usual suspects" />
+      <button class="auth-btn" onclick="createGroup()">create group</button>
+      <div class="auth-error" id="group-error"></div>
+      <span class="group-back" onclick="showGroupForm(null)">← back</span>
+    </div>
+    <div class="group-form" id="group-join-form">
+      <div class="group-title" style="font-size:18px;margin-bottom:6px;">join a group</div>
+      <div class="group-sub">enter the invite code you were sent</div>
+      <input type="text" id="group-code-input" placeholder="INVITE CODE" style="text-transform:uppercase;letter-spacing:0.1em;" />
+      <button class="auth-btn" onclick="joinGroup()">join group</button>
+      <div class="auth-error" id="join-error"></div>
+      <span class="group-back" onclick="showGroupForm(null)">← back</span>
+    </div>
+  </div>
+</div>
+
+<!-- USER DROPDOWN -->
+<div class="user-dropdown" id="user-dropdown">
+  <div class="user-dropdown-name" id="user-dropdown-name">—</div>
+  <button class="user-dropdown-item" onclick="copyInviteCode()">copy invite code</button>
+  <button class="user-dropdown-item danger" onclick="signOut()">sign out</button>
+</div>
+
+<header>
+  <a class="logo" href="#">
+    <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+      <path d="M13 23C13 23 4 17 4 10C4 6.13 7.13 3 11 3C12 3 13 3.2 13 3.2C13 3.2 14 3 15 3C18.87 3 22 6.13 22 10C22 17 13 23 13 23Z" fill="#3A7D44" fill-opacity="0.18" stroke="#3A7D44" stroke-width="1.1"/>
+      <path d="M13 4.5 Q15.5 10 13 23" stroke="#3A7D44" stroke-width="0.8" stroke-dasharray="1.5 2.5"/>
+      <path d="M13 11 Q16.5 9.5 18.5 7" stroke="#3A7D44" stroke-width="0.9"/>
+      <path d="M13 15 Q9.5 13.5 7.5 11" stroke="#3A7D44" stroke-width="0.9"/>
+    </svg>
+    <span class="logo-text">dump dates</span>
+    <span style="font-size:10px;color:var(--ink-ghost);font-family:'Jost',sans-serif;font-weight:400;margin-left:4px;align-self:flex-end;padding-bottom:4px;" title="last updated">2026-03-18 12:53:55 ET</span>
+  </a>
+  <div class="header-right" style="position:relative;">
+    <span class="month-badge" id="current-month-badge">—</span>
+    <button class="user-menu-btn" id="user-menu-btn" onclick="toggleUserMenu()" style="display:none;">?</button>
+  </div>
+</header>
+
+<div class="nav-tabs">
+  <button class="tab-btn active" onclick="switchTab('questions', this)">question garden</button>
+  <button class="tab-btn" onclick="switchTab('answer', this)">your answers</button>
+  <button class="tab-btn" onclick="switchTab('letter', this)">read the zine</button>
+</div>
+
+<main>
+
+  <!-- QUESTIONS -->
+  <div id="questions" class="section active">
+
+    <!-- THIS ISSUE -->
+    <div class="section-title">this issue</div>
+    <div class="section-sub">questions for april · answers due april 1st</div>
+    <div id="issue-list"></div>
+    <div id="issue-empty" style="font-size:14px;color:var(--ink-ghost);font-style:italic;padding:1rem 0 0.5rem;">no questions yet — add some from the garden below</div>
+
+    <!-- GARDEN as a sheet of paper -->
+    <div class="garden-paper">
+      <div class="sheet-ruled"></div>
+      <div class="sheet-margin"></div>
+      <div class="sheet-holes">
+        <div class="sheet-hole"></div>
+        <div class="sheet-hole"></div>
+        <div class="sheet-hole"></div>
+        <div class="sheet-hole"></div>
+        <div class="sheet-hole"></div>
+        <div class="sheet-hole"></div>
+      </div>
+      <div class="garden-paper-content">
+        <div class="garden-paper-title">question garden</div>
+        <div class="garden-paper-sub">write your own, generate ideas, or pick from the collection below</div>
+
+        <div class="garden-add-row">
+          <input type="text" id="garden-input" placeholder="write your own question…" />
+          <button class="btn-ghost" onclick="plantQuestion()">add</button>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:1.25rem;flex-wrap:wrap;">
+          <button class="gen-btn" id="gen-btn-garden" onclick="generateQuestions()">
+            <svg class="gen-icon" width="11" height="11" viewBox="0 0 11 11" fill="none">
+              <path d="M9.5 5.5A4 4 0 1 1 5.5 1.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+              <path d="M7.5 1l2 .5-.5 2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <div class="gen-spinner"></div>
+            generate ideas with AI
+          </button>
+          <span style="font-size:12px;color:var(--ink-ghost);">all questions accept text + photos</span>
+        </div>
+
+        <div style="font-size:11px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-ghost);margin-bottom:0.75rem;">suggested prompts</div>
+        <div class="garden-filters" id="garden-filters"></div>
+        <div class="garden-stickies" id="garden-list"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ANSWERS -->
+  <div id="answer" class="section">
+    <div class="answer-section-header">
+      <div class="section-title">your answers</div>
+      <div class="section-sub">answering for april · due april 1st</div>
+      <div class="progress-wrap">
+        <div class="progress-label">
+          <span id="progress-label-text">0 of 3 answered</span>
+          <span id="progress-pct">0%</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-bar" id="progress-bar" style="width:0%"></div>
+        </div>
+      </div>
+    </div>
+    <div id="answer-questions"></div>
+  </div>
+
+  <!-- ZINE -->
+  <div id="letter" class="section">
+
+    <!-- Past issues shelf -->
+    <div class="zine-shelf-wrap">
+      <div class="zine-shelf-label">
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+          <rect x="1" y="2" width="11" height="9" rx="1.5" stroke="currentColor" stroke-width="1.1"/>
+          <path d="M4 2V11M9 2V11" stroke="currentColor" stroke-width="1.1"/>
+          <path d="M1 5.5H12" stroke="currentColor" stroke-width="1.1"/>
+        </svg>
+        past issues
+      </div>
+      <div class="zine-shelf" id="zine-shelf"></div>
+    </div>
+
+    <!-- Current zine viewer -->
+    <div class="zine-current-label" id="zine-current-label"></div>
+    <div id="zine-root"></div>
+    <div class="zine-nav">
+      <button class="zine-nav-btn" id="zine-prev" onclick="showZinePage(zinePage-1,true)" disabled>
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M11 4L6 9L11 14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <span class="zine-nav-counter" id="zine-counter">cover</span>
+      <button class="zine-nav-btn" id="zine-next" onclick="showZinePage(zinePage+1,true)">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M7 4L12 9L7 14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </div>
+
+</main>
+
+<input type="file" class="input-hidden" id="file-input" accept="image/*" multiple />
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+
+  // Issue list — ordered array of garden item ids, no limit
+  let issueList = [];
+
+  // Pre-seeded question bank
+  let garden = [
+    { id: 1,  text: "what song has been on repeat and what does that say about you?",  tag: "fun",      mine: false, type: "text"  },
+    { id: 2,  text: "something you changed your mind about recently",                  tag: "deep",     mine: false, type: "text"  },
+    { id: 3,  text: "best $20 you've spent in the last month",                         tag: "rec",      mine: false, type: "text"  },
+    { id: 4,  text: "what are you irrationally excited about right now?",              tag: "life",     mine: false, type: "text"  },
+    { id: 5,  text: "what's something small that made you irrationally happy lately?", tag: "life",     mine: false, type: "text"  },
+    { id: 6,  text: "a hill you are willing to die on right now",                      tag: "hot take", mine: false, type: "text"  },
+    { id: 7,  text: "describe your current life in three words",                       tag: "fun",      mine: false, type: "text"  },
+    { id: 8,  text: "what's something you've been meaning to do for over a year?",     tag: "goals",    mine: false, type: "text"  },
+    { id: 9,  text: "recommend something — anything",                                  tag: "rec",      mine: false, type: "text"  },
+    { id: 10, text: "what would your 15-year-old self think of you now?",              tag: "deep",     mine: false, type: "text"  },
+    { id: 11, text: "what are you embarrassingly bad at?",                             tag: "fun",      mine: false, type: "text"  },
+    { id: 12, text: "most recent thing you genuinely laughed out loud at",             tag: "life",     mine: false, type: "text"  },
+    { id: 13, text: "show us where you are right now",                                 tag: "photo",    mine: false, type: "photo" },
+    { id: 14, text: "something on your desk or bedside table",                         tag: "photo",    mine: false, type: "photo" },
+    { id: 15, text: "last screenshot on your camera roll",                             tag: "photo",    mine: false, type: "photo" },
+    { id: 16, text: "a view you've seen recently that stuck with you",                 tag: "photo",    mine: false, type: "photo" },
+    { id: 17, text: "something you made, cooked, or built lately",                     tag: "photo",    mine: false, type: "photo" },
+    { id: 18, text: "a corner of your life that feels most like you right now",        tag: "photo",    mine: false, type: "photo" },
+  ];
+  let nextId = 19;
+  let activeFilter = 'all';
+
+  // No seed — starts empty
+
+  const allTags = ['all', 'fun', 'deep', 'life', 'rec', 'goals', 'hot take'];
+
+  // Answers
+  let answers = ["", "", "", "", "", "", "", ""];
+  let savedFlags = [false, false, false, false, false, false, false, false];
+  let photosByQ  = [[], [], [], [], [], [], [], []];
+  let activeFileQ = null;
+
+  // ── HELPERS ───────────────────────────────────────────────
+
+  function switchTab(id, btn) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    btn.classList.add('active');
+    if (id === 'letter') { renderShelf(); renderZine(activeZineKey === 'current' ? zineData : (pastZines.find(p=>p.key===activeZineKey)||{data:zineData}).data); }
+    if (id === 'answer')  { renderAnswers(); }
+  }
+
+  function getItemById(id) { return garden.find(g => g.id === id); }
+  function isInIssue(id)   { return issueList.includes(id); }
+  function filledCount()   { return issueList.length; }
+
+  // ── ISSUE LIST ────────────────────────────────────────────
+
+  function renderSlots() {
+    const list = document.getElementById('issue-list');
+    const empty = document.getElementById('issue-empty');
+    if (!list) return;
+    if (issueList.length === 0) {
+      list.innerHTML = '';
+      if (empty) empty.style.display = '';
+      return;
+    }
+    if (empty) empty.style.display = 'none';
+    list.innerHTML = issueList.map((id, i) => {
+      const item = getItemById(id);
+      if (!item) return '';
+      return `
+        <div class="issue-slot filled" style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--surface);border:1px solid var(--border-mid);border-radius:12px;margin-bottom:8px;">
+          <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:18px;color:var(--green);min-width:20px;">${i + 1}</div>
+          <div style="flex:1;font-size:15px;color:var(--ink);line-height:1.4;">${item.text}</div>
+          <button onclick="removeFromIssue(${id})" title="remove" style="width:26px;height:26px;border-radius:50%;border:1px solid transparent;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ink-ghost);transition:all 0.15s;" onmouseover="this.style.background='var(--bloom-light)';this.style.color='var(--bloom)'" onmouseout="this.style.background='transparent';this.style.color='var(--ink-ghost)'">
+            <svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1 1L8 8M8 1L1 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </button>
+        </div>`;
+    }).join('');
+  }
+
+
+
+  // ── GARDEN ────────────────────────────────────────────────
+
+  function renderFilters() {
+    const tags = ['all', ...new Set(garden.map(g => g.tag))];
+    document.getElementById('garden-filters').innerHTML = tags.map(t => `
+      <button class="filter-btn ${activeFilter === t ? 'active' : ''}"
+              onclick="setFilter('${t}')">${t}</button>`).join('');
+  }
+
+  function setFilter(tag) {
+    activeFilter = tag;
+    renderFilters();
+    renderGarden();
+  }
+
+  const gsColors = ['gs-yellow','gs-green','gs-blue','gs-pink','gs-peach','gs-lavender'];
+
+  function renderGarden() {
+    const filtered = activeFilter === 'all'
+      ? garden
+      : garden.filter(g => g.tag === activeFilter);
+
+    if (filtered.length === 0) {
+      document.getElementById('garden-list').innerHTML =
+        '<div class="garden-empty">no questions with this tag yet</div>';
+      return;
+    }
+
+    // No cap — any number of questions allowed
+
+    document.getElementById('garden-list').innerHTML = filtered.map((item, idx) => {
+      const inIssue = isInIssue(item.id);
+      const color = item.mine ? 'gs-peach' : gsColors[item.id % gsColors.length];
+      return `
+        <div class="garden-sticky ${color} ${inIssue ? 'in-issue' : ''}">
+          ${item.type === 'photo'
+            ? '<span class="photo-badge"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1 3.5C1 2.95 1.45 2.5 2 2.5h.7l.6-1h2.4l.6 1H7.5C8.05 2.5 8.5 2.95 8.5 3.5v3.5C8.5 7.55 8.05 8 7.5 8h-5C1.95 8 1 7.55 1 7V3.5z" stroke="currentColor" stroke-width="0.8"/><circle cx="4.75" cy="5.25" r="1.25" stroke="currentColor" stroke-width="0.8"/></svg> photo</span>'
+            : `<div class="gs-tag">${item.tag}</div>`}
+          <div class="gs-text">${item.text}</div>
+          <div class="gs-actions">
+            <span class="gs-in-badge">${inIssue ? '✓ in issue' : ''}</span>
+            <div style="display:flex;gap:4px;">
+              <button
+                class="gs-btn add ${inIssue ? 'added' : ''}"
+                onclick="addToIssue(${item.id})"
+                title="${inIssue ? 'already in issue' : 'add to this issue'}"
+>
+                ${inIssue
+                  ? `<svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L3.5 7L10 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+                  : `<svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M5.5 1v9M1 5.5h9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>`
+                }
+              </button>
+              <button class="gs-btn del" onclick="deleteFromGarden(${item.id})" title="remove">
+                <svg width="9" height="9" viewBox="0 0 9 9" fill="none">
+                  <path d="M1 1L8 8M8 1L1 8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+
+
+  function deleteFromGarden(id) {
+    issueList = issueList.filter(s => s !== id);
+    garden = garden.filter(g => g.id !== id);
+    renderSlots();
+    renderFilters();
+    renderGarden();
+  }
+
+  document.getElementById('garden-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') plantQuestion();
+  });
+
+  // ── ANSWERS ───────────────────────────────────────────────
+
+  function updateProgress() {
+    const filled = answers.filter(a => a.trim().length > 0).length;
+    const total2 = getIssueQuestionTexts().length || 8;
+    const pct = Math.round((filled / total2) * 100);
+    document.getElementById('progress-bar').style.width = pct + '%';
+    document.getElementById('progress-pct').textContent = pct + '%';
+    const total = getIssueQuestionTexts().length || 8;
+    document.getElementById('progress-label-text').textContent = `${filled} of ${total} answered`;
+  }
+
+  function getIssueQuestions() {
+    return issueList.map(id => getItemById(id)).filter(Boolean);
+  }
+  function getIssueQuestionTexts() {
+    return getIssueQuestions().map(g => g.text);
+  }
+
+  // Sticky colours cycle by position
+  const stickyColors = ['sticky-yellow', 'sticky-green', 'sticky-blue', 'sticky-pink', 'sticky-peach'];
+
+  function renderAnswers() {
+    updateProgress();
+    const qItems = getIssueQuestions();
+    const qs = qItems.map(g => g.text);
+    if (qs.length === 0) {
+      document.getElementById('answer-questions').innerHTML =
+        '<div style="text-align:center;padding:3rem 0;color:var(--ink-ghost);font-style:italic;font-size:15px;max-width:700px;margin:0 auto;">no questions in this issue yet — head to the question garden to add some</div>';
+      return;
+    }
+    document.getElementById('answer-questions').innerHTML = qs.map((q, i) => `
+      <div class="paper-sheet">
+        <div class="sheet-ruled"></div>
+        <div class="sheet-margin"></div>
+        <div class="sheet-holes">
+          <div class="sheet-hole"></div>
+          <div class="sheet-hole"></div>
+          <div class="sheet-hole"></div>
+          <div class="sheet-hole"></div>
+          <div class="sheet-hole"></div>
+        </div>
+        <div class="sheet-content">
+          <div class="sheet-q-label">question ${i + 1}</div>
+          <div class="sheet-q-text">${q}</div>
+          <div class="stickies-grid">
+
+            <!-- Your answer sticky — adapts to text vs photo type -->
+            ${(function() {
+              const qItem = getItemById(issueList[i]);
+              const isPhoto = qItem && qItem.type === 'photo';
+              if (isPhoto) {
+                return `<div class="sticky sticky-photo" style="grid-column:1/-1;">
+                  <div class="sticky-from" style="color:rgba(24,95,165,0.5);">
+                    <span class="sticky-avatar" style="width:18px;height:18px;font-size:8px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:#C8E6FA;color:#185FA5;">you</span>
+                    your photo
+                    <span class="photo-badge" style="margin-left:auto;"><svg width="9" height="9" viewBox="0 0 10 10" fill="none"><path d="M1 3.5C1 2.95 1.45 2.5 2 2.5h.7l.6-1h2.4l.6 1H7.5C8.05 2.5 8.5 2.95 8.5 3.5v3.5C8.5 7.55 8.05 8 7.5 8h-5C1.95 8 1 7.55 1 7V3.5z" stroke="currentColor" stroke-width="0.8"/><circle cx="4.75" cy="5.25" r="1.25" stroke="currentColor" stroke-width="0.8"/></svg> photo prompt</span>
+                  </div>
+                  ${photosByQ[i] && photosByQ[i].length > 0
+                    ? `<div class="sticky-photo-uploaded" id="photo-grid-${i}">
+                        <img src="${photosByQ[i][0]}" alt="your photo" />
+                       </div>`
+                    : `<div class="sticky-photo-upload" onclick="triggerUpload(${i})" id="photo-grid-${i}">
+                        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                          <rect x="1" y="4" width="20" height="15" rx="2" stroke="currentColor" stroke-width="1.2"/>
+                          <path d="M1 11l5-5 4 4 4-3 6 6" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+                          <circle cx="7" cy="9" r="2" stroke="currentColor" stroke-width="1"/>
+                        </svg>
+                        tap to add your photo
+                      </div>`
+                  }
+                  <textarea class="sticky-caption" placeholder="add a caption (optional)…"
+                    oninput="onAnswerInput(${i}, this.value)">${answers[i] || ''}</textarea>
+                  <div class="sticky-actions" style="border-top-color:rgba(24,95,165,0.1);">
+                    <span class="sticky-saved ${savedFlags[i] ? 'show' : ''}" id="saved-${i}">
+                      <svg width="11" height="9" viewBox="0 0 11 9" fill="none">
+                        <path d="M1 4.5L3.5 7L10 1" stroke="#3A7D44" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                      saved
+                    </span>
+                    <button class="sticky-save-btn" onclick="saveAnswer(${i})">save</button>
+                  </div>
+                </div>`;
+              }
+              return `<div class="sticky sticky-mine">
+                <div class="sticky-from">
+                  <span class="sticky-avatar av-1" style="width:18px;height:18px;font-size:8px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;">you</span>
+                  your answer
+                </div>
+                <textarea class="sticky-textarea"
+                  placeholder="write something here…"
+                  oninput="onAnswerInput(${i}, this.value)">${answers[i] || ''}</textarea>
+                <div class="sticky-upload" onclick="triggerUpload(${i})">
+                  <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+                    <rect x="0.5" y="0.5" width="10" height="10" rx="1.5" stroke="currentColor" stroke-width="0.8"/>
+                    <path d="M0.5 7.5L3 5L5 7L7 5.5L10.5 8.5" stroke="currentColor" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="3.5" cy="3.5" r="0.8" fill="currentColor"/>
+                  </svg>
+                  add a photo
+                </div>
+                <div class="photo-grid" id="photo-grid-${i}"></div>
+                <div class="sticky-actions">
+                  <span class="sticky-saved ${savedFlags[i] ? 'show' : ''}" id="saved-${i}">
+                    <svg width="11" height="9" viewBox="0 0 11 9" fill="none">
+                      <path d="M1 4.5L3.5 7L10 1" stroke="#3A7D44" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    saved
+                  </span>
+                  <button class="sticky-save-btn" onclick="saveAnswer(${i})">save</button>
+                </div>
+              </div>`;
+            })()}
+
+
+          </div>
+
+        </div>
+      </div>`).join('');
+    photosByQ.forEach((photos, i) => renderPhotos(i, photos));
+  }
+
+  function onAnswerInput(i, val) {
+    answers[i] = val;
+    savedFlags[i] = false;
+    const el = document.getElementById('saved-' + i);
+    if (el) el.classList.remove('show');
+    updateProgress();
+  }
+
+
+
+  function triggerUpload(i) {
+    activeFileQ = i;
+    document.getElementById('file-input').click();
+  }
+
+  document.getElementById('file-input').addEventListener('change', function () {
+    Array.from(this.files).forEach(file => {
+      const reader = new FileReader();
+      reader.onload = e => {
+        photosByQ[activeFileQ].push(e.target.result);
+        renderPhotos(activeFileQ, photosByQ[activeFileQ]);
+      };
+      reader.readAsDataURL(file);
+    });
+    this.value = '';
+  });
+
+  function renderPhotos(i, photos) {
+    const grid = document.getElementById('photo-grid-' + i);
+    if (!grid) return;
+    const qItem = getItemById(issueList[i]);
+    const isPhoto = qItem && qItem.type === 'photo';
+    if (isPhoto && photos.length > 0) {
+      grid.innerHTML = `<img src="${photos[0]}" alt="your photo" style="width:100%;border-radius:4px;object-fit:cover;" />`;
+      grid.onclick = () => triggerUpload(i);
+    } else if (!isPhoto) {
+      grid.innerHTML = photos.map(src =>
+        `<div class="photo-thumb"><img src="${src}" alt="photo" /></div>`
+      ).join('');
+    }
+  }
+
+  // ── ZINE ──────────────────────────────────────────────────
+
+  // Zine data will be populated from the database
+  const zineData = [];
+
+  let zinePage = 0; // 0 = cover
+  let activeZineKey = 'current'; // 'current' or a past issue key
+
+  // ── PAST ISSUES DATA ──────────────────────────────────────
+  // Past issues will be loaded from the database
+  const pastZines = [];
+
+  function renderShelf() {
+    const shelf = document.getElementById('zine-shelf');
+    if (!shelf) return;
+
+    // Current issue mini cover
+    const currentItem = document.createElement('div');
+    currentItem.className = `zine-shelf-item ${activeZineKey === 'current' ? 'active-issue' : ''}`;
+    currentItem.onclick = () => loadZine('current');
+    currentItem.innerHTML = `
+      <div class="zine-mini-cover">
+        <div class="zine-mini-title">dump dates</div>
+        <div class="zine-mini-vol">vol. 03</div>
+        <div class="zine-mini-dots">
+          <div class="zine-mini-dot" style="background:#D8EED4;"></div>
+          <div class="zine-mini-dot" style="background:#D0E8E0;"></div>
+          <div class="zine-mini-dot" style="background:#FADADD;"></div>
+        </div>
+      </div>
+      <div class="zine-shelf-month">mar 2026</div>
+    `;
+    shelf.appendChild(currentItem);
+
+    // Past issues
+    pastZines.forEach(pz => {
+      const item = document.createElement('div');
+      item.className = `zine-shelf-item ${activeZineKey === pz.key ? 'active-issue' : ''}`;
+      item.onclick = () => loadZine(pz.key);
+      item.innerHTML = `
+        <div class="zine-mini-cover" style="border-left-color:var(--ink-faint);background:#f5f0ea;">
+          <div class="zine-mini-title">dump dates</div>
+          <div class="zine-mini-vol">${pz.vol}</div>
+          <div class="zine-mini-dots">
+            ${pz.dotColors.map(c => `<div class="zine-mini-dot" style="background:${c};"></div>`).join('')}
+          </div>
+        </div>
+        <div class="zine-shelf-month">${pz.month}</div>
+      `;
+      shelf.appendChild(item);
+    });
+  }
+
+  function loadZine(key) {
+    activeZineKey = key;
+    zinePage = 0;
+
+    // Update shelf active state
+    renderShelf();
+
+    // Update current label
+    const label = document.getElementById('zine-current-label');
+    if (key === 'current') {
+      if (label) label.textContent = 'march 2026 · vol. 03';
+      renderZine(zineData);
+    } else {
+      const pz = pastZines.find(p => p.key === key);
+      if (pz && label) label.textContent = `${pz.month} · ${pz.vol}`;
+      if (pz) renderZine(pz.data);
+    }
+  }
+
+  function renderZine(data) {
+    const root = document.getElementById('zine-root');
+    root.innerHTML = '';
+
+    const wrap = document.createElement('div');
+    wrap.className = 'zine-wrap';
+    root.appendChild(wrap);
+
+    wrap.appendChild(buildCover(data));
+    data.forEach((section, idx) => wrap.appendChild(buildSpread(section, idx)));
+    wrap.appendChild(buildBackCover());
+
+    showZinePage(0, false);
+  }
+
+  function showZinePage(page, animate) {
+    zinePage = page;
+    const pages = document.querySelectorAll('.zine-page');
+    const prevBtn = document.getElementById('zine-prev');
+    const nextBtn = document.getElementById('zine-next');
+    const counter = document.getElementById('zine-counter');
+    const total = pages.length;
+
+    pages.forEach((p, i) => {
+      p.classList.remove('zine-active', 'zine-prev-page', 'zine-next-page');
+      if (i === page) p.classList.add('zine-active');
+      else if (i < page) p.classList.add('zine-prev-page');
+      else p.classList.add('zine-next-page');
+    });
+
+    if (prevBtn) prevBtn.disabled = page === 0;
+    if (nextBtn) nextBtn.disabled = page === total - 1;
+    if (counter) counter.textContent = page === 0 ? 'cover' : page === total - 1 ? 'back' : `${page} / ${zineData.length}`;
+  }
+
+  function buildCover(data) {
+    const p = document.createElement('div');
+    p.className = 'zine-page zine-cover';
+    p.innerHTML = `
+      <div class="zine-cover-inner">
+        <div class="zine-cover-vol">vol. 03 · march 2026</div>
+        <div class="zine-cover-deco">
+          <svg viewBox="0 0 120 140" fill="none" xmlns="http://www.w3.org/2000/svg" class="zine-cover-leaf">
+            <path d="M60 130C60 130 10 90 10 45C10 22 28 5 50 5C55 5 60 7 60 7C60 7 65 5 70 5C92 5 110 22 110 45C110 90 60 130 60 130Z" fill="#3A7D44" fill-opacity="0.15" stroke="#3A7D44" stroke-width="2"/>
+            <path d="M60 10 Q70 50 60 130" stroke="#3A7D44" stroke-width="1.5" stroke-dasharray="4 6"/>
+            <path d="M60 55 Q80 48 92 35" stroke="#3A7D44" stroke-width="1.5"/>
+            <path d="M60 80 Q40 73 28 60" stroke="#3A7D44" stroke-width="1.5"/>
+            <path d="M60 38 Q75 32 84 22" stroke="#3A7D44" stroke-width="1.2"/>
+            <path d="M60 68 Q45 62 36 52" stroke="#3A7D44" stroke-width="1.2"/>
+          </svg>
+        </div>
+        <h1 class="zine-cover-title">dump dates</h1>
+        <div class="zine-cover-sub">a monthly catch-up for friends</div>
+        <div class="zine-cover-friends">
+          <span class="zc-friend" style="background:#D8EED4;color:#2A5C26;">AL</span>
+          <span class="zc-friend" style="background:#D0E8E0;color:#1A5A48;">JM</span>
+          <span class="zc-friend" style="background:#EDE0D4;color:#5C3820;">RP</span>
+          <span class="zc-friend" style="background:#EDE8D0;color:#5C4A18;">SK</span>
+        </div>
+        <div class="zine-cover-qs">${data.length} questions inside</div>
+      </div>
+    `;
+    return p;
+  }
+
+  function buildSpread(section, idx) {
+    const p = document.createElement('div');
+    p.className = 'zine-page zine-spread';
+    const colors = ['#FFF9C4','#DCEDC8','#C8E6FA','#FADADD','#FFE0CC','#E8D5FA'];
+    const rotations = [-1.5, 1.2, -0.8, 1.8, -1.1, 0.9, -1.6, 1.3];
+
+    const stickiesHtml = section.answers.map((a, si) => {
+      const col = colors[(si + idx) % colors.length];
+      const rot = rotations[(si + idx * 2) % rotations.length];
+      return `
+        <div class="zine-sticky" style="background:${col};transform:rotate(${rot}deg);animation-delay:${0.1 + si * 0.08}s;">
+          <div class="zine-sticky-from" style="color:${a.fg};">
+            <span class="zine-sticky-av" style="background:${a.bg};color:${a.fg};">${a.initials}</span>
+            ${a.name}
+          </div>
+          <div class="zine-sticky-text">${a.text}</div>
+        </div>`;
+    }).join('');
+
+    p.innerHTML = `
+      <div class="zine-spread-inner">
+        <div class="zine-spread-left">
+          <div class="zine-q-num">q.${String(idx + 1).padStart(2,'0')}</div>
+          <div class="zine-q-text">${section.q}</div>
+          <div class="zine-page-num">${idx + 1}</div>
+        </div>
+        <div class="zine-spread-right">
+          <div class="zine-stickies-area">
+            ${stickiesHtml}
+          </div>
+        </div>
+      </div>
+    `;
+    return p;
+  }
+
+  function buildBackCover() {
+    const p = document.createElement('div');
+    p.className = 'zine-page zine-back';
+    p.innerHTML = `
+      <div class="zine-back-inner">
+        <div class="zine-back-title">dump dates</div>
+        <div class="zine-back-sub">until next month ♡</div>
+        <div class="zine-back-deco">
+          <svg viewBox="0 0 60 60" fill="none" width="60" height="60">
+            <circle cx="30" cy="30" r="28" stroke="#3A7D44" stroke-width="1" stroke-dasharray="4 4"/>
+            <path d="M30 10C30 10 15 20 15 32C15 38 20 43 30 43C40 43 45 38 45 32C45 20 30 10 30 10Z" fill="#3A7D44" fill-opacity="0.12" stroke="#3A7D44" stroke-width="1.2"/>
+            <path d="M30 12 Q34 28 30 43" stroke="#3A7D44" stroke-width="0.8" stroke-dasharray="2 3"/>
+          </svg>
+        </div>
+        <div class="zine-back-issue">march 2026 · vol. 03</div>
+      </div>
+    `;
+    return p;
+  }
+
+  // ── QUESTION GENERATOR ────────────────────────────────────
+
+  async function generateQuestions() {
+    const btn = document.getElementById('gen-btn-garden');
+    const input = document.getElementById('garden-input');
+    if (!btn || !input) return;
+
+    btn.classList.add('loading');
+    btn.disabled = true;
+
+    const qs = getIssueQuestionTexts();
+    const context = qs.length ? `The group is currently answering: "${qs.join('", "')}". ` : '';
+    const existing = garden.map(g => g.text).slice(0, 10).join('; ');
+
+    try {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 200,
+          messages: [{
+            role: 'user',
+            content: `You are helping a friend group come up with fun, personal, and thoughtful questions for their monthly zine called "dump dates". ${context}Some questions they already have: ${existing}.
+
+Generate exactly 1 fresh, interesting question for friends to answer about their lives. Make it playful, specific, and feel like something you'd genuinely want to answer. Avoid clichés.
+
+Return ONLY the question string, no quotes, no punctuation other than the question mark, nothing else.`
+          }]
+        })
+      });
+
+      const data = await res.json();
+      const question = (data.content?.[0]?.text || '').trim().replace(/^["']|["']$/g, '');
+
+      btn.classList.remove('loading');
+      btn.disabled = false;
+
+      if (question) {
+        input.value = question;
+        input.focus();
+        // Highlight the field briefly
+        input.style.transition = 'background 0.3s';
+        input.style.background = 'var(--green-light)';
+        setTimeout(() => { input.style.background = ''; }, 600);
+      }
+
+    } catch (err) {
+      btn.classList.remove('loading');
+      btn.disabled = false;
+      input.placeholder = 'couldn\'t generate — try again';
+      setTimeout(() => { input.placeholder = 'write your own question…'; }, 3000);
+    }
+  }
+
+  function plantFromSuggestion(text, pill) {
+    garden.unshift({ id: nextId++, text, tag: 'mine', mine: true, type: 'text' });
+    // Visual feedback — fade the pill
+    pill.style.opacity = '0.45';
+    pill.style.pointerEvents = 'none';
+    pill.textContent = '✓ added to garden';
+    renderFilters();
+    renderGarden();
+  }
+
+  // ── SUPABASE ──────────────────────────────────────────────
+
+  const SUPABASE_URL = 'https://gbzptapkiwpdtngurobz.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdienB0YXBraXdwZHRuZ3Vyb2J6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4NDg5MjQsImV4cCI6MjA4OTQyNDkyNH0.j-aJZ7iRogw3NYLt1NAYn4LcoKEaaa-1IyhIBj1a-hA';
+
+  let sb = null;
+  try {
+    sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  } catch(e) {
+    console.warn('Supabase failed to load:', e);
+    // Show auth screen anyway so page isn't blank
+    document.getElementById('auth-screen').innerHTML = `
+      <div class="auth-card" style="text-align:center;">
+        <div class="auth-logo"><span class="auth-logo-text">dump dates</span></div>
+        <p style="color:var(--ink-faint);font-size:14px;margin-bottom:1rem;">couldn't connect — check your internet connection and refresh</p>
+        <button class="auth-btn" onclick="location.reload()">try again</button>
+      </div>`;
+  }
+
+  let currentUser = null;
+  let currentGroup = null;
+  let currentMember = null;
+  let currentIssue = null;
+  let authMode = 'login';
+
+  // ── AUTH UI ───────────────────────────────────────────────
+
+  function setAuthTab(mode) {
+    authMode = mode;
+    document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+    event.target.classList.add('active');
+    document.getElementById('auth-submit-btn').textContent = mode === 'login' ? 'log in' : 'sign up';
+    document.getElementById('auth-name-field').style.display = mode === 'signup' ? 'block' : 'none';
+    document.getElementById('auth-error').textContent = '';
+  }
+
+  async function handleAuth() {
+    const email = document.getElementById('auth-email').value.trim();
+    const password = document.getElementById('auth-password').value;
+    const btn = document.getElementById('auth-submit-btn');
+    const err = document.getElementById('auth-error');
+    err.textContent = '';
+    btn.disabled = true;
+    btn.textContent = '…';
+
+    try {
+      if (authMode === 'signup') {
+        const displayName = document.getElementById('auth-displayname').value.trim();
+        if (!displayName) { err.textContent = 'please enter a display name'; btn.disabled = false; btn.textContent = 'sign up'; return; }
+        const { data, error } = await sb.auth.signUp({ email, password, options: { data: { display_name: displayName } } });
+        if (error) throw error;
+      } else {
+        const { data, error } = await sb.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+      }
+    } catch (e) {
+      err.textContent = e.message;
+      btn.disabled = false;
+      btn.textContent = authMode === 'login' ? 'log in' : 'sign up';
+    }
+  }
+
+  // Enter key on auth fields
+  ['auth-email','auth-password','auth-displayname'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('keydown', e => { if (e.key === 'Enter') handleAuth(); });
+  });
+
+  async function signOut() {
+    await sb.auth.signOut();
+    location.reload();
+  }
+
+  function toggleUserMenu() {
+    document.getElementById('user-dropdown').classList.toggle('open');
+  }
+  document.addEventListener('click', e => {
+    if (!e.target.closest('#user-dropdown') && !e.target.closest('#user-menu-btn')) {
+      document.getElementById('user-dropdown').classList.remove('open');
+    }
+  });
+
+  // ── GROUP UI ──────────────────────────────────────────────
+
+  function showGroupForm(type) {
+    document.getElementById('group-choose').style.display = type ? 'none' : 'block';
+    document.getElementById('group-create-form').classList.toggle('visible', type === 'create');
+    document.getElementById('group-join-form').classList.toggle('visible', type === 'join');
+  }
+
+  async function createGroup() {
+    const name = document.getElementById('group-name-input').value.trim();
+    const err = document.getElementById('group-error');
+    err.textContent = '';
+    if (!name) { err.textContent = 'please enter a group name'; return; }
+
+    try {
+      // Create group
+      const { data: group, error: ge } = await sb.from('groups').insert({ name, created_by: currentUser.id }).select().single();
+      if (ge) throw ge;
+
+      // Add creator as member
+      const displayName = currentUser.user_metadata?.display_name || currentUser.email.split('@')[0];
+      const { error: me } = await sb.from('group_members').insert({
+        group_id: group.id, user_id: currentUser.id,
+        display_name: displayName, avatar_color: '#D8EED4'
+      });
+      if (me) throw me;
+
+      await loadGroup(group.id);
+    } catch (e) {
+      document.getElementById('group-error').textContent = e.message;
+    }
+  }
+
+  async function joinGroup() {
+    const code = document.getElementById('group-code-input').value.trim().toUpperCase();
+    const err = document.getElementById('join-error');
+    err.textContent = '';
+    if (!code) { err.textContent = 'please enter an invite code'; return; }
+
+    // Invite code is first 8 chars of group UUID (uppercase)
+    try {
+      const { data: groups, error: ge } = await sb.from('groups').select('*');
+      if (ge) throw ge;
+      const group = groups.find(g => g.id.replace(/-/g,'').slice(0,8).toUpperCase() === code);
+      if (!group) { err.textContent = 'invite code not found — check with your friend'; return; }
+
+      const displayName = currentUser.user_metadata?.display_name || currentUser.email.split('@')[0];
+      const colors = ['#D8EED4','#D0E8E0','#EDE0D4','#EDE8D0','#C8E6FA','#FADADD'];
+      const { data: members } = await sb.from('group_members').select('*').eq('group_id', group.id);
+      const color = colors[members.length % colors.length];
+
+      const { error: me } = await sb.from('group_members').insert({
+        group_id: group.id, user_id: currentUser.id,
+        display_name: displayName, avatar_color: color
+      });
+      if (me) throw me;
+
+      await loadGroup(group.id);
+    } catch (e) {
+      document.getElementById('join-error').textContent = e.message;
+    }
+  }
+
+  async function copyInviteCode() {
+    if (!currentGroup) return;
+    const code = currentGroup.id.replace(/-/g,'').slice(0,8).toUpperCase();
+    await navigator.clipboard.writeText(code);
+    const btn = document.querySelector('.user-dropdown-item');
+    btn.textContent = 'copied!';
+    setTimeout(() => btn.textContent = 'copy invite code', 2000);
+    document.getElementById('user-dropdown').classList.remove('open');
+  }
+
+  // ── APP BOOTSTRAP ─────────────────────────────────────────
+
+  async function loadGroup(groupId) {
+    const { data: group } = await sb.from('groups').select('*').eq('id', groupId).single();
+    const { data: member } = await sb.from('group_members').select('*').eq('group_id', groupId).eq('user_id', currentUser.id).single();
+    currentGroup = group;
+    currentMember = member;
+
+    // Hide auth/group screens, show app
+    document.getElementById('auth-screen').classList.add('hidden');
+    document.getElementById('group-screen').classList.add('hidden');
+
+    // Update user menu
+    const btn = document.getElementById('user-menu-btn');
+    btn.style.display = 'flex';
+    btn.textContent = (member.display_name || '?').slice(0,2).toUpperCase();
+    document.getElementById('user-dropdown-name').textContent = member.display_name + ' · ' + group.name;
+
+    // Load or create current issue
+    await loadCurrentIssue();
+
+    // Load questions from DB (merge with seeded bank)
+    await loadQuestions();
+
+    renderSlots();
+    renderFilters();
+    renderGarden();
+    renderAnswers();
+    renderShelf();
+    renderZine(zineData);
+  }
+
+  async function loadCurrentIssue() {
+    const now = new Date();
+    const monthStr = now.toLocaleString('en-US', { month: 'long', year: 'numeric' }).toLowerCase();
+
+    let { data: issue } = await sb.from('issues')
+      .select('*')
+      .eq('group_id', currentGroup.id)
+      .eq('status', 'open')
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (!issue) {
+      // Count existing issues to get vol number
+      const { count } = await sb.from('issues').select('*', { count: 'exact', head: true }).eq('group_id', currentGroup.id);
+      const { data: newIssue, error } = await sb.from('issues').insert({
+        group_id: currentGroup.id,
+        month: monthStr,
+        vol: (count || 0) + 1,
+        status: 'open'
+      }).select().single();
+      if (!error) issue = newIssue;
+    }
+
+    currentIssue = issue;
+
+    // Update header badge
+    const badge = document.getElementById('current-month-badge');
+    if (badge && issue) badge.textContent = issue.month;
+
+    // Load issue questions into issueList
+    if (issue) {
+      const { data: iqs } = await sb.from('issue_questions')
+        .select('*, questions(*)')
+        .eq('issue_id', issue.id)
+        .order('position');
+      if (iqs) {
+        issueList = iqs.map(iq => iq.question_id);
+      }
+    }
+  }
+
+  async function loadQuestions() {
+    const { data: dbQs } = await sb.from('questions')
+      .select('*')
+      .eq('group_id', currentGroup.id)
+      .order('created_at');
+
+    if (dbQs && dbQs.length > 0) {
+      // Merge DB questions on top of seeded bank (avoid duplicates by text)
+      const seededTexts = new Set(garden.map(g => g.text.toLowerCase()));
+      dbQs.forEach(q => {
+        if (!seededTexts.has(q.text.toLowerCase())) {
+          garden.push({ id: q.id, text: q.text, tag: q.tag || 'misc', mine: q.added_by === currentUser.id, type: q.type || 'text', dbId: q.id });
+        }
+      });
+    }
+  }
+
+  // ── SAVE ANSWER TO DB ─────────────────────────────────────
+
+  async function saveAnswer(i) {
+    savedFlags[i] = true;
+    const el = document.getElementById('saved-' + i);
+    if (el) el.classList.add('show');
+
+    if (!currentIssue || !currentUser) return;
+
+    const questionId = issueList[i];
+    if (!questionId) return;
+
+    // Get issue_question id
+    const { data: iq } = await sb.from('issue_questions')
+      .select('id')
+      .eq('issue_id', currentIssue.id)
+      .eq('question_id', questionId)
+      .maybeSingle();
+
+    if (!iq) return;
+
+    await sb.from('answers').upsert({
+      issue_question_id: iq.id,
+      user_id: currentUser.id,
+      text: answers[i] || null
+    }, { onConflict: 'issue_question_id,user_id' });
+  }
+
+  // ── SAVE QUESTION TO DB ───────────────────────────────────
+
+  async function plantQuestion() {
+    const input = document.getElementById('garden-input');
+    const text = input.value.trim();
+    if (!text) return;
+
+    const localId = nextId++;
+    garden.unshift({ id: localId, text, tag: 'mine', mine: true, type: 'text' });
+    input.value = '';
+    renderFilters();
+    renderGarden();
+
+    // Save to DB if logged in
+    if (currentGroup && currentUser) {
+      const { data: q } = await sb.from('questions').insert({
+        group_id: currentGroup.id,
+        text, tag: 'mine', type: 'text',
+        added_by: currentUser.id
+      }).select().single();
+      if (q) {
+        // Update local id to DB id
+        const item = garden.find(g => g.id === localId);
+        if (item) { item.id = q.id; item.dbId = q.id; }
+      }
+    }
+  }
+
+  // ── SAVE ISSUE QUESTION TO DB ─────────────────────────────
+
+  async function addToIssue(gardenId) {
+    if (issueList.includes(gardenId)) return;
+    issueList.push(gardenId);
+    renderSlots();
+    renderGarden();
+
+    if (currentIssue) {
+      await sb.from('issue_questions').insert({
+        issue_id: currentIssue.id,
+        question_id: gardenId,
+        position: issueList.length - 1
+      });
+    }
+  }
+
+  async function removeFromIssue(gardenId) {
+    issueList = issueList.filter(id => id !== gardenId);
+    renderSlots();
+    renderGarden();
+
+    if (currentIssue) {
+      await sb.from('issue_questions')
+        .delete()
+        .eq('issue_id', currentIssue.id)
+        .eq('question_id', gardenId);
+    }
+  }
+
+  // ── INIT ──────────────────────────────────────────────────
+
+  // Listen for auth state changes
+  sb.auth.onAuthStateChange(async (event, session) => {
+    if (session?.user) {
+      currentUser = session.user;
+
+      // Check if user is in a group
+      const { data: memberships } = await sb.from('group_members')
+        .select('group_id')
+        .eq('user_id', currentUser.id)
+        .limit(1);
+
+      if (memberships && memberships.length > 0) {
+        await loadGroup(memberships[0].group_id);
+      } else {
+        // Show group setup
+        document.getElementById('auth-screen').classList.add('hidden');
+        document.getElementById('group-screen').classList.remove('hidden');
+      }
+    }
+  });
+
+  // Initial render while waiting for auth check
+  renderSlots();
+  renderFilters();
+  renderGarden();
+</script>
+</body>
+</html>
