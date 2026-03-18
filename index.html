@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>zeene</title>
+  <title>dump dates</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
@@ -1183,7 +1183,8 @@
       <path d="M13 11 Q16.5 9.5 18.5 7" stroke="#3A7D44" stroke-width="0.9"/>
       <path d="M13 15 Q9.5 13.5 7.5 11" stroke="#3A7D44" stroke-width="0.9"/>
     </svg>
-    <span class="logo-text">zeene</span>
+    <span class="logo-text">dump dates</span>
+    <span style="font-size:10px;color:var(--ink-ghost);font-family:'Jost',sans-serif;font-weight:400;margin-left:4px;align-self:flex-end;padding-bottom:4px;" title="last updated">2026-03-18 12:13:29 ET</span>
   </a>
   <div class="header-right">
     <span class="month-badge">april 2026</span>
@@ -1240,8 +1241,6 @@
           <span style="font-size:12px;color:var(--ink-ghost);">all questions accept text + photos</span>
         </div>
 
-        <div class="gen-suggestions" id="gen-suggestions-garden" style="margin-bottom:1.25rem;"></div>
-
         <div style="font-size:11px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-ghost);margin-bottom:0.75rem;">suggested prompts</div>
         <div class="garden-filters" id="garden-filters"></div>
         <div class="garden-stickies" id="garden-list"></div>
@@ -1285,7 +1284,7 @@
     </div>
 
     <!-- Current zine viewer -->
-    <div class="zine-current-label" id="zine-current-label">march 2026 · vol. 03</div>
+    <div class="zine-current-label" id="zine-current-label"></div>
     <div id="zine-root"></div>
     <div class="zine-nav">
       <button class="zine-nav-btn" id="zine-prev" onclick="showZinePage(zinePage-1,true)" disabled>
@@ -1308,32 +1307,12 @@
   // Issue list — ordered array of garden item ids, no limit
   let issueList = [];
 
-  // The full garden of questions (type: "text" or "photo")
-  let garden = [
-    { id: 1,  text: "what song has been on repeat and what does that say about you?",  tag: "fun",      mine: false, type: "text"  },
-    { id: 2,  text: "something you changed your mind about recently",                  tag: "deep",     mine: false, type: "text"  },
-    { id: 3,  text: "best $20 you've spent in the last month",                         tag: "rec",      mine: false, type: "text"  },
-    { id: 4,  text: "what are you irrationally excited about right now?",              tag: "life",     mine: false, type: "text"  },
-    { id: 5,  text: "what's something small that made you irrationally happy lately?", tag: "life",     mine: false, type: "text"  },
-    { id: 6,  text: "a hill you are willing to die on right now",                      tag: "hot take", mine: false, type: "text"  },
-    { id: 7,  text: "describe your current life in three words",                       tag: "fun",      mine: false, type: "text"  },
-    { id: 8,  text: "what's something you've been meaning to do for over a year?",     tag: "goals",    mine: false, type: "text"  },
-    { id: 9,  text: "recommend something — anything",                                  tag: "rec",      mine: false, type: "text"  },
-    { id: 10, text: "what would your 15-year-old self think of you now?",              tag: "deep",     mine: false, type: "text"  },
-    { id: 11, text: "what are you embarrassingly bad at?",                             tag: "fun",      mine: false, type: "text"  },
-    { id: 12, text: "most recent thing you genuinely laughed out loud at",             tag: "life",     mine: false, type: "text"  },
-    { id: 13, text: "show us where you are right now",                                 tag: "photo",    mine: false, type: "photo" },
-    { id: 14, text: "something on your desk or bedside table",                         tag: "photo",    mine: false, type: "photo" },
-    { id: 15, text: "last screenshot on your camera roll",                             tag: "photo",    mine: false, type: "photo" },
-    { id: 16, text: "a view you've seen recently that stuck with you",                 tag: "photo",    mine: false, type: "photo" },
-    { id: 17, text: "something you made, cooked, or built lately",                     tag: "photo",    mine: false, type: "photo" },
-    { id: 18, text: "a corner of your life that feels most like you right now",        tag: "photo",    mine: false, type: "photo" },
-  ];
-  let nextId = 19;
+  // Garden starts empty — questions added by users
+  let garden = [];
+  let nextId = 1;
   let activeFilter = 'all';
 
-  // Seed with a couple of questions
-  issueList = [1, 2];
+  // No seed — starts empty
 
   const allTags = ['all', 'fun', 'deep', 'life', 'rec', 'goals', 'hot take'];
 
@@ -1501,9 +1480,8 @@
     return getIssueQuestions().map(g => g.text);
   }
 
-  // Sticky colour palette — cycles per friend
+  // Sticky colours cycle by position
   const stickyColors = ['sticky-yellow', 'sticky-green', 'sticky-blue', 'sticky-pink', 'sticky-peach'];
-  const friendColors = { 'AL': 'sticky-yellow', 'JM': 'sticky-green', 'RP': 'sticky-pink', 'SK': 'sticky-blue' };
 
   function renderAnswers() {
     updateProgress();
@@ -1652,117 +1630,15 @@
 
   // ── ZINE ──────────────────────────────────────────────────
 
-  const zineData = [
-    {
-      q: "what song has been on repeat and what does that say about you?",
-      type: "text",
-      answers: [
-        { name: "alex",  initials: "AL", cls: "av-1", bg: "#D8EED4", fg: "#2A5C26",
-          text: "Mitski's 'Bug Like an Angel' on loop. apparently i am unwell and yearning for something i can't name. classic." },
-        { name: "jamie", initials: "JM", cls: "av-2", bg: "#D0E8E0", fg: "#1A5A48",
-          text: "a 2009 electro-pop playlist i made in high school. it says i am thriving and also in denial about being almost 30." },
-        { name: "robin", initials: "RP", cls: "av-3", bg: "#EDE0D4", fg: "#5C3820",
-          text: "the encanto soundtrack. my niece visited for a week and now it's just... part of me." },
-        { name: "sam",   initials: "SK", cls: "av-4", bg: "#EDE8D0", fg: "#5C4A18",
-          text: "the lo-fi beats playlist. it says i am avoiding something. unclear what." },
-      ]
-    },
-    {
-      q: "something you changed your mind about recently",
-      type: "text",
-      answers: [
-        { name: "alex",  initials: "AL", cls: "av-1", bg: "#D8EED4", fg: "#2A5C26",
-          text: "that i hate running. turns out i hate running alone. with a podcast it is actually fine?? who am i." },
-        { name: "sam",   initials: "SK", cls: "av-4", bg: "#EDE8D0", fg: "#5C4A18",
-          text: "that remote work would make me more productive. comfortable, yes. equally as distracted." },
-        { name: "robin", initials: "RP", cls: "av-3", bg: "#EDE0D4", fg: "#5C3820",
-          text: "anchovies on pizza. don't ask me to explain. just trust the process." },
-        { name: "jamie", initials: "JM", cls: "av-2", bg: "#D0E8E0", fg: "#1A5A48",
-          text: "that i needed 8 hours. turns out 7 with a walk is better than 8 staring at my phone." },
-      ]
-    },
-    {
-      q: "best $20 you've spent in the last month",
-      type: "text",
-      answers: [
-        { name: "jamie", initials: "JM", cls: "av-2", bg: "#D0E8E0", fg: "#1A5A48",
-          text: "a tiny cactus named gerald. he asks for nothing. he expects nothing. he is my ideal roommate." },
-        { name: "alex",  initials: "AL", cls: "av-1", bg: "#D8EED4", fg: "#2A5C26",
-          text: "a second phone charger so i don't have to decide between my bedroom and my couch. life-changing." },
-        { name: "sam",   initials: "SK", cls: "av-4", bg: "#EDE8D0", fg: "#5C4A18",
-          text: "a parking meter fine i paid immediately and felt NO guilt about. closure is worth $20." },
-        { name: "robin", initials: "RP", cls: "av-3", bg: "#EDE0D4", fg: "#5C3820",
-          text: "a library card renewal. free books. i am a genius and also very broke." },
-      ]
-    }
-  ];
+  // Zine data will be populated from the database
+  const zineData = [];
 
   let zinePage = 0; // 0 = cover
   let activeZineKey = 'current'; // 'current' or a past issue key
 
   // ── PAST ISSUES DATA ──────────────────────────────────────
-  const pastZines = [
-    {
-      key: 'feb-2026',
-      vol: 'vol. 02',
-      month: 'feb 2026',
-      dotColors: ['#D8EED4','#D0E8E0','#EDE0D4'],
-      data: [
-        {
-          q: "what's a habit you picked up this year that actually stuck?",
-          answers: [
-            { name: "alex",  initials: "AL", bg: "#D8EED4", fg: "#2A5C26", text: "making my bed. i know. i became my mother." },
-            { name: "jamie", initials: "JM", bg: "#D0E8E0", fg: "#1A5A48", text: "a five-minute journal. i skip it half the time but the half i don't skip is worth it." },
-            { name: "robin", initials: "RP", bg: "#EDE0D4", fg: "#5C3820", text: "eating breakfast. revolutionary." },
-            { name: "sam",   initials: "SK", bg: "#EDE8D0", fg: "#5C4A18", text: "deleting twitter. does that count as a habit? it feels like a habit." },
-          ]
-        },
-        {
-          q: "something you'd tell a stranger about your hometown",
-          answers: [
-            { name: "alex",  initials: "AL", bg: "#D8EED4", fg: "#2A5C26", text: "the bakery near the train station is the best thing about it and locals will pretend it doesn't exist." },
-            { name: "jamie", initials: "JM", bg: "#D0E8E0", fg: "#1A5A48", text: "everyone who grew up there either loves it fiercely or left and refuses to talk about it." },
-            { name: "sam",   initials: "SK", bg: "#EDE8D0", fg: "#5C4A18", text: "there is exactly one good restaurant and the locals will tell you it's overrated." },
-          ]
-        },
-        {
-          q: "a sentence that's been living rent-free in your head",
-          answers: [
-            { name: "robin", initials: "RP", bg: "#EDE0D4", fg: "#5C3820", text: "'you can be right or you can be happy.' both options feel bad." },
-            { name: "alex",  initials: "AL", bg: "#D8EED4", fg: "#2A5C26", text: "'how you do anything is how you do everything.' haunting. unverifiable. effective." },
-            { name: "jamie", initials: "JM", bg: "#D0E8E0", fg: "#1A5A48", text: "something my dad said in 2011 that i will not repeat here." },
-            { name: "sam",   initials: "SK", bg: "#EDE8D0", fg: "#5C4A18", text: "'rest is not a reward, it's a practice.' trying to believe this." },
-          ]
-        }
-      ]
-    },
-    {
-      key: 'jan-2026',
-      vol: 'vol. 01',
-      month: 'jan 2026',
-      dotColors: ['#EDE0D4','#EDE8D0','#D8EED4'],
-      data: [
-        {
-          q: "one word for how you're entering this year",
-          answers: [
-            { name: "alex",  initials: "AL", bg: "#D8EED4", fg: "#2A5C26", text: "slowly. which isn't really a word for entering something but here we are." },
-            { name: "jamie", initials: "JM", bg: "#D0E8E0", fg: "#1A5A48", text: "hungry. in every sense of the word." },
-            { name: "robin", initials: "RP", bg: "#EDE0D4", fg: "#5C3820", text: "suspicious." },
-            { name: "sam",   initials: "SK", bg: "#EDE8D0", fg: "#5C4A18", text: "caffeinated. that's it. that's the whole plan." },
-          ]
-        },
-        {
-          q: "what are you quietly proud of from last year?",
-          answers: [
-            { name: "robin", initials: "RP", bg: "#EDE0D4", fg: "#5C3820", text: "i finally fixed the thing in my apartment that had been broken for two years. it took fifteen minutes." },
-            { name: "sam",   initials: "SK", bg: "#EDE8D0", fg: "#5C4A18", text: "i said no to three things i would have said yes to out of guilt in previous years." },
-            { name: "alex",  initials: "AL", bg: "#D8EED4", fg: "#2A5C26", text: "a friendship i kept showing up for even when it was inconvenient." },
-            { name: "jamie", initials: "JM", bg: "#D0E8E0", fg: "#1A5A48", text: "learned to cook one thing really well. it's roast chicken. i make it every two weeks now." },
-          ]
-        }
-      ]
-    }
-  ];
+  // Past issues will be loaded from the database
+  const pastZines = [];
 
   function renderShelf() {
     const shelf = document.getElementById('zine-shelf');
@@ -1774,7 +1650,7 @@
     currentItem.onclick = () => loadZine('current');
     currentItem.innerHTML = `
       <div class="zine-mini-cover">
-        <div class="zine-mini-title">zeene</div>
+        <div class="zine-mini-title">dump dates</div>
         <div class="zine-mini-vol">vol. 03</div>
         <div class="zine-mini-dots">
           <div class="zine-mini-dot" style="background:#D8EED4;"></div>
@@ -1793,7 +1669,7 @@
       item.onclick = () => loadZine(pz.key);
       item.innerHTML = `
         <div class="zine-mini-cover" style="border-left-color:var(--ink-faint);background:#f5f0ea;">
-          <div class="zine-mini-title">zeene</div>
+          <div class="zine-mini-title">dump dates</div>
           <div class="zine-mini-vol">${pz.vol}</div>
           <div class="zine-mini-dots">
             ${pz.dotColors.map(c => `<div class="zine-mini-dot" style="background:${c};"></div>`).join('')}
@@ -1875,7 +1751,7 @@
             <path d="M60 68 Q45 62 36 52" stroke="#3A7D44" stroke-width="1.2"/>
           </svg>
         </div>
-        <h1 class="zine-cover-title">zeene</h1>
+        <h1 class="zine-cover-title">dump dates</h1>
         <div class="zine-cover-sub">a monthly catch-up for friends</div>
         <div class="zine-cover-friends">
           <span class="zc-friend" style="background:#D8EED4;color:#2A5C26;">AL</span>
@@ -1930,7 +1806,7 @@
     p.className = 'zine-page zine-back';
     p.innerHTML = `
       <div class="zine-back-inner">
-        <div class="zine-back-title">zeene</div>
+        <div class="zine-back-title">dump dates</div>
         <div class="zine-back-sub">until next month ♡</div>
         <div class="zine-back-deco">
           <svg viewBox="0 0 60 60" fill="none" width="60" height="60">
@@ -1949,13 +1825,11 @@
 
   async function generateQuestions() {
     const btn = document.getElementById('gen-btn-garden');
-    const container = document.getElementById('gen-suggestions-garden');
-    if (!btn || !container) return;
+    const input = document.getElementById('garden-input');
+    if (!btn || !input) return;
 
     btn.classList.add('loading');
     btn.disabled = true;
-
-    Array.from(container.querySelectorAll('.gen-suggestion, .gen-error')).forEach(el => el.remove());
 
     const qs = getIssueQuestionTexts();
     const context = qs.length ? `The group is currently answering: "${qs.join('", "')}". ` : '';
@@ -1967,41 +1841,37 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           model: 'claude-sonnet-4-20250514',
-          max_tokens: 1000,
+          max_tokens: 200,
           messages: [{
             role: 'user',
-            content: `You are helping a friend group come up with fun, personal, and thoughtful questions for their monthly zine called "zeene". ${context}Some questions they already have: ${existing}.
+            content: `You are helping a friend group come up with fun, personal, and thoughtful questions for their monthly zine called "dump dates". ${context}Some questions they already have: ${existing}.
 
-Generate exactly 4 fresh, interesting questions for friends to answer about their lives. Make them playful, specific, and varied — mix introspective and lighthearted. Avoid clichés. Each should feel like something you'd genuinely want to answer.
+Generate exactly 1 fresh, interesting question for friends to answer about their lives. Make it playful, specific, and feel like something you'd genuinely want to answer. Avoid clichés.
 
-Return ONLY a JSON array of 4 question strings, nothing else. Example format: ["question 1?", "question 2?", "question 3?", "question 4?"]`
+Return ONLY the question string, no quotes, no punctuation other than the question mark, nothing else.`
           }]
         })
       });
 
       const data = await res.json();
-      const text = data.content?.[0]?.text || '';
-      const cleaned = text.replace(/```json|```/g, '').trim();
-      const suggestions = JSON.parse(cleaned);
+      const question = (data.content?.[0]?.text || '').trim().replace(/^["']|["']$/g, '');
 
       btn.classList.remove('loading');
       btn.disabled = false;
 
-      suggestions.forEach(q => {
-        const pill = document.createElement('button');
-        pill.className = 'gen-suggestion';
-        pill.textContent = q;
-        pill.title = 'click to plant in your garden';
-        pill.onclick = () => plantFromSuggestion(q, pill);
-        container.insertBefore(pill, btn);
-      });
+      if (question) {
+        input.value = question;
+        input.focus();
+        // Highlight the field briefly
+        input.style.transition = 'background 0.3s';
+        input.style.background = 'var(--green-light)';
+        setTimeout(() => { input.style.background = ''; }, 600);
+      }
 
     } catch (err) {
       btn.classList.remove('loading');
       btn.disabled = false;
-      const errEl = document.createElement('div');
-      errEl.className = 'gen-error';
-      errEl.textContent = 'couldn\'t generate questions — try again';
+      input.placeholder = 'couldn\'t generate — try again';
       container.insertBefore(errEl, btn);
     }
   }
