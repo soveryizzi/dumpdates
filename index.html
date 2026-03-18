@@ -1392,7 +1392,7 @@
       <path d="M13 15 Q9.5 13.5 7.5 11" stroke="#3A7D44" stroke-width="0.9"/>
     </svg>
     <span class="logo-text">dump dates</span>
-    <span style="font-size:10px;color:var(--ink-ghost);font-family:'Jost',sans-serif;font-weight:400;margin-left:4px;align-self:flex-end;padding-bottom:4px;" title="last updated">2026-03-18 12:53:55 ET</span>
+    <span style="font-size:10px;color:var(--ink-ghost);font-family:'Jost',sans-serif;font-weight:400;margin-left:4px;align-self:flex-end;padding-bottom:4px;" title="last updated">2026-03-18 13:19:10 ET</span>
   </a>
   <div class="header-right" style="position:relative;">
     <span class="month-badge" id="current-month-badge">—</span>
@@ -2136,17 +2136,25 @@ Return ONLY the question string, no quotes, no punctuation other than the questi
     btn.disabled = true;
     btn.textContent = '…';
 
+    console.log('handleAuth called, mode:', authMode, 'email:', email);
+    console.log('sb:', sb);
+
     try {
       if (authMode === 'signup') {
         const displayName = document.getElementById('auth-displayname').value.trim();
         if (!displayName) { err.textContent = 'please enter a display name'; btn.disabled = false; btn.textContent = 'sign up'; return; }
+        console.log('attempting signup...');
         const { data, error } = await sb.auth.signUp({ email, password, options: { data: { display_name: displayName } } });
+        console.log('signup result:', data, error);
         if (error) throw error;
       } else {
+        console.log('attempting login...');
         const { data, error } = await sb.auth.signInWithPassword({ email, password });
+        console.log('login result:', data, error);
         if (error) throw error;
       }
     } catch (e) {
+      console.error('auth error:', e);
       err.textContent = e.message;
       btn.disabled = false;
       btn.textContent = authMode === 'login' ? 'log in' : 'sign up';
