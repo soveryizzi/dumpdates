@@ -489,8 +489,9 @@
 
     @media (max-width: 600px) {
       .stickies-grid { grid-template-columns: 1fr; }
-      .sheet-content { padding: 1.5rem 1.25rem 2rem 2rem; }
-      .sheet-margin  { left: 48px; }
+      .sheet-content { padding: 1.5rem 1rem 1.5rem 1rem; }
+      .sheet-margin  { display: none; }
+      .sheet-holes   { display: none; }
       .sheet-q-text  { font-size: 18px; }
     }
 
@@ -733,11 +734,97 @@
     .input-hidden { display: none; }
 
     @media (max-width: 600px) {
-      header { padding: 0 1rem; }
-      .nav-tabs { padding: 0 1rem; }
-      main { padding: 2rem 1rem 5rem; }
-      .letter-masthead h1 { font-size: 34px; }
-      .countdown-days { font-size: 30px; }
+      /* Header */
+      header { padding: 0 1rem; height: 54px; }
+      .logo-text { font-size: 18px; }
+      .month-badge { font-size: 11px; padding: 3px 9px; display: none; }
+      header span[title="last updated"] { display: none; }
+
+      /* Nav tabs */
+      .nav-tabs { padding: 0; }
+      .tab-btn { padding: 11px 0; font-size: 12px; flex: 1; text-align: center; letter-spacing: 0; }
+
+      /* Main */
+      main { padding: 1.25rem 0.875rem 5rem; }
+      #questions, #letter { max-width: 100%; }
+
+      /* Section titles */
+      .section-title { font-size: 20px; }
+      .section-sub { font-size: 13px; margin-bottom: 1.25rem; }
+
+      /* Countdown */
+      .countdown-strip { padding: 0.875rem 1rem; gap: 0.75rem; flex-wrap: nowrap; }
+      .countdown-days { font-size: 26px; }
+      .countdown-main { font-size: 13px; }
+      .countdown-detail { font-size: 12px; }
+
+      /* Cards */
+      .card { padding: 1rem 1.125rem; border-radius: 12px; }
+
+      /* Garden paper */
+      .garden-paper { border-radius: 8px; }
+      .garden-paper-content { padding: 1.25rem 1rem 1.5rem 1rem; }
+      .garden-paper-title { font-size: 18px; }
+      .sheet-holes { display: none; }
+      .sheet-margin { display: none; }
+      .garden-paper .sheet-ruled { background-position: 0 56px; }
+
+      /* Garden add row */
+      .garden-add-row { flex-wrap: nowrap; gap: 6px; }
+      .garden-add-row input { font-size: 15px; padding: 10px 12px; }
+      .btn-ghost { padding: 10px 14px; font-size: 13px; }
+
+      /* AI generate button */
+      .gen-btn { font-size: 12px; padding: 6px 12px; }
+
+      /* Filter pills */
+      .garden-filters { gap: 5px; }
+      .filter-btn { font-size: 11px; padding: 4px 10px; }
+
+      /* Garden stickies */
+      .garden-stickies { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+      .garden-sticky { min-height: 90px; padding: 10px 10px 22px; }
+      .gs-text { font-size: 12px; line-height: 1.35; }
+      .gs-tag { font-size: 10px; }
+
+      /* Issue list */
+      .issue-slot { padding: 10px 12px; border-radius: 10px; }
+
+      /* Answer section */
+      .answer-section-header { padding: 0; }
+      .progress-wrap { max-width: 100%; }
+      .paper-sheet { border-radius: 4px; margin-bottom: 2rem; }
+      .sheet-content { padding: 1.25rem 1rem 1.5rem 1rem; }
+      .sheet-q-text { font-size: 17px; }
+      .sheet-q-label { font-size: 10px; }
+      .stickies-grid { grid-template-columns: 1fr; gap: 12px; }
+      .sticky { min-height: 130px; }
+      .sticky-textarea { min-height: 80px; font-size: 14px; }
+
+      /* Auth + group cards */
+      .auth-card { padding: 2rem 1.25rem; border-radius: 14px; }
+      .auth-logo-text { font-size: 22px; }
+      .group-card { padding: 2rem 1.25rem; border-radius: 14px; }
+      .group-title { font-size: 20px; }
+
+      /* Zine */
+      .zine-wrap { border-radius: 0; }
+      .zine-spread-inner { grid-template-columns: 1fr; }
+      .zine-spread-left { border-right: none; border-bottom: 3px solid var(--border); padding: 1.5rem 1.25rem 1.25rem; }
+      .zine-spread-right { padding: 1.25rem; }
+      .zine-q-text { font-size: 20px; }
+      .zine-cover-title { font-size: 48px; }
+      .zine-stickies-area { grid-template-columns: 1fr; gap: 10px; }
+      .zine-sticky { min-height: auto; }
+      .zine-shelf-wrap { padding: 0.875rem 1rem; }
+      .zine-nav { padding: 0.875rem 1rem; }
+      .zine-current-label { padding: 0.5rem 1rem 0; font-size: 12px; }
+    }
+
+    @media (max-width: 380px) {
+      .garden-stickies { grid-template-columns: 1fr; }
+      .tab-btn { font-size: 11px; padding: 11px 0; }
+      .auth-card { padding: 1.75rem 1rem; }
     }
 
     /* ── ZINE ── */
@@ -1341,7 +1428,7 @@
     </div>
     <button class="auth-btn" id="auth-submit-btn" onclick="handleAuth()">log in</button>
     <div class="auth-error" id="auth-error"></div>
-    <div style="text-align:center;margin-top:1.25rem;font-size:10px;color:var(--ink-ghost);font-family:'Jost',sans-serif;">2026-03-18 14:09:22 ET</div>
+    <div style="text-align:center;margin-top:1.25rem;font-size:10px;color:var(--ink-ghost);font-family:'Jost',sans-serif;">2026-03-18 14:32:19 ET</div>
   </div>
 </div>
 
@@ -1395,7 +1482,7 @@
       <path d="M13 15 Q9.5 13.5 7.5 11" stroke="#3A7D44" stroke-width="0.9"/>
     </svg>
     <span class="logo-text">dump dates</span>
-    <span style="font-size:10px;color:var(--ink-ghost);font-family:'Jost',sans-serif;font-weight:400;margin-left:4px;align-self:flex-end;padding-bottom:4px;" title="last updated">2026-03-18 14:09:22 ET</span>
+    <span style="font-size:10px;color:var(--ink-ghost);font-family:'Jost',sans-serif;font-weight:400;margin-left:4px;align-self:flex-end;padding-bottom:4px;" title="last updated">2026-03-18 14:32:19 ET</span>
   </a>
   <div class="header-right" style="position:relative;">
     <span class="month-badge" id="current-month-badge">—</span>
@@ -2094,6 +2181,23 @@ Return ONLY the question string, no quotes, no punctuation other than the questi
     renderGarden();
   }
 
+  // ── PREVIEW MODE ──────────────────────────────────────────
+  // Add ?preview to the URL to skip login and see the app with demo data
+  const isPreview = new URLSearchParams(window.location.search).has('preview');
+
+  if (isPreview) {
+    document.getElementById('auth-screen').classList.add('hidden');
+    // Restore some demo data so there's something to look at
+    issueList = [1, 2, 3];
+    document.getElementById('current-month-badge').textContent = 'april 2026';
+    renderSlots();
+    renderFilters();
+    renderGarden();
+    renderAnswers();
+    renderShelf();
+    renderZine(zineData);
+  }
+
   // ── SUPABASE ──────────────────────────────────────────────
 
   const SUPABASE_URL = 'https://gbzptapkiwpdtngurobz.supabase.co';
@@ -2442,9 +2546,13 @@ Return ONLY the question string, no quotes, no punctuation other than the questi
   // Listen for auth state changes
   sb.auth.onAuthStateChange(async (event, session) => {
     console.log('auth state change:', event, session?.user?.email);
+    if (event === 'SIGNED_OUT') return;
     if (session?.user) {
       currentUser = session.user;
       console.log('user found, checking group membership...');
+
+      // Small delay to ensure DOM is ready
+      await new Promise(r => setTimeout(r, 300));
 
       // Check if user is in a group
       const { data: memberships, error: me } = await sb.from('group_members')
@@ -2459,9 +2567,11 @@ Return ONLY the question string, no quotes, no punctuation other than the questi
         await loadGroup(memberships[0].group_id);
       } else {
         console.log('no group found, showing group screen');
-        // Show group setup
-        document.getElementById('auth-screen').classList.add('hidden');
-        document.getElementById('group-screen').classList.remove('hidden');
+        const authScreen = document.getElementById('auth-screen');
+        const groupScreen = document.getElementById('group-screen');
+        console.log('auth-screen el:', authScreen, 'group-screen el:', groupScreen);
+        if (authScreen) authScreen.classList.add('hidden');
+        if (groupScreen) groupScreen.classList.remove('hidden');
       }
     }
   });
