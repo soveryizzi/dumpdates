@@ -7,7 +7,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
       --bg:          #E8F0E3;
@@ -1306,6 +1305,7 @@
   .user-dropdown-item.danger { color: var(--bloom); }
 
 
+  </style>
 </head>
 <body>
 
@@ -1392,7 +1392,7 @@
       <path d="M13 15 Q9.5 13.5 7.5 11" stroke="#3A7D44" stroke-width="0.9"/>
     </svg>
     <span class="logo-text">dump dates</span>
-    <span style="font-size:10px;color:var(--ink-ghost);font-family:'Jost',sans-serif;font-weight:400;margin-left:4px;align-self:flex-end;padding-bottom:4px;" title="last updated">2026-03-18 12:39:07 ET</span>
+    <span style="font-size:10px;color:var(--ink-ghost);font-family:'Jost',sans-serif;font-weight:400;margin-left:4px;align-self:flex-end;padding-bottom:4px;" title="last updated">2026-03-18 12:53:55 ET</span>
   </a>
   <div class="header-right" style="position:relative;">
     <span class="month-badge" id="current-month-badge">—</span>
@@ -1510,8 +1510,8 @@
 
 <input type="file" class="input-hidden" id="file-input" accept="image/*" multiple />
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  // ── STATE ─────────────────────────────────────────────────
 
   // Issue list — ordered array of garden item ids, no limit
   let issueList = [];
@@ -1591,18 +1591,7 @@
     }).join('');
   }
 
-  function addToIssue(gardenId) {
-    if (issueList.includes(gardenId)) return;
-    issueList.push(gardenId);
-    renderSlots();
-    renderGarden();
-  }
 
-  function removeFromIssue(gardenId) {
-    issueList = issueList.filter(id => id !== gardenId);
-    renderSlots();
-    renderGarden();
-  }
 
   // ── GARDEN ────────────────────────────────────────────────
 
@@ -1667,15 +1656,7 @@
     }).join('');
   }
 
-  function plantQuestion() {
-    const input = document.getElementById('garden-input');
-    const text = input.value.trim();
-    if (!text) return;
-    garden.unshift({ id: nextId++, text, tag: 'mine', mine: true, type: 'text' });
-    input.value = '';
-    renderFilters();
-    renderGarden();
-  }
+
 
   function deleteFromGarden(id) {
     issueList = issueList.filter(s => s !== id);
@@ -1818,11 +1799,7 @@
     updateProgress();
   }
 
-  function saveAnswer(i) {
-    savedFlags[i] = true;
-    const el = document.getElementById('saved-' + i);
-    if (el) el.classList.add('show');
-  }
+
 
   function triggerUpload(i) {
     activeFileQ = i;
@@ -2100,7 +2077,7 @@ Return ONLY the question string, no quotes, no punctuation other than the questi
       btn.classList.remove('loading');
       btn.disabled = false;
       input.placeholder = 'couldn\'t generate — try again';
-      container.insertBefore(errEl, btn);
+      setTimeout(() => { input.placeholder = 'write your own question…'; }, 3000);
     }
   }
 
@@ -2118,7 +2095,20 @@ Return ONLY the question string, no quotes, no punctuation other than the questi
 
   const SUPABASE_URL = 'https://gbzptapkiwpdtngurobz.supabase.co';
   const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdienB0YXBraXdwZHRuZ3Vyb2J6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4NDg5MjQsImV4cCI6MjA4OTQyNDkyNH0.j-aJZ7iRogw3NYLt1NAYn4LcoKEaaa-1IyhIBj1a-hA';
-  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  let sb = null;
+  try {
+    sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  } catch(e) {
+    console.warn('Supabase failed to load:', e);
+    // Show auth screen anyway so page isn't blank
+    document.getElementById('auth-screen').innerHTML = `
+      <div class="auth-card" style="text-align:center;">
+        <div class="auth-logo"><span class="auth-logo-text">dump dates</span></div>
+        <p style="color:var(--ink-faint);font-size:14px;margin-bottom:1rem;">couldn't connect — check your internet connection and refresh</p>
+        <button class="auth-btn" onclick="location.reload()">try again</button>
+      </div>`;
+  }
 
   let currentUser = null;
   let currentGroup = null;
