@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
   <title>dump dates</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'><path d='M13 23C13 23 4 17 4 10C4 6.13 7.13 3 11 3C12 3 13 3.2 13 3.2C13 3.2 14 3 15 3C18.87 3 22 6.13 22 10C22 17 13 23 13 23Z' fill='%233A7D44'/></svg>" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
@@ -1357,6 +1360,7 @@
   }
   .auth-btn:hover { opacity: 0.88; }
   .auth-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  @keyframes spin { to { transform: rotate(360deg); } }
 
   .auth-error {
     font-size: 13px; color: var(--bloom);
@@ -1473,7 +1477,7 @@
     </div>
     <button class="auth-btn" id="auth-submit-btn" onclick="handleAuth()">log in</button>
     <div class="auth-error" id="auth-error"></div>
-    <div style="text-align:center;margin-top:1.25rem;font-size:10px;color:var(--ink-ghost);font-family:'Jost',sans-serif;">2026-03-18 15:18:39 ET</div>
+    <div style="text-align:center;margin-top:1.25rem;font-size:10px;color:var(--ink-ghost);font-family:'Jost',sans-serif;">2026-03-18 15:25:54 ET</div>
   </div>
 </div>
 
@@ -1529,7 +1533,7 @@
       <path d="M13 15 Q9.5 13.5 7.5 11" stroke="#3A7D44" stroke-width="0.9"/>
     </svg>
     <span class="logo-text">dump dates</span>
-    <span style="font-size:10px;color:var(--ink-ghost);font-family:'Jost',sans-serif;font-weight:400;margin-left:4px;align-self:flex-end;padding-bottom:4px;" title="last updated">2026-03-18 15:18:39 ET</span>
+    <span style="font-size:10px;color:var(--ink-ghost);font-family:'Jost',sans-serif;font-weight:400;margin-left:4px;align-self:flex-end;padding-bottom:4px;" title="last updated">2026-03-18 15:25:54 ET</span>
   </a>
   <div class="header-right" style="position:relative;">
     <span class="month-badge" id="current-month-badge">—</span>
@@ -2268,21 +2272,84 @@ Return ONLY the question string, no quotes, no punctuation other than the questi
     renderGarden();
   }
 
-  // ── PREVIEW MODE ──────────────────────────────────────────
-  // Add ?preview to the URL to skip login and see the app with demo data
-  const isPreview = new URLSearchParams(window.location.search).has('preview');
+  // ── DEMO MODE ─────────────────────────────────────────────
+  // Add ?demo to the URL to see the app with dummy data, no login required
+  const isDemo = new URLSearchParams(window.location.search).has('demo');
 
-  if (isPreview) {
+  const demoZineData = [
+    {
+      q: "what song has been on repeat and what does that say about you?",
+      answers: [
+        { name: "alex",  initials: "AL", bg: "#D8EED4", fg: "#2A5C26", text: "Mitski's 'Bug Like an Angel' on loop. apparently i am unwell and yearning for something i can't name. classic." },
+        { name: "jamie", initials: "JM", bg: "#D0E8E0", fg: "#1A5A48", text: "a 2009 electro-pop playlist i made in high school. it says i am thriving and also in denial about being almost 30." },
+        { name: "robin", initials: "RP", bg: "#EDE0D4", fg: "#5C3820", text: "the encanto soundtrack. my niece visited for a week and now it's just... part of me." },
+        { name: "sam",   initials: "SK", bg: "#EDE8D0", fg: "#5C4A18", text: "lo-fi beats to study to. it says i am avoiding something. unclear what." },
+      ]
+    },
+    {
+      q: "something you changed your mind about recently",
+      answers: [
+        { name: "alex",  initials: "AL", bg: "#D8EED4", fg: "#2A5C26", text: "that i hate running. turns out i hate running alone. with a podcast it is actually fine?? who am i." },
+        { name: "sam",   initials: "SK", bg: "#EDE8D0", fg: "#5C4A18", text: "that remote work would make me more productive. comfortable, yes. equally distracted, absolutely." },
+        { name: "robin", initials: "RP", bg: "#EDE0D4", fg: "#5C3820", text: "anchovies on pizza. don't ask me to explain. just trust the process." },
+      ]
+    },
+    {
+      q: "best $20 you've spent in the last month",
+      answers: [
+        { name: "jamie", initials: "JM", bg: "#D0E8E0", fg: "#1A5A48", text: "a tiny cactus named gerald. he asks for nothing. he is my ideal roommate." },
+        { name: "alex",  initials: "AL", bg: "#D8EED4", fg: "#2A5C26", text: "a second phone charger. no longer forced to choose between my bedroom and my couch." },
+        { name: "sam",   initials: "SK", bg: "#EDE8D0", fg: "#5C4A18", text: "a parking meter fine i paid immediately and felt zero guilt about. closure is worth $20." },
+        { name: "robin", initials: "RP", bg: "#EDE0D4", fg: "#5C3820", text: "library card renewal. free books. i am a genius and also very broke." },
+      ]
+    }
+  ];
+
+  if (isDemo) {
+    // Hide auth, show the app
     document.getElementById('auth-screen').classList.add('hidden');
-    // Restore some demo data so there's something to look at
+
+    // Load demo data
     issueList = [1, 2, 3];
+    answers = ["genuinely the best decision i've made all month.", "", ""];
     document.getElementById('current-month-badge').textContent = 'april 2026';
+
+    // Show demo banner
+    const banner = document.createElement('div');
+    banner.style.cssText = `
+      position: fixed; top: 62px; left: 0; right: 0; z-index: 90;
+      background: #FFF9C4; border-bottom: 1px solid #e8d800;
+      padding: 8px 1.5rem; display: flex; align-items: center;
+      justify-content: space-between; font-size: 13px;
+      color: #5a4e00; font-family: 'Jost', sans-serif;`;
+    banner.innerHTML = `
+      <span>
+        <strong style="font-weight:500;">demo mode</strong>
+        — this is dummy data, nothing saves.
+        <a href="${window.location.pathname}" style="color:#3A7D44;margin-left:8px;font-weight:500;">sign in →</a>
+      </span>
+      <button onclick="this.parentElement.remove()" style="background:none;border:none;cursor:pointer;font-size:16px;color:#8a7a00;padding:0 0 0 12px;">×</button>`;
+    document.body.appendChild(banner);
+
+    // Push main content down to account for banner
+    document.querySelector('main').style.paddingTop = '3.5rem';
+
     renderSlots();
     renderFilters();
     renderGarden();
     renderAnswers();
     renderShelf();
-    renderZine(zineData);
+    renderZine(demoZineData);
+  }
+
+  // ── PREVIEW MODE (quick dev shortcut) ─────────────────────
+  const isPreview = new URLSearchParams(window.location.search).has('preview');
+  if (isPreview && !isDemo) {
+    document.getElementById('auth-screen').classList.add('hidden');
+    issueList = [1, 2, 3];
+    document.getElementById('current-month-badge').textContent = 'april 2026';
+    renderSlots(); renderFilters(); renderGarden(); renderAnswers();
+    renderShelf(); renderZine([]);
   }
 
   // ── SUPABASE ──────────────────────────────────────────────
@@ -2328,27 +2395,52 @@ Return ONLY the question string, no quotes, no punctuation other than the questi
     const err = document.getElementById('auth-error');
     err.textContent = '';
     btn.disabled = true;
-    btn.textContent = '…';
 
-    console.log('handleAuth called, mode:', authMode, 'email:', email);
-    console.log('sb:', sb);
+    if (authMode === 'signup') {
+      btn.innerHTML = `<span style="display:inline-flex;align-items:center;gap:8px;justify-content:center;">
+        <svg style="animation:spin 0.8s linear infinite;" width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <circle cx="7" cy="7" r="5.5" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+          <path d="M7 1.5A5.5 5.5 0 0 1 12.5 7" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        creating account…
+      </span>`;
+    } else {
+      btn.innerHTML = `<span style="display:inline-flex;align-items:center;gap:8px;justify-content:center;">
+        <svg style="animation:spin 0.8s linear infinite;" width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <circle cx="7" cy="7" r="5.5" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+          <path d="M7 1.5A5.5 5.5 0 0 1 12.5 7" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        logging you in…
+      </span>`;
+    }
 
     try {
       if (authMode === 'signup') {
         const displayName = document.getElementById('auth-displayname').value.trim();
-        if (!displayName) { err.textContent = 'please enter a display name'; btn.disabled = false; btn.textContent = 'sign up'; return; }
-        console.log('attempting signup...');
+        if (!displayName) {
+          err.textContent = 'please enter a display name';
+          btn.disabled = false; btn.textContent = 'sign up'; return;
+        }
         const { data, error } = await sb.auth.signUp({ email, password, options: { data: { display_name: displayName } } });
-        console.log('signup result:', data, error);
         if (error) throw error;
+        btn.innerHTML = `<span style="display:inline-flex;align-items:center;gap:8px;justify-content:center;">
+          <svg width="14" height="12" viewBox="0 0 14 12" fill="none">
+            <path d="M1 6L5 10L13 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          account created!
+        </span>`;
       } else {
-        console.log('attempting login...');
         const { data, error } = await sb.auth.signInWithPassword({ email, password });
-        console.log('login result:', data, error);
         if (error) throw error;
+        btn.innerHTML = `<span style="display:inline-flex;align-items:center;gap:8px;justify-content:center;">
+          <svg style="animation:spin 0.8s linear infinite;" width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <circle cx="7" cy="7" r="5.5" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+            <path d="M7 1.5A5.5 5.5 0 0 1 12.5 7" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          loading your garden…
+        </span>`;
       }
     } catch (e) {
-      console.error('auth error:', e);
       err.textContent = e.message;
       btn.disabled = false;
       btn.textContent = authMode === 'login' ? 'log in' : 'sign up';
