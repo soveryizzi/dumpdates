@@ -7,6 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
       --bg:          #E8F0E3;
@@ -1166,14 +1167,221 @@
       text-align: center;
     }
 
-    /* Kill the old letter styles that no longer apply */
-    .letter-masthead, .letter-entry, .letter-q-heading, .letter-answer,
-    .letter-from, .letter-body, .letter-divider, .letter-month,
-    .friend-chips, .friend-chip { display: none !important; }
+    /* ── AUTH SCREEN ── */
+  #auth-screen {
+    position: fixed; inset: 0; background: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 1000; padding: 1.5rem;
+  }
+  #auth-screen.hidden { display: none; }
 
-  </style>
+  .auth-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; padding: 2.5rem 2rem;
+    width: 100%; max-width: 400px;
+    box-shadow: 0 8px 32px rgba(30,42,26,0.10);
+  }
+
+  .auth-logo {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 2rem; justify-content: center;
+  }
+  .auth-logo-text {
+    font-family: 'Playfair Display', serif; font-style: italic;
+    font-size: 26px; color: var(--ink);
+  }
+
+  .auth-tabs {
+    display: flex; gap: 0; margin-bottom: 1.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .auth-tab {
+    flex: 1; padding: 10px; text-align: center;
+    font-size: 14px; color: var(--ink-ghost); cursor: pointer;
+    border: none; background: none; font-family: 'Jost', sans-serif;
+    border-bottom: 2px solid transparent; margin-bottom: -1px;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .auth-tab.active { color: var(--ink); border-bottom-color: var(--green); font-weight: 500; }
+
+  .auth-field { margin-bottom: 1rem; }
+  .auth-field label { display: block; font-size: 13px; color: var(--ink-faint); margin-bottom: 5px; }
+  .auth-field input {
+    width: 100%; padding: 10px 14px;
+    border: 1px solid var(--border); border-radius: 8px;
+    font-size: 15px; background: var(--bg); color: var(--ink);
+    font-family: 'Jost', sans-serif; outline: none;
+    transition: border-color 0.2s;
+  }
+  .auth-field input:focus { border-color: var(--border-mid); background: var(--surface); }
+
+  .auth-btn {
+    width: 100%; padding: 11px; border-radius: 8px;
+    background: var(--green); color: #fff; border: none;
+    font-size: 15px; font-weight: 500; cursor: pointer;
+    font-family: 'Jost', sans-serif; margin-top: 0.5rem;
+    transition: opacity 0.15s;
+  }
+  .auth-btn:hover { opacity: 0.88; }
+  .auth-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .auth-error {
+    font-size: 13px; color: var(--bloom);
+    margin-top: 0.75rem; text-align: center; min-height: 20px;
+  }
+  .auth-note { font-size: 12px; color: var(--ink-ghost); text-align: center; margin-top: 1rem; }
+
+  /* ── GROUP SETUP SCREEN ── */
+  #group-screen {
+    position: fixed; inset: 0; background: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 999; padding: 1.5rem;
+  }
+  #group-screen.hidden { display: none; }
+
+  .group-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; padding: 2.5rem 2rem;
+    width: 100%; max-width: 420px;
+    box-shadow: 0 8px 32px rgba(30,42,26,0.10);
+  }
+  .group-title {
+    font-family: 'Playfair Display', serif; font-size: 22px;
+    margin-bottom: 6px;
+  }
+  .group-sub { font-size: 14px; color: var(--ink-faint); margin-bottom: 2rem; }
+
+  .group-option {
+    border: 1px solid var(--border); border-radius: 12px;
+    padding: 1.25rem 1.5rem; margin-bottom: 12px; cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .group-option:hover { border-color: var(--green); background: var(--green-light); }
+  .group-option-title { font-size: 15px; font-weight: 500; margin-bottom: 3px; }
+  .group-option-sub { font-size: 13px; color: var(--ink-faint); }
+
+  .group-form { display: none; margin-top: 1rem; }
+  .group-form.visible { display: block; }
+  .group-form input {
+    width: 100%; padding: 10px 14px;
+    border: 1px solid var(--border); border-radius: 8px;
+    font-size: 15px; background: var(--bg); color: var(--ink);
+    font-family: 'Jost', sans-serif; outline: none; margin-bottom: 10px;
+    transition: border-color 0.2s;
+  }
+  .group-form input:focus { border-color: var(--border-mid); }
+  .group-back {
+    font-size: 13px; color: var(--ink-ghost); cursor: pointer;
+    margin-top: 1rem; display: inline-block;
+  }
+  .group-back:hover { color: var(--ink-faint); }
+
+  /* ── USER MENU ── */
+  .user-menu-btn {
+    width: 32px; height: 32px; border-radius: 50%;
+    border: 1.5px solid var(--border-mid); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 500; background: var(--green-light);
+    color: var(--green); transition: opacity 0.15s;
+  }
+  .user-menu-btn:hover { opacity: 0.8; }
+
+  .user-dropdown {
+    position: absolute; top: 50px; right: 1rem;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 0.5rem;
+    box-shadow: 0 4px 16px rgba(30,42,26,0.12);
+    min-width: 180px; display: none; z-index: 200;
+  }
+  .user-dropdown.open { display: block; }
+  .user-dropdown-name { font-size: 13px; color: var(--ink-faint); padding: 6px 10px 8px; border-bottom: 1px solid var(--border); margin-bottom: 4px; }
+  .user-dropdown-item {
+    display: block; width: 100%; padding: 8px 10px;
+    font-size: 14px; color: var(--ink-mid); cursor: pointer;
+    border: none; background: none; text-align: left;
+    border-radius: 6px; font-family: 'Jost', sans-serif;
+    transition: background 0.1s;
+  }
+  .user-dropdown-item:hover { background: var(--surface-alt); }
+  .user-dropdown-item.danger { color: var(--bloom); }
+
+
 </head>
 <body>
+
+<!-- AUTH SCREEN -->
+<div id="auth-screen">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <svg width="24" height="24" viewBox="0 0 26 26" fill="none">
+        <path d="M13 23C13 23 4 17 4 10C4 6.13 7.13 3 11 3C12 3 13 3.2 13 3.2C13 3.2 14 3 15 3C18.87 3 22 6.13 22 10C22 17 13 23 13 23Z" fill="#3A7D44" fill-opacity="0.18" stroke="#3A7D44" stroke-width="1.1"/>
+        <path d="M13 4.5 Q15.5 10 13 23" stroke="#3A7D44" stroke-width="0.8" stroke-dasharray="1.5 2.5"/>
+        <path d="M13 11 Q16.5 9.5 18.5 7" stroke="#3A7D44" stroke-width="0.9"/>
+        <path d="M13 15 Q9.5 13.5 7.5 11" stroke="#3A7D44" stroke-width="0.9"/>
+      </svg>
+      <span class="auth-logo-text">dump dates</span>
+    </div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="setAuthTab('login')">log in</button>
+      <button class="auth-tab" onclick="setAuthTab('signup')">sign up</button>
+    </div>
+    <div class="auth-field">
+      <label>email</label>
+      <input type="email" id="auth-email" placeholder="you@example.com" />
+    </div>
+    <div class="auth-field">
+      <label>password</label>
+      <input type="password" id="auth-password" placeholder="••••••••" />
+    </div>
+    <div class="auth-field" id="auth-name-field" style="display:none;">
+      <label>your display name</label>
+      <input type="text" id="auth-displayname" placeholder="how friends will see you" />
+    </div>
+    <button class="auth-btn" id="auth-submit-btn" onclick="handleAuth()">log in</button>
+    <div class="auth-error" id="auth-error"></div>
+  </div>
+</div>
+
+<!-- GROUP SETUP SCREEN -->
+<div id="group-screen" class="hidden">
+  <div class="group-card">
+    <div id="group-choose">
+      <div class="group-title">welcome to dump dates</div>
+      <div class="group-sub">you're not in a group yet — create one or join with an invite code</div>
+      <div class="group-option" onclick="showGroupForm('create')">
+        <div class="group-option-title">create a new group</div>
+        <div class="group-option-sub">start fresh and invite your friends</div>
+      </div>
+      <div class="group-option" onclick="showGroupForm('join')">
+        <div class="group-option-title">join with an invite code</div>
+        <div class="group-option-sub">someone sent you a code to join their group</div>
+      </div>
+    </div>
+    <div class="group-form" id="group-create-form">
+      <div class="group-title" style="font-size:18px;margin-bottom:6px;">create a group</div>
+      <div class="group-sub">what do you want to call your group?</div>
+      <input type="text" id="group-name-input" placeholder="e.g. the usual suspects" />
+      <button class="auth-btn" onclick="createGroup()">create group</button>
+      <div class="auth-error" id="group-error"></div>
+      <span class="group-back" onclick="showGroupForm(null)">← back</span>
+    </div>
+    <div class="group-form" id="group-join-form">
+      <div class="group-title" style="font-size:18px;margin-bottom:6px;">join a group</div>
+      <div class="group-sub">enter the invite code you were sent</div>
+      <input type="text" id="group-code-input" placeholder="INVITE CODE" style="text-transform:uppercase;letter-spacing:0.1em;" />
+      <button class="auth-btn" onclick="joinGroup()">join group</button>
+      <div class="auth-error" id="join-error"></div>
+      <span class="group-back" onclick="showGroupForm(null)">← back</span>
+    </div>
+  </div>
+</div>
+
+<!-- USER DROPDOWN -->
+<div class="user-dropdown" id="user-dropdown">
+  <div class="user-dropdown-name" id="user-dropdown-name">—</div>
+  <button class="user-dropdown-item" onclick="copyInviteCode()">copy invite code</button>
+  <button class="user-dropdown-item danger" onclick="signOut()">sign out</button>
+</div>
 
 <header>
   <a class="logo" href="#">
@@ -1184,10 +1392,11 @@
       <path d="M13 15 Q9.5 13.5 7.5 11" stroke="#3A7D44" stroke-width="0.9"/>
     </svg>
     <span class="logo-text">dump dates</span>
-    <span style="font-size:10px;color:var(--ink-ghost);font-family:'Jost',sans-serif;font-weight:400;margin-left:4px;align-self:flex-end;padding-bottom:4px;" title="last updated">2026-03-18 12:13:29 ET</span>
+    <span style="font-size:10px;color:var(--ink-ghost);font-family:'Jost',sans-serif;font-weight:400;margin-left:4px;align-self:flex-end;padding-bottom:4px;" title="last updated">2026-03-18 12:39:07 ET</span>
   </a>
-  <div class="header-right">
-    <span class="month-badge">april 2026</span>
+  <div class="header-right" style="position:relative;">
+    <span class="month-badge" id="current-month-badge">—</span>
+    <button class="user-menu-btn" id="user-menu-btn" onclick="toggleUserMenu()" style="display:none;">?</button>
   </div>
 </header>
 
@@ -1307,9 +1516,28 @@
   // Issue list — ordered array of garden item ids, no limit
   let issueList = [];
 
-  // Garden starts empty — questions added by users
-  let garden = [];
-  let nextId = 1;
+  // Pre-seeded question bank
+  let garden = [
+    { id: 1,  text: "what song has been on repeat and what does that say about you?",  tag: "fun",      mine: false, type: "text"  },
+    { id: 2,  text: "something you changed your mind about recently",                  tag: "deep",     mine: false, type: "text"  },
+    { id: 3,  text: "best $20 you've spent in the last month",                         tag: "rec",      mine: false, type: "text"  },
+    { id: 4,  text: "what are you irrationally excited about right now?",              tag: "life",     mine: false, type: "text"  },
+    { id: 5,  text: "what's something small that made you irrationally happy lately?", tag: "life",     mine: false, type: "text"  },
+    { id: 6,  text: "a hill you are willing to die on right now",                      tag: "hot take", mine: false, type: "text"  },
+    { id: 7,  text: "describe your current life in three words",                       tag: "fun",      mine: false, type: "text"  },
+    { id: 8,  text: "what's something you've been meaning to do for over a year?",     tag: "goals",    mine: false, type: "text"  },
+    { id: 9,  text: "recommend something — anything",                                  tag: "rec",      mine: false, type: "text"  },
+    { id: 10, text: "what would your 15-year-old self think of you now?",              tag: "deep",     mine: false, type: "text"  },
+    { id: 11, text: "what are you embarrassingly bad at?",                             tag: "fun",      mine: false, type: "text"  },
+    { id: 12, text: "most recent thing you genuinely laughed out loud at",             tag: "life",     mine: false, type: "text"  },
+    { id: 13, text: "show us where you are right now",                                 tag: "photo",    mine: false, type: "photo" },
+    { id: 14, text: "something on your desk or bedside table",                         tag: "photo",    mine: false, type: "photo" },
+    { id: 15, text: "last screenshot on your camera roll",                             tag: "photo",    mine: false, type: "photo" },
+    { id: 16, text: "a view you've seen recently that stuck with you",                 tag: "photo",    mine: false, type: "photo" },
+    { id: 17, text: "something you made, cooked, or built lately",                     tag: "photo",    mine: false, type: "photo" },
+    { id: 18, text: "a corner of your life that feels most like you right now",        tag: "photo",    mine: false, type: "photo" },
+  ];
+  let nextId = 19;
   let activeFilter = 'all';
 
   // No seed — starts empty
@@ -1886,13 +2114,352 @@ Return ONLY the question string, no quotes, no punctuation other than the questi
     renderGarden();
   }
 
+  // ── SUPABASE ──────────────────────────────────────────────
+
+  const SUPABASE_URL = 'https://gbzptapkiwpdtngurobz.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdienB0YXBraXdwZHRuZ3Vyb2J6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4NDg5MjQsImV4cCI6MjA4OTQyNDkyNH0.j-aJZ7iRogw3NYLt1NAYn4LcoKEaaa-1IyhIBj1a-hA';
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  let currentUser = null;
+  let currentGroup = null;
+  let currentMember = null;
+  let currentIssue = null;
+  let authMode = 'login';
+
+  // ── AUTH UI ───────────────────────────────────────────────
+
+  function setAuthTab(mode) {
+    authMode = mode;
+    document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+    event.target.classList.add('active');
+    document.getElementById('auth-submit-btn').textContent = mode === 'login' ? 'log in' : 'sign up';
+    document.getElementById('auth-name-field').style.display = mode === 'signup' ? 'block' : 'none';
+    document.getElementById('auth-error').textContent = '';
+  }
+
+  async function handleAuth() {
+    const email = document.getElementById('auth-email').value.trim();
+    const password = document.getElementById('auth-password').value;
+    const btn = document.getElementById('auth-submit-btn');
+    const err = document.getElementById('auth-error');
+    err.textContent = '';
+    btn.disabled = true;
+    btn.textContent = '…';
+
+    try {
+      if (authMode === 'signup') {
+        const displayName = document.getElementById('auth-displayname').value.trim();
+        if (!displayName) { err.textContent = 'please enter a display name'; btn.disabled = false; btn.textContent = 'sign up'; return; }
+        const { data, error } = await sb.auth.signUp({ email, password, options: { data: { display_name: displayName } } });
+        if (error) throw error;
+      } else {
+        const { data, error } = await sb.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+      }
+    } catch (e) {
+      err.textContent = e.message;
+      btn.disabled = false;
+      btn.textContent = authMode === 'login' ? 'log in' : 'sign up';
+    }
+  }
+
+  // Enter key on auth fields
+  ['auth-email','auth-password','auth-displayname'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('keydown', e => { if (e.key === 'Enter') handleAuth(); });
+  });
+
+  async function signOut() {
+    await sb.auth.signOut();
+    location.reload();
+  }
+
+  function toggleUserMenu() {
+    document.getElementById('user-dropdown').classList.toggle('open');
+  }
+  document.addEventListener('click', e => {
+    if (!e.target.closest('#user-dropdown') && !e.target.closest('#user-menu-btn')) {
+      document.getElementById('user-dropdown').classList.remove('open');
+    }
+  });
+
+  // ── GROUP UI ──────────────────────────────────────────────
+
+  function showGroupForm(type) {
+    document.getElementById('group-choose').style.display = type ? 'none' : 'block';
+    document.getElementById('group-create-form').classList.toggle('visible', type === 'create');
+    document.getElementById('group-join-form').classList.toggle('visible', type === 'join');
+  }
+
+  async function createGroup() {
+    const name = document.getElementById('group-name-input').value.trim();
+    const err = document.getElementById('group-error');
+    err.textContent = '';
+    if (!name) { err.textContent = 'please enter a group name'; return; }
+
+    try {
+      // Create group
+      const { data: group, error: ge } = await sb.from('groups').insert({ name, created_by: currentUser.id }).select().single();
+      if (ge) throw ge;
+
+      // Add creator as member
+      const displayName = currentUser.user_metadata?.display_name || currentUser.email.split('@')[0];
+      const { error: me } = await sb.from('group_members').insert({
+        group_id: group.id, user_id: currentUser.id,
+        display_name: displayName, avatar_color: '#D8EED4'
+      });
+      if (me) throw me;
+
+      await loadGroup(group.id);
+    } catch (e) {
+      document.getElementById('group-error').textContent = e.message;
+    }
+  }
+
+  async function joinGroup() {
+    const code = document.getElementById('group-code-input').value.trim().toUpperCase();
+    const err = document.getElementById('join-error');
+    err.textContent = '';
+    if (!code) { err.textContent = 'please enter an invite code'; return; }
+
+    // Invite code is first 8 chars of group UUID (uppercase)
+    try {
+      const { data: groups, error: ge } = await sb.from('groups').select('*');
+      if (ge) throw ge;
+      const group = groups.find(g => g.id.replace(/-/g,'').slice(0,8).toUpperCase() === code);
+      if (!group) { err.textContent = 'invite code not found — check with your friend'; return; }
+
+      const displayName = currentUser.user_metadata?.display_name || currentUser.email.split('@')[0];
+      const colors = ['#D8EED4','#D0E8E0','#EDE0D4','#EDE8D0','#C8E6FA','#FADADD'];
+      const { data: members } = await sb.from('group_members').select('*').eq('group_id', group.id);
+      const color = colors[members.length % colors.length];
+
+      const { error: me } = await sb.from('group_members').insert({
+        group_id: group.id, user_id: currentUser.id,
+        display_name: displayName, avatar_color: color
+      });
+      if (me) throw me;
+
+      await loadGroup(group.id);
+    } catch (e) {
+      document.getElementById('join-error').textContent = e.message;
+    }
+  }
+
+  async function copyInviteCode() {
+    if (!currentGroup) return;
+    const code = currentGroup.id.replace(/-/g,'').slice(0,8).toUpperCase();
+    await navigator.clipboard.writeText(code);
+    const btn = document.querySelector('.user-dropdown-item');
+    btn.textContent = 'copied!';
+    setTimeout(() => btn.textContent = 'copy invite code', 2000);
+    document.getElementById('user-dropdown').classList.remove('open');
+  }
+
+  // ── APP BOOTSTRAP ─────────────────────────────────────────
+
+  async function loadGroup(groupId) {
+    const { data: group } = await sb.from('groups').select('*').eq('id', groupId).single();
+    const { data: member } = await sb.from('group_members').select('*').eq('group_id', groupId).eq('user_id', currentUser.id).single();
+    currentGroup = group;
+    currentMember = member;
+
+    // Hide auth/group screens, show app
+    document.getElementById('auth-screen').classList.add('hidden');
+    document.getElementById('group-screen').classList.add('hidden');
+
+    // Update user menu
+    const btn = document.getElementById('user-menu-btn');
+    btn.style.display = 'flex';
+    btn.textContent = (member.display_name || '?').slice(0,2).toUpperCase();
+    document.getElementById('user-dropdown-name').textContent = member.display_name + ' · ' + group.name;
+
+    // Load or create current issue
+    await loadCurrentIssue();
+
+    // Load questions from DB (merge with seeded bank)
+    await loadQuestions();
+
+    renderSlots();
+    renderFilters();
+    renderGarden();
+    renderAnswers();
+    renderShelf();
+    renderZine(zineData);
+  }
+
+  async function loadCurrentIssue() {
+    const now = new Date();
+    const monthStr = now.toLocaleString('en-US', { month: 'long', year: 'numeric' }).toLowerCase();
+
+    let { data: issue } = await sb.from('issues')
+      .select('*')
+      .eq('group_id', currentGroup.id)
+      .eq('status', 'open')
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (!issue) {
+      // Count existing issues to get vol number
+      const { count } = await sb.from('issues').select('*', { count: 'exact', head: true }).eq('group_id', currentGroup.id);
+      const { data: newIssue, error } = await sb.from('issues').insert({
+        group_id: currentGroup.id,
+        month: monthStr,
+        vol: (count || 0) + 1,
+        status: 'open'
+      }).select().single();
+      if (!error) issue = newIssue;
+    }
+
+    currentIssue = issue;
+
+    // Update header badge
+    const badge = document.getElementById('current-month-badge');
+    if (badge && issue) badge.textContent = issue.month;
+
+    // Load issue questions into issueList
+    if (issue) {
+      const { data: iqs } = await sb.from('issue_questions')
+        .select('*, questions(*)')
+        .eq('issue_id', issue.id)
+        .order('position');
+      if (iqs) {
+        issueList = iqs.map(iq => iq.question_id);
+      }
+    }
+  }
+
+  async function loadQuestions() {
+    const { data: dbQs } = await sb.from('questions')
+      .select('*')
+      .eq('group_id', currentGroup.id)
+      .order('created_at');
+
+    if (dbQs && dbQs.length > 0) {
+      // Merge DB questions on top of seeded bank (avoid duplicates by text)
+      const seededTexts = new Set(garden.map(g => g.text.toLowerCase()));
+      dbQs.forEach(q => {
+        if (!seededTexts.has(q.text.toLowerCase())) {
+          garden.push({ id: q.id, text: q.text, tag: q.tag || 'misc', mine: q.added_by === currentUser.id, type: q.type || 'text', dbId: q.id });
+        }
+      });
+    }
+  }
+
+  // ── SAVE ANSWER TO DB ─────────────────────────────────────
+
+  async function saveAnswer(i) {
+    savedFlags[i] = true;
+    const el = document.getElementById('saved-' + i);
+    if (el) el.classList.add('show');
+
+    if (!currentIssue || !currentUser) return;
+
+    const questionId = issueList[i];
+    if (!questionId) return;
+
+    // Get issue_question id
+    const { data: iq } = await sb.from('issue_questions')
+      .select('id')
+      .eq('issue_id', currentIssue.id)
+      .eq('question_id', questionId)
+      .maybeSingle();
+
+    if (!iq) return;
+
+    await sb.from('answers').upsert({
+      issue_question_id: iq.id,
+      user_id: currentUser.id,
+      text: answers[i] || null
+    }, { onConflict: 'issue_question_id,user_id' });
+  }
+
+  // ── SAVE QUESTION TO DB ───────────────────────────────────
+
+  async function plantQuestion() {
+    const input = document.getElementById('garden-input');
+    const text = input.value.trim();
+    if (!text) return;
+
+    const localId = nextId++;
+    garden.unshift({ id: localId, text, tag: 'mine', mine: true, type: 'text' });
+    input.value = '';
+    renderFilters();
+    renderGarden();
+
+    // Save to DB if logged in
+    if (currentGroup && currentUser) {
+      const { data: q } = await sb.from('questions').insert({
+        group_id: currentGroup.id,
+        text, tag: 'mine', type: 'text',
+        added_by: currentUser.id
+      }).select().single();
+      if (q) {
+        // Update local id to DB id
+        const item = garden.find(g => g.id === localId);
+        if (item) { item.id = q.id; item.dbId = q.id; }
+      }
+    }
+  }
+
+  // ── SAVE ISSUE QUESTION TO DB ─────────────────────────────
+
+  async function addToIssue(gardenId) {
+    if (issueList.includes(gardenId)) return;
+    issueList.push(gardenId);
+    renderSlots();
+    renderGarden();
+
+    if (currentIssue) {
+      await sb.from('issue_questions').insert({
+        issue_id: currentIssue.id,
+        question_id: gardenId,
+        position: issueList.length - 1
+      });
+    }
+  }
+
+  async function removeFromIssue(gardenId) {
+    issueList = issueList.filter(id => id !== gardenId);
+    renderSlots();
+    renderGarden();
+
+    if (currentIssue) {
+      await sb.from('issue_questions')
+        .delete()
+        .eq('issue_id', currentIssue.id)
+        .eq('question_id', gardenId);
+    }
+  }
+
   // ── INIT ──────────────────────────────────────────────────
+
+  // Listen for auth state changes
+  sb.auth.onAuthStateChange(async (event, session) => {
+    if (session?.user) {
+      currentUser = session.user;
+
+      // Check if user is in a group
+      const { data: memberships } = await sb.from('group_members')
+        .select('group_id')
+        .eq('user_id', currentUser.id)
+        .limit(1);
+
+      if (memberships && memberships.length > 0) {
+        await loadGroup(memberships[0].group_id);
+      } else {
+        // Show group setup
+        document.getElementById('auth-screen').classList.add('hidden');
+        document.getElementById('group-screen').classList.remove('hidden');
+      }
+    }
+  });
+
+  // Initial render while waiting for auth check
   renderSlots();
   renderFilters();
   renderGarden();
-  renderAnswers();
-  renderShelf();
-  renderZine(zineData);
 </script>
 </body>
 </html>
