@@ -225,7 +225,7 @@
     /* ── GARDEN PAPER SHEET ── */
 
     .garden-paper {
-      background: #F7F9F4;
+      background: #F7F5F0;
       border-radius: 3px;
       box-shadow:
         0 2px 4px rgba(30,42,26,0.07),
@@ -261,7 +261,7 @@
     .garden-paper-title {
       font-family: 'Playfair Display', serif;
       font-size: 22px; font-weight: 700; 
-      color: #243020; margin-bottom: 4px;
+      color: #1C2B20; margin-bottom: 4px;
     }
     .garden-paper-sub {
       font-size: 13px; color: #8aad88; margin-bottom: 1.5rem;
@@ -274,10 +274,10 @@
     .garden-add-row input {
       flex: 1; padding: 9px 13px;
       border: 1px solid rgba(180,210,170,0.7); border-radius: 4px;
-      font-size: 14px; background: rgba(255,255,255,0.7); color: #243020;
+      font-size: 14px; background: rgba(255,255,255,0.7); color: #1C2B20;
       font-family: 'Montserrat', sans-serif; outline: none;
       transition: border-color 0.2s, background 0.2s;
-      box-shadow: inset 0 1px 2px rgba(0,0,0,0.04);
+      box-shadow: inset 0 1px 2px rgba(28,43,32,0.04);
     }
     .garden-add-row input:focus {
       border-color: rgba(90,140,80,0.6); background: rgba(255,255,255,0.95);
@@ -298,12 +298,12 @@
     }
     .filter-btn {
       padding: 4px 12px; border-radius: 3px;
-      border: 1px solid rgba(180,210,170,0.6); background: rgba(255,255,255,0.5);
+      border: 1px solid rgba(180,210,170,0.6); background: rgba(247,249,244,0.7);
       font-size: 11px; color: #7a9a72; cursor: pointer;
       font-family: 'Montserrat', sans-serif; transition: all 0.15s;
       letter-spacing: 0.03em;
     }
-    .filter-btn:hover  { background: rgba(255,255,255,0.85); color: #2F5D50; }
+    .filter-btn:hover  { background: rgba(247,249,244,0.9); color: #2F5D50; }
     .filter-btn.active { background: #DCEDC8; color: #2F5D50; border-color: rgba(90,140,80,0.5); font-weight: 500; border-radius: 999px; }
 
     /* Sticky grid on the paper */
@@ -362,7 +362,7 @@
     }
     .gs-text {
       font-family: 'Montserrat', sans-serif;
-      font-size: 16px; line-height: 1.55; color: #2a2a1a;
+      font-size: 16px; line-height: 1.55; color: #1C2B20;
       flex: 1;
     }
 
@@ -402,7 +402,7 @@
       aspect-ratio: unset;
       padding: 0;
       display: flex; flex-direction: column;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.10), 0 3px 8px rgba(0,0,0,0.08), 0 6px 16px rgba(0,0,0,0.07);
+      box-shadow: 0 1px 2px rgba(28,43,32,0.10), 0 3px 8px rgba(28,43,32,0.08), 0 6px 16px rgba(28,43,32,0.07);
       margin-bottom: 1.25rem;
     }
     .garden-write-sticky::before {
@@ -415,13 +415,13 @@
     .garden-write-textarea {
       flex: 1; background: transparent; border: none; outline: none;
       resize: none; font-family: 'Montserrat', sans-serif;
-      font-size: 16px; line-height: 1.5; color: rgba(0,0,0,0.75);
+      font-size: 16px; line-height: 1.5; color: rgba(28,43,32,0.85);
       padding: 8px 12px; width: 100%; min-height: 72px;
     }
-    .garden-write-textarea::placeholder { color: rgba(0,0,0,0.28); }
+    .garden-write-textarea::placeholder { color: rgba(28,43,32,0.28); }
     .garden-write-actions {
       display: flex; align-items: center; justify-content: space-between;
-      padding: 8px 12px 10px; border-top: 1px solid rgba(0,0,0,0.07); gap: 8px;
+      padding: 8px 12px 10px; border-top: 1px solid rgba(28,43,32,0.07); gap: 8px;
     }
     .garden-ai-btn {
       display: inline-flex; align-items: center; gap: 5px;
@@ -435,33 +435,33 @@
     .poll-toggle-btn {
       display: flex; align-items: center; gap: 5px;
       font-size: 11px; font-weight: 600; letter-spacing: 0.04em;
-      color: rgba(0,0,0,0.35); background: none; border: 1.5px solid rgba(0,0,0,0.15);
+      color: rgba(28,43,32,0.4); background: none; border: 1.5px solid rgba(28,43,32,0.15);
       border-radius: 999px; padding: 3px 9px; cursor: pointer;
       font-family: 'Montserrat', sans-serif; transition: all 0.15s;
     }
-    .poll-toggle-btn:hover { color: rgba(0,0,0,0.55); border-color: rgba(0,0,0,0.3); }
-    .poll-toggle-btn.active { background: rgba(0,0,0,0.08); color: rgba(0,0,0,0.65); border-color: rgba(0,0,0,0.25); }
+    .poll-toggle-btn:hover { color: rgba(28,43,32,0.6); border-color: rgba(28,43,32,0.35); }
+    .poll-toggle-btn.active { background: rgba(28,43,32,0.08); color: rgba(28,43,32,0.7); border-color: rgba(28,43,32,0.3); }
 
     .poll-inline-row {
       display: flex; align-items: center; gap: 7px; margin-bottom: 5px;
     }
     .poll-inline-dot {
       width: 5px; height: 5px; border-radius: 50%;
-      background: rgba(0,0,0,0.2); flex-shrink: 0;
+      background: rgba(28,43,32,0.2); flex-shrink: 0;
     }
     .poll-inline-input {
-      flex: 1; background: rgba(255,255,255,0.5); border: none;
-      border-bottom: 1px solid rgba(0,0,0,0.15); outline: none;
+      flex: 1; background: rgba(247,249,244,0.7); border: none;
+      border-bottom: 1px solid rgba(28,43,32,0.15); outline: none;
       font-size: 13px; font-family: 'Montserrat', sans-serif;
-      color: rgba(0,0,0,0.65); padding: 3px 0;
+      color: rgba(28,43,32,0.7); padding: 3px 0;
     }
-    .poll-inline-input::placeholder { color: rgba(0,0,0,0.25); }
+    .poll-inline-input::placeholder { color: rgba(28,43,32,0.3); }
     .poll-add-option-inline {
-      font-size: 11px; color: rgba(0,0,0,0.4); background: none; border: none;
+      font-size: 11px; color: rgba(28,43,32,0.45); background: none; border: none;
       cursor: pointer; padding: 4px 0; font-family: 'Montserrat', sans-serif;
       transition: color 0.15s;
     }
-    .poll-add-option-inline:hover { color: rgba(0,0,0,0.65); }
+    .poll-add-option-inline:hover { color: rgba(28,43,32,0.7); }
 
     .garden-add-btn {
       font-size: 13px; font-weight: 600; color: var(--green);
@@ -518,12 +518,12 @@
 
     /* ── NOTEBOOK PAPER SHEET ── */
     .paper-sheet {
-      background: #fafdf7;
+      background: #F7F5F0;
       border-radius: 3px;
       box-shadow:
-        0 2px 4px rgba(0,0,0,0.06),
-        0 8px 24px rgba(0,0,0,0.09),
-        0 20px 48px rgba(0,0,0,0.07);
+        0 2px 4px rgba(28,43,32,0.06),
+        0 8px 24px rgba(28,43,32,0.09),
+        0 20px 48px rgba(28,43,32,0.07);
       margin-bottom: 3.5rem;
       position: relative;
       overflow: hidden;
@@ -569,7 +569,7 @@
     .sheet-q-text {
       font-family: 'Playfair Display', serif;
       font-size: 24px; font-weight: 700; line-height: 1.45;
-      color: #1e2c1a;
+      color: #1C2B20;
       margin-bottom: 2rem;
       max-width: 560px;
     }
@@ -586,7 +586,7 @@
     .sticky-q-label {
       font-size: 14px;
       font-weight: 600;
-      color: rgba(0,0,0,0.5);
+      color: rgba(28,43,32,0.5);
       margin-bottom: 8px;
       line-height: 1.4;
       letter-spacing: 0;
@@ -654,7 +654,7 @@
 
     .sticky-from {
       font-size: 12px; font-weight: 500; letter-spacing: 0.08em;
-      text-transform: uppercase; color: rgba(0,0,0,0.4);
+      text-transform: uppercase; color: rgba(28,43,32,0.45);
       margin-bottom: 7px; display: flex; align-items: center; gap: 5px;
     }
 
@@ -662,13 +662,13 @@
       width: 16px; height: 16px; border-radius: 50%;
       font-size: 7px; font-weight: 600;
       display: inline-flex; align-items: center; justify-content: center;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+      box-shadow: 0 1px 2px rgba(28,43,32,0.15);
     }
 
     .sticky-body {
       font-family: 'Montserrat', sans-serif;
       font-size: 16px; line-height: 28px;
-      color: rgba(0,0,0,0.75);
+      color: rgba(28,43,32,0.85);
       flex: 1;
     }
 
@@ -680,17 +680,17 @@
       resize: none;
       font-family: 'Montserrat', sans-serif;
       font-size: 16px; line-height: 28px;
-      color: rgba(0,0,0,0.75);
+      color: rgba(28,43,32,0.85);
       width: 100%;
       min-height: 72px;
-      caret-color: rgba(0,0,0,0.6);
+      caret-color: rgba(28,43,32,0.6);
     }
-    .sticky-textarea::placeholder { color: rgba(0,0,0,0.25);  }
+    .sticky-textarea::placeholder { color: rgba(28,43,32,0.3);  }
 
     .sticky-actions {
       display: flex; align-items: center; justify-content: space-between;
       margin-top: 8px; padding-top: 6px;
-      border-top: 1px solid rgba(0,0,0,0.1);
+      border-top: 1px solid rgba(28,43,32,0.1);
     }
 
 
@@ -699,15 +699,15 @@
       position: absolute;
       bottom: 10px; right: 10px;
       width: 28px; height: 28px; border-radius: 50%;
-      border: 1.5px solid rgba(0,0,0,0.18);
-      background: rgba(255,255,255,0.5);
+      border: 1.5px solid rgba(28,43,32,0.18);
+      background: rgba(247,249,244,0.7);
       cursor: pointer; display: flex; align-items: center; justify-content: center;
-      color: rgba(0,0,0,0.45); transition: all 0.15s;
+      color: rgba(28,43,32,0.5); transition: all 0.15s;
     }
-    .sticky-photo-btn:hover { background: rgba(255,255,255,0.85); color: rgba(0,0,0,0.7); border-color: rgba(0,0,0,0.3); }
+    .sticky-photo-btn:hover { background: rgba(247,249,244,0.9); color: rgba(28,43,32,0.7); border-color: rgba(28,43,32,0.35); }
 
     .sticky-autosave {
-      font-size: 10px; color: rgba(0,0,0,0.3);
+      font-size: 10px; color: rgba(28,43,32,0.35);
       text-align: right; margin-top: 6px;
       min-height: 14px; transition: opacity 0.3s;
       font-family: 'Montserrat', sans-serif;
@@ -716,22 +716,22 @@
     /* Upload zone inside sticky */
     .sticky-upload {
       margin-top: 6px;
-      border: 1px dashed rgba(0,0,0,0.2);
+      border: 1px dashed rgba(28,43,32,0.2);
       border-radius: 2px;
       padding: 6px;
       text-align: center;
       cursor: pointer;
       font-size: 10px;
-      color: rgba(0,0,0,0.35);
+      color: rgba(28,43,32,0.4);
       transition: background 0.15s;
       display: flex; align-items: center; justify-content: center; gap: 4px;
     }
-    .sticky-upload:hover { background: rgba(255,255,255,0.45); color: rgba(0,0,0,0.55); }
+    .sticky-upload:hover { background: rgba(247,249,244,0.65); color: rgba(28,43,32,0.6); }
 
     .photo-grid { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px; }
     .photo-thumb {
       width: 52px; height: 52px; border-radius: 2px;
-      border: 1px solid rgba(0,0,0,0.12); overflow: hidden;
+      border: 1px solid rgba(28,43,32,0.12); overflow: hidden;
     }
     .photo-thumb img { width: 100%; height: 100%; object-fit: cover; }
 
@@ -969,7 +969,7 @@
       grid-template-columns: 1fr 1fr;
       width: 100%;
       position: relative;
-      filter: drop-shadow(0 20px 60px rgba(0,0,0,0.18));
+      filter: drop-shadow(0 20px 60px rgba(28,43,32,0.18));
     }
 
     /* The spine down the middle */
@@ -980,11 +980,11 @@
       transform: translateX(-50%);
       width: 6px;
       background: linear-gradient(to right,
-        rgba(0,0,0,0.18) 0%,
-        rgba(0,0,0,0.06) 40%,
+        rgba(28,43,32,0.18) 0%,
+        rgba(28,43,32,0.06) 40%,
         rgba(255,255,255,0.15) 50%,
-        rgba(0,0,0,0.06) 60%,
-        rgba(0,0,0,0.12) 100%
+        rgba(28,43,32,0.06) 60%,
+        rgba(28,43,32,0.12) 100%
       );
       z-index: 20;
       pointer-events: none;
@@ -1014,13 +1014,13 @@
       transition: opacity 0.2s;
     }
     .page-edge:hover { opacity: 1; }
-    .page-edge.left-edge  { left: 0;  background: linear-gradient(to right, rgba(0,0,0,0.05), transparent); }
-    .page-edge.right-edge { right: 0; background: linear-gradient(to left, rgba(0,0,0,0.05), transparent); }
+    .page-edge.left-edge  { left: 0;  background: linear-gradient(to right, rgba(28,43,32,0.05), transparent); }
+    .page-edge.right-edge { right: 0; background: linear-gradient(to left, rgba(28,43,32,0.05), transparent); }
     .page-edge-arrow {
       width: 28px; height: 28px; border-radius: 50%;
       background: rgba(255,255,255,0.8);
       display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+      box-shadow: 0 2px 8px rgba(28,43,32,0.12);
       color: var(--ink-mid);
     }
 
@@ -1065,13 +1065,13 @@
     /* Page shadow during flip */
     .book-flipper.flipping-forward .flipper-front,
     .book-flipper.flipping-back .flipper-back {
-      box-shadow: inset -8px 0 20px rgba(0,0,0,0.08);
+      box-shadow: inset -8px 0 20px rgba(28,43,32,0.08);
     }
 
     /* ── PAGE CONTENT STYLES ── */
 
     /* COVER */
-    .zine-cover { background: #EEF5EE; border-radius: 4px 0 0 4px; }
+    .zine-cover { background: #F7F5F0; border-radius: 4px 0 0 4px; }
 
     .zine-cover-inner {
       width: 100%;
@@ -1121,7 +1121,7 @@
 
     /* Blank right page when cover is showing */
     .zine-blank-right {
-      background: #F7F9F4;
+      background: #F7F5F0;
       border-radius: 0 4px 4px 0;
       min-height: 520px;
       background-image: repeating-linear-gradient(transparent, transparent 31px, #d5e8f0 31px, #d5e8f0 32px);
@@ -1130,7 +1130,7 @@
 
     /* SPREAD pages */
     .zine-spread-left {
-      background: #EEF5EE;
+      background: #F7F5F0;
       padding: 3rem 2rem 2rem 2.5rem;
       display: flex; flex-direction: column;
       position: relative;
@@ -1140,7 +1140,7 @@
     }
 
     .zine-spread-right {
-      background: #F7F9F4;
+      background: #F7F5F0;
       padding: 2rem 1.5rem;
       overflow-y: auto;
       min-height: 520px;
@@ -1175,7 +1175,7 @@
     .zine-sticky {
       border-radius: 2px;
       aspect-ratio: 1 / 1;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.10), 0 6px 16px rgba(0,0,0,0.08), 2px 8px 20px rgba(0,0,0,0.06);
+      box-shadow: 0 2px 4px rgba(28,43,32,0.10), 0 6px 16px rgba(28,43,32,0.08), 2px 8px 20px rgba(28,43,32,0.06);
       position: relative;
       opacity: 0;
       transform: translateY(12px) rotate(var(--r, 0deg));
@@ -1192,13 +1192,13 @@
     .zine-sticky::after { content: none; }
     .zine-sticky:hover {
       transform: translateY(-3px) rotate(0deg) !important;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.14), 0 12px 28px rgba(0,0,0,0.12);
+      box-shadow: 0 4px 8px rgba(28,43,32,0.14), 0 12px 28px rgba(28,43,32,0.12);
       transition: transform 0.2s ease, box-shadow 0.2s ease; z-index: 10;
     }
 
     .zine-sticky-inner {
       padding: 10px 12px 12px;
-      background-image: repeating-linear-gradient(transparent 0px, transparent 23px, rgba(0,0,0,0.07) 23px, rgba(0,0,0,0.07) 24px);
+      background-image: repeating-linear-gradient(transparent 0px, transparent 23px, rgba(28,43,32,0.07) 23px, rgba(28,43,32,0.07) 24px);
       background-position: 0 30px;
     }
 
@@ -1214,7 +1214,7 @@
     }
     .zine-sticky-text {
       font-family: 'Montserrat', sans-serif;
-      font-size: 16px; line-height: 28px; color: rgba(0,0,0,0.75);
+      font-size: 16px; line-height: 28px; color: rgba(28,43,32,0.85);
     }
 
     /* BACK COVER */
@@ -1281,7 +1281,7 @@
     .zine-shelf-item.active-issue { opacity: 0.45; cursor: default; transform: none; }
     .zine-mini-cover {
       width: 90px; height: 118px; border-radius: 3px;
-      border-left: 5px solid var(--green); background: #EEF5EE;
+      border-left: 5px solid var(--green); background: #F7F5F0;
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       padding: 10px 8px;
       box-shadow: 2px 3px 10px rgba(30,42,26,0.14), 1px 0 0 var(--border) inset;
@@ -1328,25 +1328,31 @@
 
     /* ── AUTH SCREEN ── */
   #auth-screen {
-    position: fixed; inset: 0;
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    width: 100vw; height: 100vh;
     background-color: var(--bg);
     display: flex; align-items: center; justify-content: center;
-    z-index: 1000; padding: 1.5rem;
+    z-index: 9999;
+    padding: 1.5rem;
     overflow: hidden;
-    min-height: 100dvh;
   }
-  #auth-screen.hidden { display: none; }
-  body.auth-open { overflow: hidden; height: 100vh; }
-  body.auth-open header,
-  body.auth-open .mobile-bottom-nav,
-  body.auth-open main,
-  body.auth-open nav { display: none; }
+  #auth-screen.hidden { display: none !important; }
+
+  /* While auth is showing, nothing else should be visible or scrollable */
+  body.auth-open {
+    overflow: hidden !important;
+    height: 100vh !important;
+    position: fixed;
+    width: 100%;
+  }
+  body.auth-open > *:not(#auth-screen) { display: none !important; }
 
   .auth-card {
     background: var(--surface); border: 1px solid var(--border);
     border-radius: 16px; padding: 2.5rem 2rem 2rem;
     width: 100%; max-width: 400px;
     box-shadow: 0 8px 32px rgba(30,42,26,0.10);
+    position: relative; z-index: 1;
   }
 
   .auth-logo {
@@ -1526,7 +1532,7 @@
   .home-avatar-menu {
     position: absolute; top: calc(100% + 8px); right: 0;
     background: var(--surface); border: 1px solid var(--border);
-    border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.10);
+    border-radius: 12px; box-shadow: 0 8px 24px rgba(28,43,32,0.10);
     min-width: 180px; z-index: 200; display: none; overflow: hidden;
   }
   .home-avatar-menu.open { display: block; }
@@ -1647,7 +1653,7 @@
 <body>
 
 <!-- AUTH SCREEN -->
-<div id="auth-screen" style="position:relative;">
+<div id="auth-screen">
   <div style="position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0;opacity:0.3;">
 <style>@keyframes sw0{0%,100%{transform:rotate(45.96798433032538deg)}50%{transform:rotate(49.96798433032538deg)}}.af0{animation:sw0 7s -0.0s ease-in-out infinite;transform-origin:252.0px 150.0px;}@keyframes sw1{0%,100%{transform:rotate(190.90648687139944deg)}50%{transform:rotate(196.90648687139944deg)}}.af1{animation:sw1 8s -0.9s ease-in-out infinite;transform-origin:93.3px 414.5px;}@keyframes sw2{0%,100%{transform:rotate(207.82658045000753deg)}50%{transform:rotate(215.82658045000753deg)}}.af2{animation:sw2 9s -1.8s ease-in-out infinite;transform-origin:519.2px 294.6px;}@keyframes sw3{0%,100%{transform:rotate(71.5327094109323deg)}50%{transform:rotate(81.5327094109323deg)}}.af3{animation:sw3 10s -2.7s ease-in-out infinite;transform-origin:446.3px 444.2px;}@keyframes sw4{0%,100%{transform:rotate(13.354528851685792deg)}50%{transform:rotate(17.354528851685792deg)}}.af4{animation:sw4 11s -3.6s ease-in-out infinite;transform-origin:314.4px 437.2px;}@keyframes sw5{0%,100%{transform:rotate(189.35161028127305deg)}50%{transform:rotate(195.35161028127305deg)}}.af5{animation:sw5 12s -4.5s ease-in-out infinite;transform-origin:329.0px 262.6px;}@keyframes sw6{0%,100%{transform:rotate(14.47440755895503deg)}50%{transform:rotate(22.47440755895503deg)}}.af6{animation:sw6 13s -5.4s ease-in-out infinite;transform-origin:281.0px 500.1px;}@keyframes sw7{0%,100%{transform:rotate(280.0620800183509deg)}50%{transform:rotate(290.0620800183509deg)}}.af7{animation:sw7 14s -6.3s ease-in-out infinite;transform-origin:114.6px 526.2px;}@keyframes sw8{0%,100%{transform:rotate(11.342380818167836deg)}50%{transform:rotate(15.342380818167836deg)}}.af8{animation:sw8 15s -7.2s ease-in-out infinite;transform-origin:347.7px 541.4px;}@keyframes sw9{0%,100%{transform:rotate(150.15128257516986deg)}50%{transform:rotate(156.15128257516986deg)}}.af9{animation:sw9 16s -8.1s ease-in-out infinite;transform-origin:61.7px 286.9px;}@keyframes sw10{0%,100%{transform:rotate(44.89380178171954deg)}50%{transform:rotate(52.89380178171954deg)}}.af10{animation:sw10 7s -9.0s ease-in-out infinite;transform-origin:93.0px 204.9px;}@keyframes sw11{0%,100%{transform:rotate(263.9996705514074deg)}50%{transform:rotate(273.9996705514074deg)}}.af11{animation:sw11 8s -9.9s ease-in-out infinite;transform-origin:511.1px 115.5px;}@keyframes sw12{0%,100%{transform:rotate(297.7192783442434deg)}50%{transform:rotate(301.7192783442434deg)}}.af12{animation:sw12 9s -10.8s ease-in-out infinite;transform-origin:143.0px 86.2px;}@keyframes sw13{0%,100%{transform:rotate(140.78764464660279deg)}50%{transform:rotate(146.78764464660279deg)}}.af13{animation:sw13 10s -11.7s ease-in-out infinite;transform-origin:218.7px 238.5px;}@keyframes sw14{0%,100%{transform:rotate(134.07964613061864deg)}50%{transform:rotate(142.07964613061864deg)}}.af14{animation:sw14 11s -12.6s ease-in-out infinite;transform-origin:159.3px 454.6px;}@keyframes sw15{0%,100%{transform:rotate(239.16727933441163deg)}50%{transform:rotate(249.16727933441163deg)}}.af15{animation:sw15 12s -13.5s ease-in-out infinite;transform-origin:534.1px 463.2px;}@keyframes sw16{0%,100%{transform:rotate(35.85454638522569deg)}50%{transform:rotate(39.85454638522569deg)}}.af16{animation:sw16 13s -14.4s ease-in-out infinite;transform-origin:353.0px 193.8px;}@keyframes sw17{0%,100%{transform:rotate(129.92152933397753deg)}50%{transform:rotate(135.92152933397753deg)}}.af17{animation:sw17 14s -15.3s ease-in-out infinite;transform-origin:203.8px 340.3px;}@keyframes sw18{0%,100%{transform:rotate(354.98645077313444deg)}50%{transform:rotate(362.98645077313444deg)}}.af18{animation:sw18 15s -16.2s ease-in-out infinite;transform-origin:508.0px 382.5px;}@keyframes sw19{0%,100%{transform:rotate(230.86565482722176deg)}50%{transform:rotate(240.86565482722176deg)}}.af19{animation:sw19 16s -17.1s ease-in-out infinite;transform-origin:311.6px 107.4px;}@keyframes sw20{0%,100%{transform:rotate(65.8519490523654deg)}50%{transform:rotate(69.8519490523654deg)}}.af20{animation:sw20 7s -18.0s ease-in-out infinite;transform-origin:269.5px 397.8px;}@keyframes sw21{0%,100%{transform:rotate(282.58103825828346deg)}50%{transform:rotate(288.58103825828346deg)}}.af21{animation:sw21 8s -18.9s ease-in-out infinite;transform-origin:415.3px 56.3px;}@keyframes sw22{0%,100%{transform:rotate(281.45678091707725deg)}50%{transform:rotate(289.45678091707725deg)}}.af22{animation:sw22 9s -19.8s ease-in-out infinite;transform-origin:441.4px 544.9px;}@keyframes sw23{0%,100%{transform:rotate(205.36384092829792deg)}50%{transform:rotate(215.36384092829792deg)}}.af23{animation:sw23 10s -20.7s ease-in-out infinite;transform-origin:437.0px 236.6px;}@keyframes sw24{0%,100%{transform:rotate(118.4323854970686deg)}50%{transform:rotate(122.4323854970686deg)}}.af24{animation:sw24 11s -21.6s ease-in-out infinite;transform-origin:70.1px 132.0px;}@keyframes sw25{0%,100%{transform:rotate(230.2101647073808deg)}50%{transform:rotate(236.2101647073808deg)}}.af25{animation:sw25 12s -22.5s ease-in-out infinite;transform-origin:137.1px 253.1px;}@keyframes sw26{0%,100%{transform:rotate(335.6977324063881deg)}50%{transform:rotate(343.6977324063881deg)}}.af26{animation:sw26 13s -23.4s ease-in-out infinite;transform-origin:131.9px 333.6px;}@keyframes sw27{0%,100%{transform:rotate(58.339253338247616deg)}50%{transform:rotate(68.33925333824762deg)}}.af27{animation:sw27 14s -24.3s ease-in-out infinite;transform-origin:172.5px 126.7px;}@keyframes sw28{0%,100%{transform:rotate(44.69212751449921deg)}50%{transform:rotate(48.69212751449921deg)}}.af28{animation:sw28 15s -25.2s ease-in-out infinite;transform-origin:92.6px 59.9px;}@keyframes sw29{0%,100%{transform:rotate(95.68557678118069deg)}50%{transform:rotate(101.68557678118069deg)}}.af29{animation:sw29 16s -26.1s ease-in-out infinite;transform-origin:524.3px 201.9px;}@keyframes sw30{0%,100%{transform:rotate(260.10512792943354deg)}50%{transform:rotate(268.10512792943354deg)}}.af30{animation:sw30 7s -27.0s ease-in-out infinite;transform-origin:440.7px 336.5px;}@keyframes sw31{0%,100%{transform:rotate(4.0511598263381465deg)}50%{transform:rotate(14.051159826338147deg)}}.af31{animation:sw31 8s -27.9s ease-in-out infinite;transform-origin:388.3px 145.0px;}</style>
 <svg width="100%" height="100%" viewBox="0 0 600 600" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
@@ -1656,7 +1662,7 @@
 </svg>
 </div>
 
-  <div class="auth-card" style="position:relative;z-index:1;">
+  <div class="auth-card">
     <div class="auth-logo">
       <svg width="48" height="48" viewBox="0 0 26 26" fill="none"><path d="M13.00,13.00 C16.12,8.55 14.25,4.90 13.00,3.12 C11.75,4.90 9.88,8.55 13.00,13.00Z" fill="#CFE8D5" stroke="#2F5D50" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.00,13.00 C18.19,14.59 21.09,11.68 22.40,9.95 C20.32,9.31 16.26,8.66 13.00,13.00Z" fill="#CFE8D5" stroke="#2F5D50" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.00,13.00 C13.09,18.43 16.75,20.29 18.81,20.99 C18.77,18.82 18.14,14.76 13.00,13.00Z" fill="#CFE8D5" stroke="#2F5D50" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.00,13.00 C7.86,14.76 7.23,18.82 7.19,20.99 C9.25,20.29 12.91,18.43 13.00,13.00Z" fill="#CFE8D5" stroke="#2F5D50" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.00,13.00 C9.74,8.66 5.68,9.31 3.60,9.95 C4.91,11.68 7.81,14.59 13.00,13.00Z" fill="#CFE8D5" stroke="#2F5D50" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/><circle cx="13.00" cy="13.00" r="2.60" fill="#CFE8D5" stroke="#2F5D50" stroke-width="1.1"/></svg>
       <span class="auth-logo-text">dumpdates</span>
@@ -1872,7 +1878,7 @@
           ></textarea>
           <!-- Poll options — hidden by default -->
           <div id="poll-options-inline" style="display:none;padding:0 12px 6px;display:none;">
-            <div style="font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:rgba(0,0,0,0.35);margin-bottom:6px;">options</div>
+            <div style="font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:rgba(28,43,32,0.35);margin-bottom:6px;">options</div>
             <div id="poll-options-list">
               <div class="poll-inline-row"><span class="poll-inline-dot"></span><input class="poll-inline-input" placeholder="option 1" /></div>
               <div class="poll-inline-row"><span class="poll-inline-dot"></span><input class="poll-inline-input" placeholder="option 2" /></div>
@@ -2038,8 +2044,39 @@
 
   // ── HELPERS ───────────────────────────────────────────────
 
+
+  // Auto-collapse tabs when they don't fit
+  function checkTabsFit() {
+    const tabs = document.querySelector('.header-tabs');
+    const dd = document.querySelector('.tab-dropdown-wrap');
+    if (!tabs || !dd) return;
+    // Temporarily show tabs to measure
+    tabs.style.visibility = 'hidden';
+    tabs.style.display = 'flex';
+    dd.style.display = 'none';
+    const tabsWidth = tabs.scrollWidth;
+    const headerWidth = document.querySelector('header')?.offsetWidth || 9999;
+    const logoWidth = document.querySelector('.logo')?.offsetWidth || 0;
+    const rightWidth = document.querySelector('.header-right')?.offsetWidth || 0;
+    const available = headerWidth - logoWidth - rightWidth - 48; // 48px gap buffer
+    tabs.style.visibility = '';
+    if (tabsWidth > available) {
+      tabs.style.display = 'none';
+      dd.style.display = 'flex';
+    } else {
+      tabs.style.display = 'flex';
+      dd.style.display = 'none';
+    }
+  }
+  window.addEventListener('resize', checkTabsFit);
+  // Run after DOM ready
+  setTimeout(checkTabsFit, 100);
+
   function toggleTabDropdown() {
-    document.getElementById('tab-dd-menu').classList.toggle('open');
+    const menu = document.getElementById('tab-dd-menu');
+    const btn = document.getElementById('tab-dd-btn');
+    menu.classList.toggle('open');
+    btn.classList.toggle('open', menu.classList.contains('open'));
   }
   function switchTabDD(id, label, btn) {
     document.getElementById('tab-dd-menu').classList.remove('open');
@@ -2164,7 +2201,7 @@
               ? `<div class="poll-badge"><svg width="9" height="9" viewBox="0 0 16 16" fill="none"><rect x="1" y="9" width="3" height="6" rx="1" fill="currentColor" opacity="0.5"/><rect x="6" y="5" width="3" height="10" rx="1" fill="currentColor" opacity="0.7"/><rect x="11" y="1" width="3" height="14" rx="1" fill="currentColor"/></svg> poll</div>`
               : `<div class="gs-tag">${item.tag}</div>`}
           <div class="gs-text">${item.text}</div>
-          ${isPoll && item.options ? `<div style="margin-top:6px;display:flex;flex-direction:column;gap:3px;">${item.options.map(o => `<div style="font-size:11px;color:rgba(30,42,26,0.5);padding:2px 0;border-top:1px solid rgba(0,0,0,0.06);">${o}</div>`).join('')}</div>` : ''}
+          ${isPoll && item.options ? `<div style="margin-top:6px;display:flex;flex-direction:column;gap:3px;">${item.options.map(o => `<div style="font-size:11px;color:rgba(30,42,26,0.5);padding:2px 0;border-top:1px solid rgba(28,43,32,0.06);">${o}</div>`).join('')}</div>` : ''}
           <div class="gs-actions">
             <span class="gs-in-badge">${inIssue ? '✓ in issue' : ''}</span>
             <div style="display:flex;gap:4px;">
@@ -2254,7 +2291,65 @@
     const qs = qItems.map(g => g.text);
     if (qs.length === 0) {
       document.getElementById('answer-questions').innerHTML =
-        '<div style="text-align:center;padding:3rem 0;color:var(--ink-ghost);font-size:15px;max-width:700px;margin:0 auto;">no questions in this issue yet — head to the question garden to add some</div>';
+`<div style="text-align:center;padding:4rem 1rem 3rem;position:relative;max-width:400px;margin:0 auto;">
+  <style>@keyframes sway-empty{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}</style>
+  <div style="position:absolute;top:20px;left:10px;"><svg width="40" height="40" viewBox="0 0 40 40" fill="none" style="position:absolute;opacity:0.35;animation:sway-empty 3s -7.5s ease-in-out infinite;">
+  <g transform="translate(20,20) rotate(15)">
+    <path fill="none" d="M0,0 C-4,-3 -6,-14 0,-20 C6,-14 4,-3 0,0Z" stroke="#5A8070" stroke-width="1.5" stroke-linecap="round" transform="rotate(0)"/>
+    <path fill="none" d="M0,0 C-4,-3 -6,-14 0,-20 C6,-14 4,-3 0,0Z" stroke="#5A8070" stroke-width="1.5" stroke-linecap="round" transform="rotate(72)"/>
+    <path fill="none" d="M0,0 C-4,-3 -6,-14 0,-20 C6,-14 4,-3 0,0Z" stroke="#5A8070" stroke-width="1.5" stroke-linecap="round" transform="rotate(144)"/>
+    <path fill="none" d="M0,0 C-4,-3 -6,-14 0,-20 C6,-14 4,-3 0,0Z" stroke="#5A8070" stroke-width="1.5" stroke-linecap="round" transform="rotate(216)"/>
+    <path fill="none" d="M0,0 C-4,-3 -6,-14 0,-20 C6,-14 4,-3 0,0Z" stroke="#5A8070" stroke-width="1.5" stroke-linecap="round" transform="rotate(288)"/>
+    <circle fill="#CFE8D5" cx="0" cy="0" r="4" stroke="#5A8070" stroke-width="1.5"/>
+  </g>
+</svg></div>
+  <div style="position:absolute;top:10px;right:10px;"><svg width="40" height="40" viewBox="0 0 40 40" fill="none" style="position:absolute;opacity:0.35;animation:sway-empty 4s 10.0s ease-in-out infinite;">
+  <g transform="translate(20,20) rotate(-20)">
+    <path fill="none" d="M0,0 C-4,-3 -6,-14 0,-20 C6,-14 4,-3 0,0Z" stroke="#5A8070" stroke-width="1.5" stroke-linecap="round" transform="rotate(0)"/>
+    <path fill="none" d="M0,0 C-4,-3 -6,-14 0,-20 C6,-14 4,-3 0,0Z" stroke="#5A8070" stroke-width="1.5" stroke-linecap="round" transform="rotate(72)"/>
+    <path fill="none" d="M0,0 C-4,-3 -6,-14 0,-20 C6,-14 4,-3 0,0Z" stroke="#5A8070" stroke-width="1.5" stroke-linecap="round" transform="rotate(144)"/>
+    <path fill="none" d="M0,0 C-4,-3 -6,-14 0,-20 C6,-14 4,-3 0,0Z" stroke="#5A8070" stroke-width="1.5" stroke-linecap="round" transform="rotate(216)"/>
+    <path fill="none" d="M0,0 C-4,-3 -6,-14 0,-20 C6,-14 4,-3 0,0Z" stroke="#5A8070" stroke-width="1.5" stroke-linecap="round" transform="rotate(288)"/>
+    <circle fill="#CFE8D5" cx="0" cy="0" r="4" stroke="#5A8070" stroke-width="1.5"/>
+  </g>
+</svg></div>
+  <div style="position:absolute;bottom:40px;left:20px;"><svg width="40" height="40" viewBox="0 0 40 40" fill="none" style="position:absolute;opacity:0.35;animation:sway-empty 3s -15.0s ease-in-out infinite;">
+  <g transform="translate(20,20) rotate(30)">
+    <path fill="none" d="M0,0 C-4,-3 -6,-14 0,-20 C6,-14 4,-3 0,0Z" stroke="#5A8070" stroke-width="1.5" stroke-linecap="round" transform="rotate(0)"/>
+    <path fill="none" d="M0,0 C-4,-3 -6,-14 0,-20 C6,-14 4,-3 0,0Z" stroke="#5A8070" stroke-width="1.5" stroke-linecap="round" transform="rotate(72)"/>
+    <path fill="none" d="M0,0 C-4,-3 -6,-14 0,-20 C6,-14 4,-3 0,0Z" stroke="#5A8070" stroke-width="1.5" stroke-linecap="round" transform="rotate(144)"/>
+    <path fill="none" d="M0,0 C-4,-3 -6,-14 0,-20 C6,-14 4,-3 0,0Z" stroke="#5A8070" stroke-width="1.5" stroke-linecap="round" transform="rotate(216)"/>
+    <path fill="none" d="M0,0 C-4,-3 -6,-14 0,-20 C6,-14 4,-3 0,0Z" stroke="#5A8070" stroke-width="1.5" stroke-linecap="round" transform="rotate(288)"/>
+    <circle fill="#CFE8D5" cx="0" cy="0" r="4" stroke="#5A8070" stroke-width="1.5"/>
+  </g>
+</svg></div>
+  <div style="position:absolute;bottom:30px;right:15px;"><svg width="40" height="40" viewBox="0 0 40 40" fill="none" style="position:absolute;opacity:0.35;animation:sway-empty 5s 5.0s ease-in-out infinite;">
+  <g transform="translate(20,20) rotate(-10)">
+    <path fill="none" d="M0,0 C-4,-3 -6,-14 0,-20 C6,-14 4,-3 0,0Z" stroke="#5A8070" stroke-width="1.5" stroke-linecap="round" transform="rotate(0)"/>
+    <path fill="none" d="M0,0 C-4,-3 -6,-14 0,-20 C6,-14 4,-3 0,0Z" stroke="#5A8070" stroke-width="1.5" stroke-linecap="round" transform="rotate(72)"/>
+    <path fill="none" d="M0,0 C-4,-3 -6,-14 0,-20 C6,-14 4,-3 0,0Z" stroke="#5A8070" stroke-width="1.5" stroke-linecap="round" transform="rotate(144)"/>
+    <path fill="none" d="M0,0 C-4,-3 -6,-14 0,-20 C6,-14 4,-3 0,0Z" stroke="#5A8070" stroke-width="1.5" stroke-linecap="round" transform="rotate(216)"/>
+    <path fill="none" d="M0,0 C-4,-3 -6,-14 0,-20 C6,-14 4,-3 0,0Z" stroke="#5A8070" stroke-width="1.5" stroke-linecap="round" transform="rotate(288)"/>
+    <circle fill="#CFE8D5" cx="0" cy="0" r="4" stroke="#5A8070" stroke-width="1.5"/>
+  </g>
+</svg></div>
+  <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" style="animation:sway-empty 4s ease-in-out infinite;display:block;margin:0 auto 1.5rem;">
+  <g transform="translate(60,60)">
+    <path fill="none" d="M0,0 C-9,-7 -14,-30 0,-44 C14,-30 9,-7 0,0Z" stroke="#5A8070" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(0)"/>
+    <path fill="none" d="M0,0 C-9,-7 -14,-30 0,-44 C14,-30 9,-7 0,0Z" stroke="#5A8070" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(72)"/>
+    <path fill="none" d="M0,0 C-9,-7 -14,-30 0,-44 C14,-30 9,-7 0,0Z" stroke="#5A8070" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(144)"/>
+    <path fill="none" d="M0,0 C-9,-7 -14,-30 0,-44 C14,-30 9,-7 0,0Z" stroke="#5A8070" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(216)"/>
+    <path fill="none" d="M0,0 C-9,-7 -14,-30 0,-44 C14,-30 9,-7 0,0Z" stroke="#5A8070" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(288)"/>
+    <circle fill="#CFE8D5" cx="0" cy="0" r="9" stroke="#5A8070" stroke-width="2"/>
+  </g>
+</svg>
+  <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--ink);margin-bottom:0.5rem;">nothing to answer yet</div>
+  <div style="font-size:15px;color:var(--ink-faint);margin-bottom:1.75rem;line-height:1.6;">add some questions to this issue and they'll appear here as sticky notes</div>
+  <button onclick="switchTab('questions', document.querySelector('.tab-btn'))" class="auth-btn" style="width:auto;padding:10px 24px;font-size:15px;display:inline-flex;align-items:center;gap:8px;">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg>
+    go to question garden
+  </button>
+</div>`;
       return;
     }
 
@@ -2497,7 +2592,7 @@
       ].map(s => `<div class="zine-sticky" style="background:${s.col};--r:${s.rot}deg;opacity:0.55;">
         <div class="zine-sticky-inner">
           <div class="zine-sticky-from" style="opacity:0.5;">${s.name}</div>
-          <div class="zine-sticky-text" style="color:rgba(0,0,0,0.45);">${s.text}</div>
+          <div class="zine-sticky-text" style="color:rgba(28,43,32,0.45);">${s.text}</div>
         </div>
       </div>`).join('');
 
@@ -2534,8 +2629,8 @@
             <div class="zine-back-sub">your first issue awaits ♡</div>
             <div class="zine-back-deco">
               <svg viewBox="0 0 60 60" fill="none" width="60" height="60">
-                <circle cx="30" cy="30" r="28" stroke="#3A7D44" stroke-width="1" stroke-dasharray="4 4"/>
-                <path d="M30 10C30 10 15 20 15 32C15 38 20 43 30 43C40 43 45 38 45 32C45 20 30 10 30 10Z" fill="#3A7D44" fill-opacity="0.12" stroke="#3A7D44" stroke-width="1.2"/>
+                <circle cx="30" cy="30" r="28" stroke="#2F5D50" stroke-width="1" stroke-dasharray="4 4"/>
+                <path d="M30 10C30 10 15 20 15 32C15 38 20 43 30 43C40 43 45 38 45 32C45 20 30 10 30 10Z" fill="#2F5D50" fill-opacity="0.12" stroke="#2F5D50" stroke-width="1.2"/>
               </svg>
             </div>
             <div class="zine-back-issue">vol. 01 · coming soon</div>
@@ -2707,28 +2802,6 @@
 
   // ── POLL QUESTION ─────────────────────────────────────────
 
-  function addPollQuestion() {
-    const overlay = document.createElement('div');
-    overlay.className = 'poll-modal-overlay';
-    overlay.innerHTML = `
-      <div class="poll-modal" onclick="event.stopPropagation()">
-        <h3>add a poll</h3>
-        <p>ask your group a multiple-choice question</p>
-        <input class="poll-question-input" id="poll-q-input" placeholder="e.g. what should we do for the summer issue?" />
-        <div id="poll-options">
-          <div class="poll-option-row"><input class="poll-option-input" placeholder="option 1" /><button class="poll-remove-btn" onclick="removePollOption(this)"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1 1L8 8M8 1L1 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button></div>
-          <div class="poll-option-row"><input class="poll-option-input" placeholder="option 2" /><button class="poll-remove-btn" onclick="removePollOption(this)"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1 1L8 8M8 1L1 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button></div>
-        </div>
-        <button class="poll-add-option" onclick="addPollOption()">+ add option</button>
-        <div class="poll-actions">
-          <button class="btn-ghost" onclick="this.closest('.poll-modal-overlay').remove()">cancel</button>
-          <button class="auth-btn" style="width:auto;padding:10px 24px;border-radius:999px;" onclick="submitPoll()">add to garden</button>
-        </div>
-      </div>`;
-    overlay.onclick = () => overlay.remove();
-    document.body.appendChild(overlay);
-    document.getElementById('poll-q-input').focus();
-  }
 
   function addPollOption() {
     const container = document.getElementById('poll-options');
@@ -2884,7 +2957,7 @@
       <span>
         <strong style="font-weight:500;">demo mode</strong>
         — this is dummy data, nothing saves.
-        <a href="${window.location.pathname}" style="color:#3A7D44;margin-left:8px;font-weight:500;">sign in →</a>
+        <a href="${window.location.pathname}" style="color:#2F5D50;margin-left:8px;font-weight:500;">sign in →</a>
       </span>
       <button onclick="this.parentElement.remove()" style="background:none;border:none;cursor:pointer;font-size:16px;color:#8a7a00;padding:0 0 0 12px;">×</button>`;
     document.body.appendChild(banner);
@@ -3341,6 +3414,7 @@
   // ── APP BOOTSTRAP ─────────────────────────────────────────
 
   async function loadGroup(groupId) {
+    try {
     // Run group + member fetch in parallel
     const [
       { data: group },
