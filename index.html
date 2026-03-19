@@ -1707,7 +1707,15 @@
     </div>
     <div class="auth-field">
       <label>password</label>
-      <input type="password" id="auth-password" placeholder="••••••••" />
+      <div style="position:relative;">
+        <input type="password" id="auth-password" placeholder="password" style="padding-right:2.5rem;width:100%;" />
+        <button type="button" onclick="togglePasswordVis()" id="pw-eye-btn" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;padding:2px;color:var(--ink-ghost);display:flex;align-items:center;" tabindex="-1">
+          <svg id="pw-eye-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 12C2 12 5 6 12 6C19 6 22 12 22 12C22 12 19 18 12 18C5 18 2 12 2 12Z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+        </button>
+      </div>
     </div>
     <div class="auth-field collapsing" id="auth-name-field">
       <label>your display name</label>
@@ -3204,6 +3212,20 @@
 
   // ── AUTH UI ───────────────────────────────────────────────
 
+  function togglePasswordVis() {
+    const input = document.getElementById('auth-password');
+    const icon = document.getElementById('pw-eye-icon');
+    const isHidden = input.type === 'password';
+    input.type = isHidden ? 'text' : 'password';
+    // swap to closed-eye when visible
+    icon.innerHTML = isHidden
+      ? `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
+         <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
+         <line x1="1" y1="1" x2="23" y2="23"/>`
+      : `<path d="M2 12C2 12 5 6 12 6C19 6 22 12 22 12C22 12 19 18 12 18C5 18 2 12 2 12Z"/>
+         <circle cx="12" cy="12" r="3"/>`;
+  }
+
   function setAuthTab(mode) {
     authMode = mode;
     document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
@@ -3525,9 +3547,8 @@
     renderAnswers();
     renderShelf();
     renderZine(zineData);
+    } catch(e) { console.error('loadGroup error:', e); }
   }
-
-  // ── SAVE ANSWER TO DB ─────────────────────────────────────
 
   async function saveAnswer(i) {
     savedFlags[i] = true;
