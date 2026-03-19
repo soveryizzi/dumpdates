@@ -1712,7 +1712,7 @@
         <circle cx="210" cy="26" r="1.8" fill="#C9C3D9" opacity="0.8"/>
       </svg>
     </div>
-    <div style="text-align:center;margin-top:0.5rem;font-size:10px;color:var(--ink-ghost);font-family:'Montserrat',sans-serif;">2026-03-18 22:36:46 ET</div>
+    <div style="text-align:center;margin-top:0.5rem;font-size:10px;color:var(--ink-ghost);font-family:'Montserrat',sans-serif;">2026-03-18 22:44:20 ET</div>
   </div>
 </div>
 
@@ -1841,7 +1841,7 @@
       <path d="M13 15 Q9.5 13.5 7.5 11" stroke="#2F5D50" stroke-width="0.9"/>
     </svg>
     <span class="logo-text">dump dates</span>
-    <span style="font-size:10px;color:var(--ink-ghost);font-family:'Montserrat',sans-serif;font-weight:400;margin-left:4px;align-self:flex-end;padding-bottom:4px;" title="last updated">2026-03-18 22:36:46 ET</span>
+    <span style="font-size:10px;color:var(--ink-ghost);font-family:'Montserrat',sans-serif;font-weight:400;margin-left:4px;align-self:flex-end;padding-bottom:4px;" title="last updated">2026-03-18 22:44:20 ET</span>
   </a>
   <!-- CENTERED TABS -->
   <div class="header-tabs">
@@ -3294,95 +3294,57 @@
   // ── APP BOOTSTRAP ─────────────────────────────────────────
 
   async function loadGroup(groupId) {
-    console.log('loadGroup called with:', groupId);
-    const { data: group, error: ge } = await sb.from('groups').select('*').eq('id', groupId).single();
-    console.log('group:', group, 'error:', ge);
-    const { data: member, error: mbe } = await sb.from('group_members').select('*').eq('group_id', groupId).eq('user_id', currentUser.id).single();
-    console.log('member:', member, 'error:', mbe);
+    // Run group + member fetch in parallel
+    const [
+      { data: group },
+      { data: member }
+    ] = await Promise.all([
+      sb.from('groups').select('*').eq('id', groupId).single(),
+      sb.from('group_members').select('*').eq('group_id', groupId).eq('user_id', currentUser.id).single()
+    ]);
+
     currentGroup = group;
     currentMember = member;
 
-    // Refresh memberships for group switcher
-    const { data: freshMemberships } = await sb.from('group_members')
-      .select('group_id, groups(id, name)')
-      .eq('user_id', currentUser.id);
-    if (freshMemberships) allMemberships = freshMemberships;
-
-    // Hide auth/group screens, show app
+    // Hide screens, show app immediately
     document.getElementById('auth-screen').classList.add('hidden');
     document.getElementById('group-screen').classList.add('hidden');
+    document.getElementById('home-screen').classList.add('hidden');
 
     // Update user menu
     const btn = document.getElementById('user-menu-btn');
     btn.style.display = 'flex';
-    btn.textContent = (member.display_name || '?').slice(0,2).toUpperCase();
-    document.getElementById('user-dropdown-name').textContent = member.display_name + ' · ' + group.name;
-    updateGroupSwitcher();
+    btn.textContent = (member?.display_name || '?').slice(0,2).toUpperCase();
+    document.getElementById('user-dropdown-name').textContent = (member?.display_name || '?') + ' · ' + (group?.name || '');
 
-    // Load or create current issue
-    await loadCurrentIssue();
-
-    // Load questions from DB (merge with seeded bank)
-    await loadQuestions();
-
-    renderSlots();
-    renderFilters();
-    renderGarden();
-    renderAnswers();
-    renderShelf();
-    renderZine(zineData);
-  }
-
-  async function loadCurrentIssue() {
+    // Run remaining fetches in parallel
     const now = new Date();
     const monthStr = now.toLocaleString('en-US', { month: 'long', year: 'numeric' }).toLowerCase();
 
-    let { data: issue } = await sb.from('issues')
-      .select('*')
-      .eq('group_id', currentGroup.id)
-      .eq('status', 'open')
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .maybeSingle();
+    const [issueResult, questionsResult, membershipsResult] = await Promise.all([
+      sb.from('issues').select('*').eq('group_id', groupId).eq('status', 'open')
+        .order('created_at', { ascending: false }).limit(1).maybeSingle(),
+      sb.from('questions').select('*').eq('group_id', groupId).order('created_at'),
+      sb.from('group_members').select('group_id, groups(id, name)').eq('user_id', currentUser.id)
+    ]);
 
+    // Handle issue
+    let issue = issueResult.data;
     if (!issue) {
-      // Count existing issues to get vol number
-      const { count } = await sb.from('issues').select('*', { count: 'exact', head: true }).eq('group_id', currentGroup.id);
-      const { data: newIssue, error } = await sb.from('issues').insert({
-        group_id: currentGroup.id,
-        month: monthStr,
-        vol: (count || 0) + 1,
-        status: 'open'
+      const { count } = await sb.from('issues').select('*', { count: 'exact', head: true }).eq('group_id', groupId);
+      const { data: newIssue } = await sb.from('issues').insert({
+        group_id: groupId, month: monthStr, vol: (count || 0) + 1, status: 'open'
       }).select().single();
-      if (!error) issue = newIssue;
+      issue = newIssue;
     }
-
     currentIssue = issue;
 
-    // Update header badge
     const badge = document.getElementById('current-month-badge');
     if (badge && issue) badge.textContent = issue.month;
 
-    // Load issue questions into issueList
-    if (issue) {
-      const { data: iqs } = await sb.from('issue_questions')
-        .select('*, questions(*)')
-        .eq('issue_id', issue.id)
-        .order('position');
-      if (iqs) {
-        issueList = iqs.map(iq => iq.question_id);
-      }
-    }
-  }
-
-  async function loadQuestions() {
-    const { data: dbQs } = await sb.from('questions')
-      .select('*')
-      .eq('group_id', currentGroup.id)
-      .order('created_at');
-
+    // Handle questions
+    const dbQs = questionsResult.data;
     if (dbQs && dbQs.length > 0) {
-      // Merge DB questions on top of seeded bank (avoid duplicates by text)
       const seededTexts = new Set(garden.map(g => g.text.toLowerCase()));
       dbQs.forEach(q => {
         if (!seededTexts.has(q.text.toLowerCase())) {
@@ -3390,6 +3352,24 @@
         }
       });
     }
+
+    // Handle memberships
+    if (membershipsResult.data) allMemberships = membershipsResult.data;
+    updateGroupSwitcher();
+
+    // Load issue questions then render everything
+    if (issue) {
+      const { data: iqs } = await sb.from('issue_questions')
+        .select('*, questions(*)').eq('issue_id', issue.id).order('position');
+      if (iqs) issueList = iqs.map(iq => iq.question_id);
+    }
+
+    renderSlots();
+    renderFilters();
+    renderGarden();
+    renderAnswers();
+    renderShelf();
+    renderZine(zineData);
   }
 
   // ── SAVE ANSWER TO DB ─────────────────────────────────────
@@ -3499,21 +3479,31 @@
     if (event === 'SIGNED_OUT') return;
     if (session?.user) {
       currentUser = session.user;
-      console.log('user found, checking group membership...');
+      console.log('user found, loading home screen...');
 
       // Small delay to ensure DOM is ready
       await new Promise(r => setTimeout(r, 300));
 
-      // Fetch all group memberships
-      const { data: memberships, error: me } = await sb.from('group_members')
-        .select('group_id, groups(id, name)')
-        .eq('user_id', currentUser.id);
+      let memberships = [];
+      try {
+        const { data: mData } = await sb
+          .from('group_members')
+          .select('group_id')
+          .eq('user_id', currentUser.id);
 
-      console.log('memberships:', memberships, 'error:', me);
-
-      // Always show home screen — user picks their group there
+        if (mData && mData.length > 0) {
+          const groupIds = mData.map(m => m.group_id);
+          const { data: gData } = await sb.from('groups').select('id, name').in('id', groupIds);
+          memberships = mData.map(m => ({
+            group_id: m.group_id,
+            groups: gData?.find(g => g.id === m.group_id) || { id: m.group_id, name: 'unnamed group' }
+          }));
+        }
+      } catch (err) {
+        console.error('membership fetch error:', err);
+      }
       document.getElementById('auth-screen').classList.add('hidden');
-      showHomeScreen(memberships || []);
+      showHomeScreen(memberships);
     }
   });
 
