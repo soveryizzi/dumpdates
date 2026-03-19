@@ -7,8 +7,8 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   <title>dumpdates</title>
-  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
-  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="favicon.svg?v=2" type="image/svg+xml" />
+  <link rel="icon" href="favicon.svg?v=2" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet" />
@@ -139,6 +139,12 @@
 
     .section { display: none; }
     .section.active { display: block; animation: grow 0.28s ease; }
+ } } to { opacity:1; transform:none; } } to { opacity:1; transform:none; } }
+
+    @keyframes sway-empty { 0%,100% { transform: rotate(-4deg); } 50% { transform: rotate(4deg); } }
+    @keyframes toggle-on  { 0% { transform: scale(1); } 40% { transform: scale(0.9); } 70% { transform: scale(1.12); } 100% { transform: scale(1); } }
+    @keyframes toggle-off { 0% { transform: scale(1); } 40% { transform: scale(0.9); } 70% { transform: scale(1.08); } 100% { transform: scale(1); } }
+
     @keyframes grow {
       from { opacity: 0; transform: translateY(7px); }
       to   { opacity: 1; transform: translateY(0); }
@@ -222,6 +228,21 @@
     .issue-slot.filled:hover .slot-remove { opacity: 1; pointer-events: auto; }
     .slot-remove:hover { background: var(--bloom-light); border-color: #e0a898; color: var(--bloom); }
 
+
+    /* ── SMOOTH TRANSITIONS ── */
+    #issue-list, #issue-empty, #issue-answer-cta {
+      transition: opacity 0.25s ease;
+    }
+    .section { transition: none; } /* handled by animation */
+
+    /* Sticky max-width so single sticky doesn't fill screen */
+    .sticky {
+      max-width: 380px;
+    }
+    .garden-sticky {
+      max-width: 220px;
+    }
+
     /* ── GARDEN PAPER SHEET ── */
 
     .garden-paper {
@@ -273,7 +294,7 @@
     }
     .garden-add-row input {
       flex: 1; padding: 9px 13px;
-      border: 1px solid rgba(180,210,170,0.7); border-radius: 4px;
+      border: 1px solid rgba(180,210,170,0.7); border-radius: 8px;
       font-size: 14px; background: rgba(255,255,255,0.7); color: #1C2B20;
       font-family: 'Montserrat', sans-serif; outline: none;
       transition: border-color 0.2s, background 0.2s;
@@ -285,26 +306,33 @@
     .garden-add-row input::placeholder { color: #b0c8a8;  }
 
     .btn-ghost {
-      padding: 9px 18px; border: 1px solid rgba(90,140,80,0.4); border-radius: 4px;
-      background: rgba(255,255,255,0.6); font-size: 13px; color: #2F5D50;
+      padding: 9px 18px; border: 1.5px solid var(--border-mid); border-radius: 8px;
+      background: transparent; font-size: 13px; color: var(--green);
       cursor: pointer; font-family: 'Montserrat', sans-serif; font-weight: 500;
-      transition: background 0.15s, border-color 0.15s; white-space: nowrap;
+      transition: background 0.15s, border-color 0.15s, box-shadow 0.15s, transform 0.1s;
+      white-space: nowrap; outline: none;
     }
-    .btn-ghost:hover { background: rgba(255,255,255,0.9); border-color: rgba(90,140,80,0.7); }
+    .btn-ghost:hover  { background: var(--green-light); border-color: var(--green); }
+    .btn-ghost:active { background: var(--border); border-color: var(--green); transform: translateY(1px); }
+    .btn-ghost:focus-visible { outline: 2px solid var(--green); outline-offset: 3px; }
+    .btn-ghost:disabled { color: var(--ink-ghost); border-color: var(--border); cursor: not-allowed; background: transparent; }
 
     /* Filter pills sit on the paper */
     .garden-filters {
       display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1.5rem;
     }
     .filter-btn {
-      padding: 4px 12px; border-radius: 3px;
-      border: 1px solid rgba(180,210,170,0.6); background: rgba(247,249,244,0.7);
+      padding: 4px 12px; border-radius: 999px;
+      border: 1.5px solid rgba(180,210,170,0.5); background: rgba(247,249,244,0.7);
       font-size: 11px; color: #7a9a72; cursor: pointer;
-      font-family: 'Montserrat', sans-serif; transition: all 0.15s;
-      letter-spacing: 0.03em;
+      font-family: 'Montserrat', sans-serif;
+      transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.1s;
+      letter-spacing: 0.03em; outline: none;
     }
-    .filter-btn:hover  { background: rgba(247,249,244,0.9); color: #2F5D50; }
-    .filter-btn.active { background: #DCEDC8; color: #2F5D50; border-color: rgba(90,140,80,0.5); font-weight: 500; border-radius: 999px; }
+    .filter-btn:hover  { background: var(--green-light); border-color: var(--border-mid); color: var(--green); }
+    .filter-btn:active { transform: translateY(1px); background: var(--border); }
+    .filter-btn:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+    .filter-btn.active { background: var(--green-light); color: var(--green); border-color: var(--green); font-weight: 600; }
 
     /* Sticky grid on the paper */
     .garden-stickies {
@@ -341,6 +369,7 @@
     /* Flower palette — matches answer + zine stickies */
     .gs-yellow   { background: #FBF0C0; }
     .gs-sage     { background: #D4EAD0; }
+    .gs-sage-deep { background: #B8DDB8; }
     .gs-green    { background: #F1D4DC; }
     .gs-blue     { background: #C9C3D9; }
     .gs-pink     { background: #E3B8C2; }
@@ -404,6 +433,7 @@
       display: flex; flex-direction: column;
       box-shadow: 0 1px 2px rgba(28,43,32,0.10), 0 3px 8px rgba(28,43,32,0.08), 0 6px 16px rgba(28,43,32,0.07);
       margin-bottom: 1.25rem;
+      transition: background 0.35s ease;
     }
     .garden-write-sticky::before {
       content: ''; display: block; height: 6px;
@@ -426,36 +456,42 @@
     .garden-ai-btn {
       display: inline-flex; align-items: center; gap: 5px;
       font-size: 12px; font-weight: 600; color: var(--green);
-      background: var(--green-light); border: 1px solid var(--border-mid);
+      background: var(--green-light); border: 1.5px solid var(--border-mid);
       border-radius: 999px; padding: 5px 12px; cursor: pointer;
       font-family: 'Montserrat', sans-serif;
-      transition: background 0.15s, opacity 0.15s;
+      transition: background 0.15s, border-color 0.15s, box-shadow 0.15s, transform 0.1s;
+      outline: none;
     }
-    .garden-ai-btn:hover { background: var(--border); }
+    .garden-ai-btn:hover  { background: #b8dfc4; border-color: var(--green); }
+    .garden-ai-btn:active { background: var(--border); transform: translateY(1px); }
+    .garden-ai-btn:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+    .garden-ai-btn:disabled { opacity: 0.45; cursor: not-allowed; }
 
     .poll-toggle-label {
       display: inline-flex; align-items: center; gap: 6px;
       cursor: pointer; user-select: none;
     }
     .poll-toggle-track {
-      width: 32px; height: 18px; border-radius: 999px;
+      width: 36px; height: 20px; border-radius: 999px;
       background: var(--border); border: 1.5px solid var(--border-mid);
       position: relative; display: inline-block;
-      transition: background 0.2s, border-color 0.2s; flex-shrink: 0;
+      transition: background 0.25s ease, border-color 0.25s ease; flex-shrink: 0;
     }
     .poll-toggle-thumb {
       position: absolute; top: 2px; left: 2px;
-      width: 12px; height: 12px; border-radius: 50%;
+      width: 14px; height: 14px; border-radius: 50%;
       background: var(--surface); box-shadow: 0 1px 3px rgba(28,43,32,0.2);
-      transition: transform 0.2s;
+      transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
+    .poll-toggle-track.anim-on { animation: toggle-on 0.3s ease; }
+    .poll-toggle-track.anim-off { animation: toggle-off 0.3s ease; }
     #poll-toggle-checkbox:checked ~ .poll-toggle-track,
     .poll-toggle-track.on {
       background: var(--green); border-color: var(--green);
     }
     #poll-toggle-checkbox:checked ~ .poll-toggle-track .poll-toggle-thumb,
     .poll-toggle-track.on .poll-toggle-thumb {
-      transform: translateX(14px);
+      transform: translateX(16px);
     }
     .poll-toggle-text {
       font-size: 12px; font-weight: 500; color: var(--ink-faint);
@@ -480,7 +516,7 @@
       background: rgba(28,43,32,0.2); flex-shrink: 0;
     }
     .poll-inline-input {
-      flex: 1; background: rgba(247,249,244,0.7); border: none;
+      flex: 1; background: none; border: none;
       border-bottom: 1px solid rgba(28,43,32,0.15); outline: none;
       font-size: 13px; font-family: 'Montserrat', sans-serif;
       color: rgba(28,43,32,0.7); padding: 3px 0;
@@ -495,11 +531,30 @@
 
     .garden-add-btn {
       font-size: 13px; font-weight: 600; color: var(--green);
-      background: var(--green-light); border: 1px solid var(--border-mid);
+      background: var(--green-light); border: 1.5px solid var(--border-mid);
       border-radius: 999px; padding: 6px 16px; cursor: pointer;
-      font-family: 'Montserrat', sans-serif; transition: background 0.15s;
+      font-family: 'Montserrat', sans-serif;
+      transition: background 0.15s, border-color 0.15s, box-shadow 0.15s, transform 0.1s;
+      outline: none;
     }
-    .garden-add-btn:hover { background: var(--border); }
+    .garden-add-btn:hover  { background: #b8dfc4; border-color: var(--green); }
+    .garden-add-btn:active { background: var(--border); transform: translateY(1px); }
+    .garden-add-btn:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+    .garden-add-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+
+    /* Link CTA */
+    .btn-link {
+      background: none; border: none; padding: 0; cursor: pointer;
+      color: var(--green); font-weight: 600; font-family: 'Montserrat', sans-serif;
+      font-size: inherit; text-decoration: underline; text-underline-offset: 3px;
+      text-decoration-color: rgba(47,93,80,0.3);
+      transition: text-decoration-color 0.15s, color 0.15s;
+      outline: none; display: inline;
+    }
+    .btn-link:hover  { color: #1a3d36; text-decoration-color: rgba(47,93,80,0.8); }
+    .btn-link:active { color: #122e28; }
+    .btn-link:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; border-radius: 2px; }
 
     /* Poll stickies get a little bar-chart badge */
     .garden-sticky .poll-badge {
@@ -534,7 +589,7 @@
     .mobile-nav-btn svg { transition: stroke 0.15s; }
     /* ── ANSWERS — paper + sticky notes ── */
 
-    #answer { max-width: none; }
+    #answer { max-width: 700px; margin-left: auto; margin-right: auto; }
 
     .progress-wrap { margin-bottom: 2rem; max-width: 700px; margin-left: auto; margin-right: auto; }
     .progress-label {
@@ -557,6 +612,9 @@
       margin-bottom: 3.5rem;
       position: relative;
       overflow: hidden;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
 
@@ -625,7 +683,7 @@
     @media (max-width: 600px) {
       .answers-sticky-grid { grid-template-columns: 1fr; gap: 14px; }
       .sticky { aspect-ratio: unset; min-height: 160px; padding-bottom: 32px; }
-      .zine-sticky { aspect-ratio: unset; min-height: 120px; }
+      .zine-sticky { aspect-ratio: unset; min-height: 160px; }
       .garden-sticky { aspect-ratio: unset; min-height: 110px; }
     }
 
@@ -758,6 +816,31 @@
     }
     .sticky-upload:hover { background: rgba(247,249,244,0.65); color: rgba(28,43,32,0.6); }
 
+
+    /* ── PHOTO GRID IN STICKIES ── */
+    .sticky-photo-item {
+      position: relative; border-radius: 4px; overflow: hidden;
+      margin-bottom: 6px;
+    }
+    .sticky-photo-item img {
+      width: 100%; display: block; border-radius: 4px; object-fit: cover; max-height: 160px;
+    }
+    .sticky-photo-delete {
+      position: absolute; top: 5px; right: 5px;
+      width: 26px; height: 26px; border-radius: 50%;
+      background: rgba(28,43,32,0.65); border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transition: opacity 0.15s;
+      color: #fff;
+    }
+    .sticky-photo-item:hover .sticky-photo-delete { opacity: 1; }
+    .sticky-photo-caption {
+      width: 100%; border: none; background: transparent; outline: none;
+      font-size: 11px; color: rgba(28,43,32,0.5); font-family: 'Montserrat', sans-serif;
+      padding: 3px 0 6px; resize: none; line-height: 1.4;
+    }
+    .sticky-photo-caption::placeholder { color: rgba(28,43,32,0.25); }
+
     .photo-grid { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px; }
     .photo-thumb {
       width: 52px; height: 52px; border-radius: 2px;
@@ -878,6 +961,33 @@
 
     .input-hidden { display: none; }
 
+
+    @media (max-width: 480px) {
+      main { padding: 1rem 0.75rem 5rem; }
+      .section-title { font-size: 20px; }
+      .section-sub { font-size: 12px; }
+      .garden-paper-content { padding: 0.875rem 0.75rem 1.25rem 0.875rem; }
+      .sheet-content { padding: 1rem 0.875rem 1.25rem; }
+      .home-body { padding: 1.25rem 0.875rem 5rem; }
+      .home-greeting { font-size: 22px; }
+      .issue-slot { padding: 8px 10px !important; }
+      .journal-content { padding: 1.25rem 0.875rem; }
+      .auth-card { padding: 1.25rem 1rem 1.5rem; }
+      .zine-journal { margin: 0.75rem 0 0; }
+      .garden-write-sticky { margin-bottom: 0.875rem; }
+      .garden-paper { border-radius: 6px; }
+    }
+    @media (max-width: 380px) {
+      main { padding: 0.75rem 0.625rem 5rem; }
+      .tab-btn { padding: 6px 10px; font-size: 12px; }
+      .garden-paper-content { padding: 0.75rem 0.625rem 1rem; }
+      .sheet-content { padding: 0.875rem 0.75rem 1rem; }
+    }
+    @media (max-width: 380px) {
+      main { padding: 0.875rem 0.625rem 5rem; }
+      .tab-btn { padding: 6px 10px; font-size: 12px; }
+    }
+
     @media (max-width: 600px) {
       /* Header — on mobile tabs move to bottom bar */
       header { padding: 0 1rem; height: 54px; grid-template-columns: 1fr auto; }
@@ -935,7 +1045,7 @@
       /* Answer section */
       .answer-section-header { padding: 0; }
       .progress-wrap { max-width: 100%; }
-      .paper-sheet { border-radius: 4px; margin-bottom: 2rem; }
+      .paper-sheet { border-radius: 8px; margin-bottom: 2rem; }
       .sheet-content { padding: 1.25rem 1rem 1.5rem 1rem; }
       .sheet-q-text { font-size: 17px; }
       .sheet-q-label { font-size: 10px; }
@@ -972,136 +1082,219 @@
       .auth-card { padding: 1.25rem 0.875rem; }
     }
 
-    /* ── ZINE 3D BOOK ── */
-    #letter { max-width: none; padding: 0; }
 
-    /* Scene container — establishes 3D perspective */
-    .book-scene {
-      width: 100%;
-      padding: 2rem 1rem 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    /* The book itself — two pages side by side */
-    .book {
+    /* ── SHELF ── */
+    .zine-shelf-wrap {
+      max-width: 860px; margin: 0 auto 0;
+      background: transparent;
+      border-radius: 0;
+      box-shadow: none;
+      padding: 20px 20px 0;
       position: relative;
-      width: 100%;
-      max-width: 860px;
+    }
+    .zine-shelf-wrap::after {
+      content: ''; position: absolute;
+      bottom: 0; left: 0; right: 0; height: 6px;
+      background: #1a3d2c;
+      border-radius: 0 0 4px 4px;
+    }
+    .zine-shelf-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: rgba(28,43,32,0.35);
+      margin-bottom: 12px;
+    }
+    .zine-shelf {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      align-items: flex-end;
+    }
+    .zine-shelf-item {
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      transform-origin: bottom center;
+    }
+    .zine-shelf-item:hover { transform: translateY(-6px); }
+    .zine-shelf-item.active-issue { cursor: default; transform: translateY(-4px); }
+    .zine-mini-cover {
+      width: 100%; aspect-ratio: 0.68;
+      border-radius: 2px 3px 3px 2px;
+      border-left: 8px solid var(--green);
+      background: #F7F5F0;
+      display: flex; flex-direction: column;
+      justify-content: flex-end;
+      padding: 10px 10px 12px;
+      box-shadow: 2px 4px 12px rgba(30,42,26,0.22), inset -1px 0 0 rgba(255,255,255,0.6);
+      position: relative; overflow: hidden;
+      transition: box-shadow 0.18s;
+    }
+    .zine-mini-cover::before {
+      content: ''; position: absolute; left: -6px; top: 3px; bottom: 3px; width: 4px;
+      background: repeating-linear-gradient(transparent, transparent 5px, rgba(0,0,0,0.06) 5px, rgba(0,0,0,0.06) 6px);
+    }
+    .zine-mini-cover::after {
+      content: ''; position: absolute; top: 0; right: 0; width: 40%; bottom: 0;
+      background: linear-gradient(to right, transparent, rgba(255,255,255,0.18));
+      pointer-events: none;
+    }
+    .zine-shelf-item:hover .zine-mini-cover { box-shadow: 3px 8px 20px rgba(30,42,26,0.3), inset -1px 0 0 rgba(255,255,255,0.6); }
+    .zine-shelf-item.active-issue .zine-mini-cover { border-left-color: var(--green); box-shadow: 0 0 0 2px var(--green), 2px 4px 12px rgba(30,42,26,0.22); }
+    .zine-mini-title { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: var(--ink); letter-spacing: -0.3px; line-height: 1.15; margin-bottom: 3px; }
+    .zine-mini-vol   { font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 8px; }
+    .zine-mini-dots  { display: flex; gap: 3px; }
+    .zine-mini-dot   { width: 7px; height: 7px; border-radius: 50%; }
+    .zine-shelf-month { font-size: 11px; color: var(--ink-ghost); text-align: center; margin-top: 6px; font-family: 'Montserrat', sans-serif; }
+    /* ── ZINE JOURNAL ── */
+    #letter { max-width: 860px; margin: 0 auto; padding: 0 1rem 4rem; }
+
+    .zine-journal {
+      display: flex;
+      align-items: stretch;
+      margin: 1.25rem 0 0;
+      position: relative;
       perspective: 2000px;
-      perspective-origin: 50% 40%;
+      overflow: visible;
     }
 
-    /* Open book container — left + right pages */
-    .book-open {
+    /* spine removed */
+
+    /* ── PAGE CONTAINER — holds both pages + flipper ── */
+    .journal-book {
+      flex: 1;
+      position: relative;
       display: grid;
       grid-template-columns: 1fr 1fr;
-      width: 100%;
-      position: relative;
-      filter: drop-shadow(0 20px 60px rgba(28,43,32,0.18));
+      min-height: 580px;
+      background: #F7F5F0;
+      border-radius: 8px;
+      box-shadow:
+        4px 4px 0 #ccc9c0,
+        7px 7px 0 #bfbcb4,
+        0 16px 48px rgba(28,43,32,0.20),
+        0 4px 12px rgba(28,43,32,0.10);
+      overflow: visible;
+      height: 580px;
     }
 
-    /* The spine down the middle */
-    .book-open::after {
+    /* Fold shadow down the center */
+    .journal-book::after {
       content: '';
       position: absolute;
-      left: 50%; top: 0; bottom: 0;
+      left: 50%; top: 0; bottom: 0; width: 16px;
       transform: translateX(-50%);
-      width: 6px;
       background: linear-gradient(to right,
-        rgba(28,43,32,0.18) 0%,
-        rgba(28,43,32,0.06) 40%,
-        rgba(255,255,255,0.15) 50%,
-        rgba(28,43,32,0.06) 60%,
-        rgba(28,43,32,0.12) 100%
+        rgba(28,43,32,0.13) 0%,
+        rgba(28,43,32,0.05) 30%,
+        rgba(255,255,255,0.14) 50%,
+        rgba(28,43,32,0.05) 70%,
+        rgba(28,43,32,0.13) 100%
       );
-      z-index: 20;
-      pointer-events: none;
+      pointer-events: none; z-index: 30;
     }
 
-    /* Static visible page (the one staying put) */
-    .book-page-static {
-      min-height: 520px;
+    /* Ruled lines texture on book background */
+    .journal-book::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: repeating-linear-gradient(
+        transparent 0px, transparent 27px,
+        rgba(180,195,210,0.22) 27px, rgba(180,195,210,0.22) 28px
+      );
+      background-position: 0 40px;
+      pointer-events: none; z-index: 0;
+    }
+
+    /* Individual pages */
+    .journal-page-left,
+    .journal-page-right {
       position: relative;
+      height: 580px;
       overflow: hidden;
+      z-index: 1;
+    }
+    .journal-page-left  { border-radius: 8px 0 0 8px; }
+    .journal-page-right { border-radius: 0 8px 8px 0; }
+    /* Ensure any direct children that aren't the ruled lines have padding */
+    .journal-page-left > div:not(.journal-ruled):not(.journal-page-num),
+    .journal-page-right > div:not(.journal-ruled):not(.journal-page-num) {
+      min-height: 100%;
+    }
+    .journal-page-left { border-right: 1px solid rgba(28,43,32,0.06); }
+
+    /* Page curl shadow on right edge of left page */
+    .journal-page-left::after {
+      content: '';
+      position: absolute; right: 0; top: 0; bottom: 0; width: 18px;
+      background: linear-gradient(to right,
+        rgba(28,43,32,0.04) 0%,
+        transparent 100%
+      );
+      pointer-events: none; z-index: 5;
     }
 
-    .book-page-static.left  { border-radius: 4px 0 0 4px; }
-    .book-page-static.right { border-radius: 0 4px 4px 0; }
 
-    /* Page edge click zones */
-    .page-edge {
-      position: absolute;
-      top: 0; bottom: 0;
-      width: 48px;
-      z-index: 15;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      transition: opacity 0.2s;
+
+
+    /* Page number */
+    .journal-page-num {
+      position: absolute; bottom: 14px;
+      font-size: 11px; color: rgba(28,43,32,0.22);
+      font-family: 'Montserrat', sans-serif; z-index: 5;
     }
-    .page-edge:hover { opacity: 1; }
-    .page-edge.left-edge  { left: 0;  background: linear-gradient(to right, rgba(28,43,32,0.05), transparent); }
-    .page-edge.right-edge { right: 0; background: linear-gradient(to left, rgba(28,43,32,0.05), transparent); }
-    .page-edge-arrow {
-      width: 28px; height: 28px; border-radius: 50%;
-      background: rgba(255,255,255,0.8);
+    .journal-page-left  .journal-page-num { left: 20px; }
+    .journal-page-right .journal-page-num { right: 20px; }
+
+    /* Ruled lines inside a page */
+    .journal-ruled {
+      position: absolute; inset: 0;
+      background: repeating-linear-gradient(
+        transparent 0px, transparent 27px,
+        rgba(180,195,210,0.3) 27px, rgba(180,195,210,0.3) 28px
+      );
+      background-position: 0 40px;
+      pointer-events: none; z-index: 0;
+    }
+
+    /* Navigation */
+    .journal-nav {
       display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 2px 8px rgba(28,43,32,0.12);
-      color: var(--ink-mid);
+      padding: 0.75rem 0 0;
+    }
+    .journal-nav-counter {
+      font-size: 12px; color: var(--ink-ghost);
+      font-family: 'Montserrat', sans-serif; letter-spacing: 0.04em;
     }
 
-    /* Flipping page — the 3D element */
-    .book-flipper {
-      position: absolute;
-      top: 0; bottom: 0;
-      width: 50%;
-      transform-style: preserve-3d;
-      transform-origin: right center;  /* flips from right to left (forward) */
-      transition: transform 0.7s cubic-bezier(0.645, 0.045, 0.355, 1.000);
-      z-index: 10;
-      pointer-events: none;
+    /* ── PAGE EDGE CLICK ZONES ── */
+    .page-edge-zone {
+      position: absolute; top: 0; bottom: 0; width: 28px;
+      z-index: 10; cursor: pointer; opacity: 0;
+      display: flex; align-items: center; justify-content: center;
+      transition: opacity 0.2s ease;
+    }
+    .page-edge-zone:hover { opacity: 1; }
+    .page-edge-zone.left-zone  { left: 0; border-radius: 8px 0 0 8px; background: linear-gradient(to right, rgba(28,43,32,0.07), transparent); }
+    .page-edge-zone.right-zone { right: 0; border-radius: 0 8px 8px 0; background: linear-gradient(to left,  rgba(28,43,32,0.07), transparent); }
+    .page-edge-zone.edge-disabled { cursor: default; pointer-events: none; opacity: 0 !important; }
+    .page-edge-icon {
+      width: 22px; height: 22px; border-radius: 50%;
+      background: rgba(28,43,32,0.12);
+      display: flex; align-items: center; justify-content: center;
+      color: rgba(28,43,32,0.5);
     }
 
-    .book-flipper.flip-left  { left: 0;  transform-origin: right center; }
-    .book-flipper.flip-right { right: 0; transform-origin: left center; }
-
-    .book-flipper.flipping-forward { animation: flipForward 0.7s cubic-bezier(0.645,0.045,0.355,1.000) forwards; }
-    .book-flipper.flipping-back    { animation: flipBack    0.7s cubic-bezier(0.645,0.045,0.355,1.000) forwards; }
-
-    @keyframes flipForward {
-      0%   { transform: rotateY(0deg); }
-      100% { transform: rotateY(-180deg); }
-    }
-    @keyframes flipBack {
-      0%   { transform: rotateY(-180deg); }
-      100% { transform: rotateY(0deg); }
-    }
-
-    .flipper-front, .flipper-back {
-      position: absolute;
-      inset: 0;
-      backface-visibility: hidden;
-      -webkit-backface-visibility: hidden;
-      overflow: hidden;
-    }
-    .flipper-back {
-      transform: rotateY(180deg);
-    }
-
-    /* Page shadow during flip */
-    .book-flipper.flipping-forward .flipper-front,
-    .book-flipper.flipping-back .flipper-back {
-      box-shadow: inset -8px 0 20px rgba(28,43,32,0.08);
+    @media (max-width: 600px) {
+      .journal-book { grid-template-columns: 1fr; height: auto; min-height: 500px; }
+      .journal-book::after { display: none; }
+      .journal-page-right { display: none; }
+      .journal-page-left { height: auto; min-height: 500px; }
+      .journal-flipper { display: none !important; }
     }
 
     /* ── PAGE CONTENT STYLES ── */
 
     /* COVER */
-    .zine-cover { background: #F7F5F0; border-radius: 4px 0 0 4px; }
+    .zine-cover { background: #F7F5F0; border-radius: 8px 0 0 8px; }
 
     .zine-cover-inner {
       width: 100%;
@@ -1152,7 +1345,7 @@
     /* Blank right page when cover is showing */
     .zine-blank-right {
       background: #F7F5F0;
-      border-radius: 0 4px 4px 0;
+      border-radius: 8px;
       min-height: 520px;
       background-image: repeating-linear-gradient(transparent, transparent 31px, #d5e8f0 31px, #d5e8f0 32px);
       background-position: 0 48px;
@@ -1244,20 +1437,20 @@
     }
     .zine-sticky-text {
       font-family: 'Montserrat', sans-serif;
-      font-size: 16px; line-height: 28px; color: rgba(28,43,32,0.85);
+      font-size: 17px; line-height: 28px; color: rgba(28,43,32,0.85);
     }
 
     /* BACK COVER */
     .zine-back-left {
       background: #1E2A1A;
       min-height: 520px;
-      border-radius: 4px 0 0 4px;
+      border-radius: 8px 0 0 8px;
       display: flex; align-items: center; justify-content: center;
     }
     .zine-back-right {
       background: #162012;
       min-height: 520px;
-      border-radius: 0 4px 4px 0;
+      border-radius: 8px;
     }
     .zine-back-inner {
       display: flex; flex-direction: column;
@@ -1295,54 +1488,12 @@
       min-width: 80px; text-align: center;
     }
 
-    /* SHELF */
-    .zine-shelf-wrap { max-width: 860px; margin: 0 auto 1.5rem; padding: 0 1.5rem; }
-    .zine-shelf-label {
-      font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
-      text-transform: uppercase; color: var(--ink-ghost);
-      margin-bottom: 0.9rem; display: flex; align-items: center; gap: 6px;
-    }
-    .zine-shelf {
-      display: flex; gap: 12px; overflow-x: auto;
-      padding-bottom: 8px; scrollbar-width: thin; scrollbar-color: var(--border) transparent;
-    }
-    .zine-shelf-item { flex-shrink: 0; width: 90px; cursor: pointer; transition: transform 0.18s, opacity 0.18s; }
-    .zine-shelf-item:hover { transform: translateY(-3px); }
-    .zine-shelf-item.active-issue { opacity: 0.45; cursor: default; transform: none; }
-    .zine-mini-cover {
-      width: 90px; height: 118px; border-radius: 3px;
-      border-left: 5px solid var(--green); background: #F7F5F0;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      padding: 10px 8px;
-      box-shadow: 2px 3px 10px rgba(30,42,26,0.14), 1px 0 0 var(--border) inset;
-      position: relative; overflow: hidden; transition: box-shadow 0.18s;
-    }
-    .zine-shelf-item:hover .zine-mini-cover { box-shadow: 3px 6px 18px rgba(30,42,26,0.2); }
-    .zine-shelf-item.active-issue .zine-mini-cover { box-shadow: 0 0 0 2px var(--green); }
-    .zine-mini-cover::before {
-      content: ''; position: absolute; top: 0; right: 0; bottom: 0; width: 8px;
-      background: linear-gradient(to right, transparent, rgba(255,255,255,0.5));
-    }
-    .zine-mini-title { font-family: 'Playfair Display', serif;  font-size: 17px; color: var(--ink); letter-spacing: -0.5px; margin-bottom: 4px; }
-    .zine-mini-vol   { font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 8px; }
-    .zine-mini-dots  { display: flex; gap: 3px; }
-    .zine-mini-dot   { width: 6px; height: 6px; border-radius: 50%; }
-    .zine-shelf-month { font-size: 11px; color: var(--ink-faint); text-align: center; margin-top: 6px; letter-spacing: 0.02em; }
 
-    .zine-current-label {
-      max-width: 860px; margin: 0 auto 0.75rem; padding: 0 1.5rem;
-      font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase;
-      color: var(--ink-faint); display: flex; align-items: center; gap: 8px;
-    }
-    .zine-current-label::before {
-      content: ''; display: inline-block; width: 8px; height: 8px;
-      border-radius: 50%; background: var(--green);
-    }
 
     @media (max-width: 650px) {
       .book-open { grid-template-columns: 1fr; }
       .book-open::after { display: none; }
-      .zine-cover { border-radius: 4px; }
+      .zine-cover { border-radius: 8px; }
       .zine-blank-right { display: none; }
       .zine-spread-left { border-radius: 4px 4px 0 0; min-height: auto; }
       .zine-spread-right { border-radius: 0 0 4px 4px; min-height: auto; }
@@ -1420,13 +1571,16 @@
 
   .auth-btn {
     width: 100%; padding: 11px; border-radius: 999px;
-    background: var(--green); color: #fff; border: none;
+    background: var(--green); color: #fff; border: 2px solid transparent;
     font-size: 16px; font-weight: 500; cursor: pointer;
     font-family: 'Montserrat', sans-serif; margin-top: 0.5rem;
-    transition: opacity 0.15s;
+    transition: background 0.15s, box-shadow 0.15s, transform 0.1s;
+    outline: none;
   }
-  .auth-btn:hover { opacity: 0.88; }
-  .auth-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .auth-btn:hover  { background: #245044; box-shadow: 0 4px 14px rgba(47,93,80,0.35); }
+  .auth-btn:active { background: #1a3d36; transform: translateY(1px); box-shadow: 0 1px 4px rgba(47,93,80,0.2); }
+  .auth-btn:focus-visible { outline: 2px solid var(--green); outline-offset: 3px; box-shadow: 0 0 0 4px rgba(47,93,80,0.18); }
+  .auth-btn:disabled { background: var(--border-mid); color: var(--ink-ghost); cursor: not-allowed; box-shadow: none; transform: none; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
   .auth-card { transition: height 0.3s ease; }
@@ -1723,6 +1877,9 @@
     </div>
     <button class="auth-btn" id="auth-submit-btn" onclick="handleAuth()">log in</button>
     <div class="auth-error" id="auth-error"></div>
+    <div style="text-align:center;margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--border);">
+      <button onclick="enterPreview()" style="background:none;border:none;cursor:pointer;font-family:'Montserrat',sans-serif;font-size:13px;color:var(--ink-ghost);text-decoration:underline;text-underline-offset:2px;">preview without signing in</button>
+    </div>
   </div>
 </div>
 
@@ -1848,18 +2005,6 @@
     <button class="tab-btn" onclick="switchTab('answer', this)">your answers</button>
     <button class="tab-btn" onclick="switchTab('letter', this)">read the zine</button>
   </div>
-  <!-- DROPDOWN TABS for small screens -->
-  <div class="tab-dropdown-wrap">
-    <button class="tab-dropdown-btn" id="tab-dd-btn" onclick="toggleTabDropdown()">
-      <span id="tab-dd-label">question garden</span>
-      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </button>
-    <div class="tab-dropdown-menu" id="tab-dd-menu">
-      <button class="tab-dropdown-item active" onclick="switchTabDD('questions', 'question garden', this)">question garden</button>
-      <button class="tab-dropdown-item" onclick="switchTabDD('answer', 'your answers', this)">your answers</button>
-      <button class="tab-dropdown-item" onclick="switchTabDD('letter', 'read the zine', this)">read the zine</button>
-    </div>
-  </div>
   <!-- header-right goes to col 3 -->
   <div class="header-right" style="position:relative;justify-self:end;">
     <button class="home-avatar" id="user-menu-btn" onclick="toggleUserMenu()" style="display:none;border:none;cursor:pointer;background:var(--green-light);color:var(--green);">?</button>
@@ -1877,10 +2022,19 @@
       <div class="section-sub" style="margin-bottom:0;white-space:nowrap;" id="issue-section-sub"></div>
     </div>
     <div id="issue-list"></div>
-    <div id="issue-empty" style="font-size:14px;color:var(--ink-ghost);padding:1rem 0 0.5rem;">no questions yet — add some from the garden below</div>
+    <div id="issue-empty">
+      <div style="text-align:center;padding:2.5rem 1rem 2rem;position:relative;max-width:400px;margin:0 auto;">
+        <div style="position:absolute;top:10px;left:10px;pointer-events:none;"><svg width="36" height="36" viewBox="0 0 40 40" fill="none" style="opacity:0.35;animation:sway-empty 3s -2s ease-in-out infinite;"><g transform="translate(20,20) rotate(15)"><path fill="none" d="M0,0 C-4,-3 -6,-14 0,-20 C6,-14 4,-3 0,0Z" stroke="#5A8070" stroke-width="1.5" stroke-linecap="round" transform="rotate(0)"/><path fill="none" d="M0,0 C-4,-3 -6,-14 0,-20 C6,-14 4,-3 0,0Z" stroke="#5A8070" stroke-width="1.5" stroke-linecap="round" transform="rotate(72)"/><path fill="none" d="M0,0 C-4,-3 -6,-14 0,-20 C6,-14 4,-3 0,0Z" stroke="#5A8070" stroke-width="1.5" stroke-linecap="round" transform="rotate(144)"/><path fill="none" d="M0,0 C-4,-3 -6,-14 0,-20 C6,-14 4,-3 0,0Z" stroke="#5A8070" stroke-width="1.5" stroke-linecap="round" transform="rotate(216)"/><path fill="none" d="M0,0 C-4,-3 -6,-14 0,-20 C6,-14 4,-3 0,0Z" stroke="#5A8070" stroke-width="1.5" stroke-linecap="round" transform="rotate(288)"/><circle fill="#CFE8D5" cx="0" cy="0" r="4" stroke="#5A8070" stroke-width="1.5"/></g></svg></div>
+        <div style="position:absolute;top:8px;right:10px;pointer-events:none;"><svg width="36" height="36" viewBox="0 0 40 40" fill="none" style="opacity:0.3;animation:sway-empty 4s -5s ease-in-out infinite;"><g transform="translate(20,20) rotate(-20)"><path fill="none" d="M0,0 C-4,-3 -6,-14 0,-20 C6,-14 4,-3 0,0Z" stroke="#5A8070" stroke-width="1.5" stroke-linecap="round" transform="rotate(0)"/><path fill="none" d="M0,0 C-4,-3 -6,-14 0,-20 C6,-14 4,-3 0,0Z" stroke="#5A8070" stroke-width="1.5" stroke-linecap="round" transform="rotate(72)"/><path fill="none" d="M0,0 C-4,-3 -6,-14 0,-20 C6,-14 4,-3 0,0Z" stroke="#5A8070" stroke-width="1.5" stroke-linecap="round" transform="rotate(144)"/><path fill="none" d="M0,0 C-4,-3 -6,-14 0,-20 C6,-14 4,-3 0,0Z" stroke="#5A8070" stroke-width="1.5" stroke-linecap="round" transform="rotate(216)"/><path fill="none" d="M0,0 C-4,-3 -6,-14 0,-20 C6,-14 4,-3 0,0Z" stroke="#5A8070" stroke-width="1.5" stroke-linecap="round" transform="rotate(288)"/><circle fill="#CFE8D5" cx="0" cy="0" r="4" stroke="#5A8070" stroke-width="1.5"/></g></svg></div>
+        <svg width="80" height="80" viewBox="0 0 40 40" fill="none" style="animation:sway-empty 5s ease-in-out infinite;display:block;margin:0 auto 1.25rem;"><g transform="translate(20,20)"><path fill="none" d="M0,0 C-4,-3 -6,-14 0,-20 C6,-14 4,-3 0,0Z" stroke="#5A8070" stroke-width="1.5" stroke-linecap="round" transform="rotate(0)"/><path fill="none" d="M0,0 C-4,-3 -6,-14 0,-20 C6,-14 4,-3 0,0Z" stroke="#5A8070" stroke-width="1.5" stroke-linecap="round" transform="rotate(72)"/><path fill="none" d="M0,0 C-4,-3 -6,-14 0,-20 C6,-14 4,-3 0,0Z" stroke="#5A8070" stroke-width="1.5" stroke-linecap="round" transform="rotate(144)"/><path fill="none" d="M0,0 C-4,-3 -6,-14 0,-20 C6,-14 4,-3 0,0Z" stroke="#5A8070" stroke-width="1.5" stroke-linecap="round" transform="rotate(216)"/><path fill="none" d="M0,0 C-4,-3 -6,-14 0,-20 C6,-14 4,-3 0,0Z" stroke="#5A8070" stroke-width="1.5" stroke-linecap="round" transform="rotate(288)"/><circle fill="#CFE8D5" cx="0" cy="0" r="4" stroke="#5A8070" stroke-width="1.5"/></g></svg>
+        <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--ink);margin-bottom:0.4rem;">nothing here yet</div>
+        <div style="font-size:14px;color:var(--ink-faint);line-height:1.6;margin-bottom:1.5rem;">write your own or tap + on any prompt in the garden below to add it to this issue</div>
+      </div>
+    </div>
 
     <!-- GARDEN as a sheet of paper -->
-    <div class="garden-paper">
+
+    <div class="garden-paper" style="margin-top:2rem;">
       <div class="sheet-ruled"></div>
       <div class="sheet-margin"></div>
       <div class="sheet-holes">
@@ -1897,7 +2051,16 @@
 
         <!-- Write-your-own sticky note -->
         <div class="garden-write-sticky gs-sage">
-          <div class="gs-tag">yours</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px 0;">
+            <div class="gs-tag" style="padding:0;margin:0;">add a new prompt</div>
+<label class="poll-toggle-label" title="make this a poll">
+                <span class="poll-toggle-text" style="color:var(--ink-faint);font-size:11px;">poll</span>
+                <input type="checkbox" id="poll-toggle-checkbox" onchange="togglePollMode()" style="display:none;">
+                <span class="poll-toggle-track" id="poll-toggle">
+                  <span class="poll-toggle-thumb"></span>
+                </span>
+              </label>
+          </div>
           <textarea
             id="garden-input"
             class="garden-write-textarea"
@@ -1905,7 +2068,7 @@
             rows="2"
           ></textarea>
           <!-- Poll options — hidden by default -->
-          <div id="poll-options-inline" style="display:none;padding:0 0 6px;">
+          <div id="poll-options-inline" style="padding:0 12px 8px;max-height:0;overflow:hidden;opacity:0;transition:max-height 0.35s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease;">
             <div style="font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:rgba(28,43,32,0.4);margin-bottom:6px;">poll options</div>
             <div id="poll-options-list">
               <div class="poll-inline-row"><span class="poll-inline-dot"></span><input class="poll-inline-input" placeholder="option 1" /></div>
@@ -1929,21 +2092,10 @@
                 generate with AI
               </span>
             </button>
-            <div style="display:flex;align-items:center;gap:8px;">
-              <!-- Poll toggle -->
-              <label class="poll-toggle-label" title="make this a poll">
-                <input type="checkbox" id="poll-toggle-checkbox" onchange="togglePollMode()" style="display:none;">
-                <span class="poll-toggle-track" id="poll-toggle">
-                  <span class="poll-toggle-thumb"></span>
-                </span>
-                <span class="poll-toggle-text">poll</span>
-              </label>
-              <!-- Add to issue -->
-              <button class="garden-add-btn" onclick="plantQuestion()">
+            <button class="garden-add-btn" onclick="plantQuestion()">
                 <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M5.5 1v9M1 5.5h9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
                 add to issue
               </button>
-            </div>
           </div>
         </div>
 
@@ -1958,10 +2110,13 @@
   <!-- ANSWERS -->
   <div id="answer" class="section">
     <div class="answer-section-header">
-      <div style="margin-bottom:2rem;">
-        <div class="section-title">your answers</div>
-        <div class="section-sub">answering for april · due april 1st</div>
+      <div style="display:flex;align-items:baseline;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:0.25rem;">
+        <div class="section-title" style="margin-bottom:0;">your answers</div>
+        <button class="btn-ghost" style="font-size:13px;padding:6px 14px;flex-shrink:0;" onclick="switchTab('questions', document.querySelector('.tab-btn'))">
+          + add more questions
+        </button>
       </div>
+      <div class="section-sub" id="answer-section-sub" style="margin-bottom:1.75rem;"></div>
       <span id="progress-pct" style="display:none"></span>
       <span id="progress-label-text" style="display:none"></span>
       <div id="progress-bar" style="display:none"></div>
@@ -1971,39 +2126,19 @@
 
   <!-- ZINE -->
   <div id="letter" class="section">
-    <div class="zine-shelf-wrap" id="zine-shelf-outer" style="display:none;">
-      <div class="zine-shelf-label">
-        <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
-          <rect x="1" y="2" width="11" height="9" rx="1.5" stroke="currentColor" stroke-width="1.1"/>
-          <path d="M4 2V11M9 2V11" stroke="currentColor" stroke-width="1.1"/>
-          <path d="M1 5.5H12" stroke="currentColor" stroke-width="1.1"/>
-        </svg>
-        past issues
-      </div>
+    <div class="zine-shelf-wrap" id="zine-shelf-outer">
+      <div class="zine-shelf-label">past issues</div>
       <div class="zine-shelf" id="zine-shelf"></div>
     </div>
-    <div class="zine-current-label" id="zine-current-label"></div>
-    <div class="book-scene">
-      <div class="book">
-        <div class="book-open" id="book-open">
-          <!-- Pages rendered by JS -->
-        </div>
-        <!-- Flipper element for 3D animation -->
-        <div class="book-flipper" id="book-flipper">
-          <div class="flipper-front" id="flipper-front"></div>
-          <div class="flipper-back"  id="flipper-back"></div>
-        </div>
+
+    <div class="zine-journal">
+      <div class="journal-book" id="journal-pages">
+        <!-- Pages rendered by JS -->
+
       </div>
     </div>
-    <div class="zine-nav">
-      <button class="zine-nav-btn" id="zine-prev" onclick="turnPage(-1)" disabled>
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M11 4L6 9L11 14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
-      <span class="zine-nav-counter" id="zine-counter">cover</span>
-      <button class="zine-nav-btn" id="zine-next" onclick="turnPage(1)">
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M7 4L12 9L7 14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
-    </div>
+
+<div class="journal-nav"><span class="journal-nav-counter" id="zine-counter">cover</span></div>
   </div>
 
 </main>
@@ -2041,28 +2176,48 @@
 
   // Pre-seeded question bank
   let garden = [
-    { id: 1,  text: "what song has been on repeat and what does that say about you?",  tag: "fun",      mine: false, type: "text"  },
-    { id: 2,  text: "something you changed your mind about recently",                  tag: "deep",     mine: false, type: "text"  },
-    { id: 3,  text: "best $20 you've spent in the last month",                         tag: "rec",      mine: false, type: "text"  },
-    { id: 4,  text: "what are you irrationally excited about right now?",              tag: "life",     mine: false, type: "text"  },
-    { id: 5,  text: "what's something small that made you irrationally happy lately?", tag: "life",     mine: false, type: "text"  },
-    { id: 6,  text: "a hill you are willing to die on right now",                      tag: "hot take", mine: false, type: "text"  },
-    { id: 7,  text: "describe your current life in three words",                       tag: "fun",      mine: false, type: "text"  },
-    { id: 8,  text: "what's something you've been meaning to do for over a year?",     tag: "goals",    mine: false, type: "text"  },
-    { id: 9,  text: "recommend something — anything",                                  tag: "rec",      mine: false, type: "text"  },
-    { id: 10, text: "what would your 15-year-old self think of you now?",              tag: "deep",     mine: false, type: "text"  },
-    { id: 11, text: "what are you embarrassingly bad at?",                             tag: "fun",      mine: false, type: "text"  },
-    { id: 12, text: "most recent thing you genuinely laughed out loud at",             tag: "life",     mine: false, type: "text"  },
-    { id: 13, text: "show us where you are right now",                                 tag: "photo",    mine: false, type: "photo" },
-    { id: 14, text: "something on your desk or bedside table",                         tag: "photo",    mine: false, type: "photo" },
-    { id: 15, text: "last screenshot on your camera roll",                             tag: "photo",    mine: false, type: "photo" },
-    { id: 16, text: "a view you've seen recently that stuck with you",                 tag: "photo",    mine: false, type: "photo" },
-    { id: 17, text: "something you made, cooked, or built lately",                     tag: "photo",    mine: false, type: "photo" },
-    { id: 18, text: "a corner of your life that feels most like you right now",        tag: "photo",    mine: false, type: "photo" },
-    { id: 19, text: "what should we theme next month's issue?",                          tag: "poll",     mine: false, type: "text", poll: true, options: ["seasons / nature", "nostalgia", "ambitions", "open topic"] },
-    { id: 20, text: "pick a group challenge for next month",                              tag: "poll",     mine: false, type: "text", poll: true, options: ["read the same book", "try a new recipe", "go somewhere new", "a digital detox day"] },
+    // fun (5)
+    { id: 1,  text: "what song has been on repeat and what does that say about you?",   tag: "fun",      mine: false, type: "text" },
+    { id: 7,  text: "describe your current life in three words",                        tag: "fun",      mine: false, type: "text" },
+    { id: 11, text: "what are you embarrassingly bad at?",                              tag: "fun",      mine: false, type: "text" },
+    { id: 21, text: "what's a weird habit you've fully accepted about yourself?",       tag: "fun",      mine: false, type: "text" },
+    { id: 22, text: "what is your villain era right now?",                              tag: "fun",      mine: false, type: "text" },
+    // deep (4)
+    { id: 2,  text: "something you changed your mind about recently",                   tag: "deep",     mine: false, type: "text" },
+    { id: 10, text: "what would your 15-year-old self think of you now?",               tag: "deep",     mine: false, type: "text" },
+    { id: 23, text: "what's something you're still figuring out?",                      tag: "deep",     mine: false, type: "text" },
+    { id: 24, text: "a belief you hold that most people around you don't",              tag: "deep",     mine: false, type: "text" },
+    // rec (4)
+    { id: 3,  text: "best $20 you've spent in the last month",                          tag: "rec",      mine: false, type: "text" },
+    { id: 9,  text: "recommend something — anything",                                   tag: "rec",      mine: false, type: "text" },
+    { id: 25, text: "a show, book, or podcast that actually changed something for you", tag: "rec",      mine: false, type: "text" },
+    { id: 26, text: "underrated place you've been to recently",                         tag: "rec",      mine: false, type: "text" },
+    // life (4)
+    { id: 4,  text: "what are you irrationally excited about right now?",               tag: "life",     mine: false, type: "text" },
+    { id: 5,  text: "something small that made you irrationally happy lately",          tag: "life",     mine: false, type: "text" },
+    { id: 12, text: "most recent thing you genuinely laughed out loud at",              tag: "life",     mine: false, type: "text" },
+    { id: 27, text: "what does a perfect tuesday look like for you right now?",         tag: "life",     mine: false, type: "text" },
+    // goals (3)
+    { id: 8,  text: "what's something you've been meaning to do for over a year?",      tag: "goals",    mine: false, type: "text" },
+    { id: 28, text: "one thing you want to be different by next month",                 tag: "goals",    mine: false, type: "text" },
+    { id: 29, text: "something you're quietly proud of lately",                         tag: "goals",    mine: false, type: "text" },
+    // hot take (3)
+    { id: 6,  text: "a hill you are willing to die on right now",                       tag: "hot take", mine: false, type: "text" },
+    { id: 30, text: "most overrated thing people your age are obsessed with",           tag: "hot take", mine: false, type: "text" },
+    { id: 31, text: "an opinion you have that you'd never say at a dinner party",       tag: "hot take", mine: false, type: "text" },
+    // photo (6)
+    { id: 13, text: "show us where you are right now",                                  tag: "photo",    mine: false, type: "photo" },
+    { id: 14, text: "something on your desk or bedside table",                          tag: "photo",    mine: false, type: "photo" },
+    { id: 15, text: "last screenshot on your camera roll",                              tag: "photo",    mine: false, type: "photo" },
+    { id: 16, text: "a view you've seen recently that stuck with you",                  tag: "photo",    mine: false, type: "photo" },
+    { id: 17, text: "something you made, cooked, or built lately",                      tag: "photo",    mine: false, type: "photo" },
+    { id: 18, text: "a corner of your life that feels most like you right now",         tag: "photo",    mine: false, type: "photo" },
+    // poll (3)
+    { id: 19, text: "what should we theme next month's issue?",                         tag: "poll",     mine: false, type: "text", poll: true, options: ["seasons / nature", "nostalgia", "ambitions", "open topic"] },
+    { id: 20, text: "pick a group challenge for next month",                            tag: "poll",     mine: false, type: "text", poll: true, options: ["read the same book", "try a new recipe", "go somewhere new", "a digital detox day"] },
+    { id: 32, text: "how are we all doing honestly?",                                   tag: "poll",     mine: false, type: "text", poll: true, options: ["thriving", "surviving", "somewhere in between", "send help"] },
   ];
-  let nextId = 21;
+  let nextId = 33;
   let activeFilter = 'all';
 
   // No seed — starts empty
@@ -2077,59 +2232,8 @@
 
   // ── HELPERS ───────────────────────────────────────────────
 
-
-  // Auto-collapse tabs when they don't fit
-  function checkTabsFit() {
-    const tabs = document.querySelector('.header-tabs');
-    const dd = document.querySelector('.tab-dropdown-wrap');
-    if (!tabs || !dd) return;
-    // Temporarily show tabs to measure
-    tabs.style.visibility = 'hidden';
-    tabs.style.display = 'flex';
-    dd.style.display = 'none';
-    const tabsWidth = tabs.scrollWidth;
-    const headerWidth = document.querySelector('header')?.offsetWidth || 9999;
-    const logoWidth = document.querySelector('.logo')?.offsetWidth || 0;
-    const rightWidth = document.querySelector('.header-right')?.offsetWidth || 0;
-    const available = headerWidth - logoWidth - rightWidth - 48; // 48px gap buffer
-    tabs.style.visibility = '';
-    if (tabsWidth > available) {
-      tabs.style.display = 'none';
-      dd.style.display = 'flex';
-    } else {
-      tabs.style.display = 'flex';
-      dd.style.display = 'none';
-    }
-  }
-  window.addEventListener('resize', checkTabsFit);
-  // Run after DOM ready
-  setTimeout(checkTabsFit, 100);
-
-  function toggleTabDropdown() {
-    const menu = document.getElementById('tab-dd-menu');
-    const btn = document.getElementById('tab-dd-btn');
-    menu.classList.toggle('open');
-    btn.classList.toggle('open', menu.classList.contains('open'));
-  }
-  function switchTabDD(id, label, btn) {
-    document.getElementById('tab-dd-menu').classList.remove('open');
-    document.getElementById('tab-dd-label').textContent = label;
-    document.querySelectorAll('.tab-dropdown-item').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    const desktopBtn = document.querySelector(`.tab-btn[onclick*="${id}"]`);
-    switchTab(id, desktopBtn || btn);
-  }
-  document.addEventListener('click', e => {
-    const wrap = document.querySelector('.tab-dropdown-wrap');
-    if (wrap && !wrap.contains(e.target)) {
-      document.getElementById('tab-dd-menu')?.classList.remove('open');
-    }
-  });
-
   function goHome(e) {
     e.preventDefault();
-    if (!currentUser) return; // not logged in, do nothing
-    // hide app, show home screen
     document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
     document.getElementById('home-screen').classList.remove('hidden');
   }
@@ -2172,10 +2276,30 @@
     if (!list) return;
     if (issueList.length === 0) {
       list.innerHTML = '';
-      if (empty) empty.style.display = '';
+      if (empty) { empty.style.opacity = '0'; empty.style.display = ''; requestAnimationFrame(() => { empty.style.opacity = '1'; }); }
+      const oldCta = document.getElementById('issue-answer-cta'); if (oldCta) oldCta.innerHTML = '';
       return;
     }
-    if (empty) empty.style.display = 'none';
+    if (empty) { empty.style.opacity = '0'; setTimeout(() => { empty.style.display = 'none'; empty.style.opacity = '1'; }, 200); }
+    else if (empty) empty.style.display = 'none';
+
+    // render after list
+    const renderCta = () => {
+      let cta = document.getElementById('issue-answer-cta');
+      if (!cta) {
+        cta = document.createElement('div');
+        cta.id = 'issue-answer-cta';
+        list.parentNode.insertBefore(cta, list.nextSibling);
+      }
+      cta.innerHTML = `<div style="margin:1rem 0 0.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;">
+        <div style="font-size:13px;color:var(--ink-faint);">${issueList.length} question${issueList.length !== 1 ? 's' : ''} ready</div>
+        <button class="auth-btn" style="width:auto;padding:8px 20px;font-size:14px;display:inline-flex;align-items:center;gap:7px;" onclick="switchTab('answer', document.querySelector('.tab-btn[onclick*=answer]'))">
+          ready to answer?
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 6.5h9M7 2.5l4 4-4 4" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>`;
+    };
+
     list.innerHTML = issueList.map((id, i) => {
       const item = getItemById(id);
       if (!item) return '';
@@ -2206,6 +2330,7 @@
 
   function setFilter(tag) {
     activeFilter = tag;
+    gardenShowAll = false;
     renderFilters();
     renderGarden();
   }
@@ -2218,14 +2343,23 @@
       : garden.filter(g => g.tag === activeFilter);
 
     if (filtered.length === 0) {
-      document.getElementById('garden-list').innerHTML =
-        '<div class="garden-empty">no questions with this tag yet</div>';
+      document.getElementById('garden-list').innerHTML = `<div style="text-align:center;padding:4rem 1rem 3rem;position:relative;max-width:400px;margin:0 auto;">
+  <style>@keyframes sway-empty{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}</style>
+  <div style="position:absolute;top:20px;left:10px;pointer-events:none;"><svg width="40" height="40" viewBox="0 0 40 40" fill="none" style="opacity:0.35;animation:sway-empty 3s -2s ease-in-out infinite;"><g transform="translate(20,20) rotate(15)"><path fill="none" d="M0,0 C-4,-3 -6,-14 0,-20 C6,-14 4,-3 0,0Z" stroke="#5A8070" stroke-width="1.5" stroke-linecap="round" transform="rotate(0)"/><path fill="none" d="M0,0 C-4,-3 -6,-14 0,-20 C6,-14 4,-3 0,0Z" stroke="#5A8070" stroke-width="1.5" stroke-linecap="round" transform="rotate(72)"/><path fill="none" d="M0,0 C-4,-3 -6,-14 0,-20 C6,-14 4,-3 0,0Z" stroke="#5A8070" stroke-width="1.5" stroke-linecap="round" transform="rotate(144)"/><path fill="none" d="M0,0 C-4,-3 -6,-14 0,-20 C6,-14 4,-3 0,0Z" stroke="#5A8070" stroke-width="1.5" stroke-linecap="round" transform="rotate(216)"/><path fill="none" d="M0,0 C-4,-3 -6,-14 0,-20 C6,-14 4,-3 0,0Z" stroke="#5A8070" stroke-width="1.5" stroke-linecap="round" transform="rotate(288)"/><circle fill="#CFE8D5" cx="0" cy="0" r="4" stroke="#5A8070" stroke-width="1.5"/></g></svg></div>
+  <div style="position:absolute;top:10px;right:10px;pointer-events:none;"><svg width="40" height="40" viewBox="0 0 40 40" fill="none" style="opacity:0.35;animation:sway-empty 4s -5s ease-in-out infinite;"><g transform="translate(20,20) rotate(-20)"><path fill="none" d="M0,0 C-4,-3 -6,-14 0,-20 C6,-14 4,-3 0,0Z" stroke="#5A8070" stroke-width="1.5" stroke-linecap="round" transform="rotate(0)"/><path fill="none" d="M0,0 C-4,-3 -6,-14 0,-20 C6,-14 4,-3 0,0Z" stroke="#5A8070" stroke-width="1.5" stroke-linecap="round" transform="rotate(72)"/><path fill="none" d="M0,0 C-4,-3 -6,-14 0,-20 C6,-14 4,-3 0,0Z" stroke="#5A8070" stroke-width="1.5" stroke-linecap="round" transform="rotate(144)"/><path fill="none" d="M0,0 C-4,-3 -6,-14 0,-20 C6,-14 4,-3 0,0Z" stroke="#5A8070" stroke-width="1.5" stroke-linecap="round" transform="rotate(216)"/><path fill="none" d="M0,0 C-4,-3 -6,-14 0,-20 C6,-14 4,-3 0,0Z" stroke="#5A8070" stroke-width="1.5" stroke-linecap="round" transform="rotate(288)"/><circle fill="#CFE8D5" cx="0" cy="0" r="4" stroke="#5A8070" stroke-width="1.5"/></g></svg></div>
+  <svg width="80" height="80" viewBox="0 0 40 40" fill="none" style="animation:sway-empty 5s ease-in-out infinite;display:block;margin:0 auto 1.25rem;"><g transform="translate(20,20)"><path fill="none" d="M0,0 C-4,-3 -6,-14 0,-20 C6,-14 4,-3 0,0Z" stroke="#5A8070" stroke-width="1.5" stroke-linecap="round" transform="rotate(0)"/><path fill="none" d="M0,0 C-4,-3 -6,-14 0,-20 C6,-14 4,-3 0,0Z" stroke="#5A8070" stroke-width="1.5" stroke-linecap="round" transform="rotate(72)"/><path fill="none" d="M0,0 C-4,-3 -6,-14 0,-20 C6,-14 4,-3 0,0Z" stroke="#5A8070" stroke-width="1.5" stroke-linecap="round" transform="rotate(144)"/><path fill="none" d="M0,0 C-4,-3 -6,-14 0,-20 C6,-14 4,-3 0,0Z" stroke="#5A8070" stroke-width="1.5" stroke-linecap="round" transform="rotate(216)"/><path fill="none" d="M0,0 C-4,-3 -6,-14 0,-20 C6,-14 4,-3 0,0Z" stroke="#5A8070" stroke-width="1.5" stroke-linecap="round" transform="rotate(288)"/><circle fill="#CFE8D5" cx="0" cy="0" r="4" stroke="#5A8070" stroke-width="1.5"/></g></svg>
+  <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--ink);margin-bottom:0.4rem;">no ${activeFilter === 'all' ? 'prompts' : activeFilter + ' prompts'} yet</div>
+  <div style="font-size:14px;color:var(--ink-faint);line-height:1.6;">${activeFilter === 'all' ? 'write your own or generate one with AI above' : 'try a different tag or write your own'}</div>
+</div>`;
       return;
     }
 
-    // No cap — any number of questions allowed
+    const isMobile = window.innerWidth <= 600;
+    const GARDEN_PAGE = isMobile ? 4 : 9;
+    const visible = gardenShowAll ? filtered : filtered.slice(0, GARDEN_PAGE);
+    const hasMore = !gardenShowAll && filtered.length > GARDEN_PAGE;
 
-    document.getElementById('garden-list').innerHTML = filtered.map((item, idx) => {
+    document.getElementById('garden-list').innerHTML = visible.map((item, idx) => {
       const inIssue = isInIssue(item.id);
       const color = item.mine ? 'gs-peach' : gsColors[item.id % gsColors.length];
       const isPoll = item.tag === 'poll';
@@ -2260,18 +2394,44 @@
             </div>
           </div>
         </div>`;
-    }).join('');
+    }).join('') + (hasMore ? `
+    <div style="grid-column:1/-1;text-align:center;padding:0.5rem 0 0.25rem;">
+      <button class="btn-ghost" style="font-size:13px;" onclick="showAllGarden()">
+        show all ${filtered.length} prompts
+      </button>
+    </div>` : '');
   }
 
-
-
-  function deleteFromGarden(id) {
-    issueList = issueList.filter(s => s !== id);
-    garden = garden.filter(g => g.id !== id);
-    renderSlots();
-    renderFilters();
+  let gardenShowAll = false;
+  function showAllGarden() {
+    gardenShowAll = true;
     renderGarden();
   }
+
+  function deleteFromGarden(id) {
+    // Find the sticky element and animate it out
+    const stickies = document.querySelectorAll('.garden-sticky');
+    let targetEl = null;
+    stickies.forEach(el => {
+      if (el.querySelector(`[onclick*="${id}"]`)) targetEl = el;
+    });
+    const doDelete = () => {
+      issueList = issueList.filter(s => s !== id);
+      garden = garden.filter(g => g.id !== id);
+      renderSlots();
+      renderFilters();
+      renderGarden();
+    };
+    if (targetEl) {
+      targetEl.style.transition = 'opacity 0.2s ease, transform 0.2s ease';
+      targetEl.style.opacity = '0';
+      targetEl.style.transform = 'scale(0.92)';
+      setTimeout(doDelete, 200);
+    } else {
+      doDelete();
+    }
+  }
+
 
   // garden-input is now a textarea — Enter adds newline, user clicks 'add →'
 
@@ -2279,13 +2439,27 @@
 
   function togglePollMode() {
     isPollMode = !isPollMode;
-    const btn = document.getElementById('poll-toggle');
+    const track = document.getElementById('poll-toggle');
     const opts = document.getElementById('poll-options-inline');
-    const sticky = btn.closest('.garden-write-sticky');
-    btn.classList.toggle('active', isPollMode);
-    opts.style.display = isPollMode ? 'block' : 'none';
-    sticky.classList.toggle('gs-lavender', isPollMode);
-    sticky.classList.toggle('gs-yellow', !isPollMode);
+    const sticky = document.querySelector('.garden-write-sticky');
+    if (track) {
+      track.classList.toggle('on', isPollMode);
+      track.classList.add(isPollMode ? 'anim-on' : 'anim-off');
+      setTimeout(() => { track.classList.remove('anim-on', 'anim-off'); }, 350);
+    }
+    // Smooth expand/collapse poll options with CSS transition
+    if (isPollMode) {
+      opts.style.maxHeight = '200px';
+      opts.style.opacity = '1';
+    } else {
+      opts.style.maxHeight = '0';
+      opts.style.opacity = '0';
+    }
+    // Subtle green shift — stay green throughout
+    if (sticky) {
+      sticky.classList.toggle('gs-sage-deep', isPollMode);
+      sticky.classList.toggle('gs-sage', !isPollMode);
+    }
     document.getElementById('garden-input').placeholder = isPollMode
       ? 'what should the group vote on?'
       : 'write your own question here…';
@@ -2394,6 +2568,7 @@
     const stickiesHtml = qs.map((q, i) => {
       const qItem = getItemById(issueList[i]);
       const isPhoto = qItem && qItem.type === 'photo';
+      const isPoll  = qItem && qItem.tag === 'poll';
       const color = stickyColors[i % stickyColors.length];
 
       if (isPhoto) {
@@ -2403,14 +2578,7 @@
             ? `<div class="sticky-photo-uploaded" id="photo-grid-${i}" onclick="triggerUpload(${i})">
                 <img src="${photosByQ[i][0]}" alt="your photo" />
                </div>`
-            : `<div class="sticky-photo-upload" onclick="triggerUpload(${i})" id="photo-grid-${i}">
-                <svg width="20" height="20" viewBox="0 0 22 22" fill="none">
-                  <rect x="1" y="4" width="20" height="15" rx="2" stroke="currentColor" stroke-width="1.2"/>
-                  <path d="M1 11l5-5 4 4 4-3 6 6" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
-                  <circle cx="7" cy="9" r="2" stroke="currentColor" stroke-width="1"/>
-                </svg>
-                tap to add photo
-              </div>`
+            : ``
           }
           <textarea class="sticky-caption" placeholder="caption (optional)…"
             oninput="onAnswerInput(${i}, this.value)">${answers[i] || ''}</textarea>
@@ -2418,20 +2586,42 @@
         </div>`;
       }
 
-      return `<div class="sticky ${color}">
+      if (isPoll) {
+        const opts = qItem.options || [];
+        const saved = answers[i] || '';
+        const pills = opts.map(opt => {
+          const sel = saved === opt;
+          return `<button onclick="onAnswerInput(${i},'${opt.replace(/'/g, "\\'")}');renderAnswers();"
+            style="display:block;width:100%;text-align:left;padding:8px 12px;margin-bottom:5px;border-radius:8px;
+            border:1.5px solid ${sel ? 'var(--green)' : 'rgba(28,43,32,0.15)'};
+            background:${sel ? 'var(--green-light)' : 'transparent'};
+            color:${sel ? 'var(--green)' : 'rgba(28,43,32,0.7)'};font-weight:${sel ? '600' : '400'};
+            font-family:Montserrat,sans-serif;font-size:13px;cursor:pointer;transition:all 0.15s;">
+            ${sel ? '<span style="margin-right:5px;">\u2713</span>' : ''}${opt}
+          </button>`;
+        }).join('');
+        return `<div class="sticky ${color}" style="display:flex;flex-direction:column;position:relative;padding-bottom:38px;">
+          <div class="sticky-q-label">${i + 1}. ${q}</div>
+          <div style="margin-top:10px;">${pills}</div>
+          <div class="photo-grid" id="photo-grid-${i}" style="margin-top:4px;"></div>
+          <button onclick="triggerUpload(${i})" id="photo-btn-${i}" style="position:absolute;bottom:10px;right:12px;display:inline-flex;align-items:center;gap:6px;padding:5px 11px;background:var(--surface);border:1.5px solid var(--border);border-radius:999px;cursor:pointer;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:500;color:var(--ink-mid);transition:background 0.15s,border-color 0.15s;" onmouseover="this.style.background='var(--green-light)';this.style.borderColor='var(--border-mid)'" onmouseout="this.style.background='var(--surface)';this.style.borderColor='var(--border)'">
+            <svg width="12" height="12" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="20" height="15" rx="2.5"/><circle cx="11" cy="12" r="3.5"/><path d="M15 4l-1.5-2.5h-5L7 4"/></svg>
+            add a photo
+          </button>
+          <div class="sticky-autosave" id="saved-${i}"></div>
+        </div>`;
+      }
+
+      return `<div class="sticky ${color}" style="display:flex;flex-direction:column;position:relative;padding-bottom:38px;">
         <div class="sticky-q-label">${i + 1}. ${q}</div>
         <textarea class="sticky-textarea"
           placeholder="write something here…"
           oninput="onAnswerInput(${i}, this.value)">${answers[i] || ''}</textarea>
-        <div class="sticky-upload" onclick="triggerUpload(${i})">
-          <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
-            <rect x="0.5" y="0.5" width="10" height="10" rx="1.5" stroke="currentColor" stroke-width="0.8"/>
-            <path d="M0.5 7.5L3 5L5 7L7 5.5L10.5 8.5" stroke="currentColor" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round"/>
-            <circle cx="3.5" cy="3.5" r="0.8" fill="currentColor"/>
-          </svg>
+        <div class="photo-grid" id="photo-grid-${i}" style="margin-top:4px;"></div>
+        <button onclick="triggerUpload(${i})" id="photo-btn-${i}" style="position:absolute;bottom:10px;right:12px;display:inline-flex;align-items:center;gap:6px;padding:5px 11px;background:var(--surface);border:1.5px solid var(--border);border-radius:999px;cursor:pointer;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:500;color:var(--ink-mid);transition:background 0.15s,border-color 0.15s;" onmouseover="this.style.background='var(--green-light)';this.style.borderColor='var(--border-mid)'" onmouseout="this.style.background='var(--surface)';this.style.borderColor='var(--border)'">
+          <svg width="12" height="12" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="20" height="15" rx="2.5"/><circle cx="11" cy="12" r="3.5"/><path d="M15 4l-1.5-2.5h-5L7 4"/></svg>
           add a photo
-        </div>
-        <div class="photo-grid" id="photo-grid-${i}"></div>
+        </button>
         <div class="sticky-autosave" id="saved-${i}"></div>
       </div>`;
     }).join('');
@@ -2482,303 +2672,285 @@
     this.value = '';
   });
 
+  // photoCaptions[i] = array of caption strings per photo
+  const photoCaptions = Array(8).fill(null).map(() => []);
+
+  function removePhoto(i, pi) {
+    photosByQ[i].splice(pi, 1);
+    photoCaptions[i].splice(pi, 1);
+    renderPhotos(i, photosByQ[i]);
+  }
+
   function renderPhotos(i, photos) {
     const grid = document.getElementById('photo-grid-' + i);
+    const btn  = document.getElementById('photo-btn-' + i);
     if (!grid) return;
-    const qItem = getItemById(issueList[i]);
-    const isPhoto = qItem && qItem.type === 'photo';
-    if (isPhoto && photos.length > 0) {
-      grid.innerHTML = `<img src="${photos[0]}" alt="your photo" style="width:100%;border-radius:4px;object-fit:cover;" />`;
-      grid.onclick = () => triggerUpload(i);
-    } else if (!isPhoto) {
-      grid.innerHTML = photos.map(src =>
-        `<div class="photo-thumb"><img src="${src}" alt="photo" /></div>`
-      ).join('');
-    }
+
+    grid.innerHTML = photos.map((src, pi) => `
+      <div class="sticky-photo-item">
+        <img src="${src}" alt="photo ${pi+1}" />
+        <button class="sticky-photo-delete" onclick="removePhoto(${i},${pi})" title="remove photo">
+          <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1 1l9 9M10 1l-9 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+        <textarea class="sticky-photo-caption" placeholder="caption (optional)…" rows="1"
+          oninput="photoCaptions[${i}][${pi}]=this.value">${photoCaptions[i][pi]||''}</textarea>
+      </div>`).join('');
+
+    // Update button label
+    if (btn) btn.innerHTML = btn.innerHTML.replace(/add a photo|add more photos/, photos.length > 0 ? 'add more photos' : 'add a photo');
   }
 
   // ── ZINE ──────────────────────────────────────────────────
 
-  // Zine data will be populated from the database
-  const zineData = [];
+  const zineData    = [];
+  let zinePage      = 0;
+  let zinePages     = [];
+  let isFlipping    = false;
 
-  let zinePage = 0;
-  let zinePages = []; // array of {left, right} HTML strings
-  let activeZineKey = 'current';
-  let isFlipping = false;
 
-  // ── PAST ISSUES DATA ──────────────────────────────────────
-  const pastZines = [];
+  let activeZineKey = 'instructions';
+  const pastZines   = [];
+
+  function makeShelfItem(key, innerHtml, label) {
+    const el = document.createElement('div');
+    el.className = `zine-shelf-item${activeZineKey === key ? ' active-issue' : ''}`;
+    el.onclick = () => loadZine(key);
+    el.innerHTML = innerHtml + `<div class="zine-shelf-month">${label}</div>`;
+    return el;
+  }
+
+  function miniCover(title, vol, dots, style='') {
+    const dotHtml = dots.map(c => `<div class="zine-mini-dot" style="background:${c};"></div>`).join('');
+    return `<div class="zine-mini-cover" ${style}><div class="zine-mini-title"${style.includes('green') ? ' style="color:rgba(255,255,255,0.75);"' : ''}>${title}</div><div class="zine-mini-vol"${style.includes('green') ? ' style="color:rgba(255,255,255,0.5);"' : ''}>${vol}</div><div class="zine-mini-dots">${dotHtml}</div></div>`;
+  }
 
   function renderShelf() {
     const shelf = document.getElementById('zine-shelf');
-    const wrap = document.getElementById('zine-shelf-outer');
+    const wrap  = document.getElementById('zine-shelf-outer');
     if (!shelf) return;
     shelf.innerHTML = '';
-    const recentPast = pastZines.slice(0, 3);
-    if (recentPast.length === 0) { if (wrap) wrap.style.display = 'none'; return; }
     if (wrap) wrap.style.display = '';
 
-    const currentItem = document.createElement('div');
-    currentItem.className = `zine-shelf-item ${activeZineKey === 'current' ? 'active-issue' : ''}`;
-    currentItem.onclick = () => loadZine('current');
-    currentItem.innerHTML = `
-      <div class="zine-mini-cover">
-        <div class="zine-mini-title">dumpdates</div>
-        <div class="zine-mini-vol">vol. 03</div>
-        <div class="zine-mini-dots">
-          <div class="zine-mini-dot" style="background:#D8EED4;"></div>
-          <div class="zine-mini-dot" style="background:#D0E8E0;"></div>
-          <div class="zine-mini-dot" style="background:#FADADD;"></div>
-        </div>
-      </div>
-      <div class="zine-shelf-month">mar 2026</div>`;
-    shelf.appendChild(currentItem);
+    // Current issue — only show if there are published past issues
+    if (pastZines.length > 0) {
+      const mo = (currentIssue?.month || 'current').split(' ')[0].slice(0,3);
+      shelf.appendChild(makeShelfItem('current',
+        miniCover('dumpdates', issueList.length ? issueList.length + ' q' : 'open', ['#CFE8D5','#F1D4DC','#C9C3D9']),
+        mo));
+      pastZines.slice(0, 3).forEach(pz =>
+        shelf.appendChild(makeShelfItem(pz.key,
+          miniCover('dumpdates', pz.vol, pz.dotColors, 'style="border-left-color:var(--ink-faint);background:#f5f0ea;"'),
+          pz.month)));
+    }
 
-    recentPast.forEach(pz => {
-      const item = document.createElement('div');
-      item.className = `zine-shelf-item ${activeZineKey === pz.key ? 'active-issue' : ''}`;
-      item.onclick = () => loadZine(pz.key);
-      item.innerHTML = `
-        <div class="zine-mini-cover" style="border-left-color:var(--ink-faint);background:#f5f0ea;">
-          <div class="zine-mini-title">dumpdates</div>
-          <div class="zine-mini-vol">${pz.vol}</div>
-          <div class="zine-mini-dots">
-            ${pz.dotColors.map(c => `<div class="zine-mini-dot" style="background:${c};"></div>`).join('')}
-          </div>
-        </div>
-        <div class="zine-shelf-month">${pz.month}</div>`;
-      shelf.appendChild(item);
-    });
+    // Guide — always present
+    shelf.appendChild(makeShelfItem('instructions',
+      miniCover('how to', 'guide', ['rgba(255,255,255,0.3)','rgba(255,255,255,0.2)'], 'style="background:var(--green);border-left-color:#1a3d2e;"'),
+      'guide'));
   }
 
   function loadZine(key) {
     activeZineKey = key;
     zinePage = 0;
     renderShelf();
-    const label = document.getElementById('zine-current-label');
-    if (key === 'current') {
-      if (label) label.textContent = '';
-      renderZine(zineData);
+    renderZine(key === 'current' ? zineData : key === 'instructions' ? [] : (pastZines.find(p=>p.key===key)||{data:[]}).data);
+  }
+
+  // ── Helpers ───────────────────────────────────────────────
+  const PAGE_BG   = '#F7F5F0';
+  const RULED     = '<div class="journal-ruled"></div>';
+  const PAD       = 'position:relative;z-index:2;padding:3rem 3rem 2.5rem;';
+
+  const flowerSvg = (sz, col='#2F5D50', fill='#CFE8D5', sw=2) => {
+    const p = r => `<path fill="none" d="M0,0 C${-3.5*sw/2},-2 ${-5*sw/2},-9 0,-${sz*.45} C${5*sw/2},-9 ${3.5*sw/2},-2 0,0Z" stroke="${col}" stroke-width="${sw}" stroke-linecap="round" transform="rotate(${r})"/>`;
+    return `<svg width="${sz}" height="${sz}" viewBox="0 0 ${sz} ${sz}" fill="none"><g transform="translate(${sz/2},${sz/2})">${[0,72,144,216,288].map(p).join('')}<circle fill="${fill}" cx="0" cy="0" r="${sz*.1}" stroke="${col}" stroke-width="${sw}"/></g></svg>`;
+  };
+
+  const flowerSm = (pos, op, [dur, delay, sz]) =>
+    `<div style="position:absolute;${pos};opacity:${op};animation:sway-empty ${dur}s ${delay}s ease-in-out infinite;pointer-events:none;">${flowerSvg(sz)}</div>`;
+
+  const page = (inner, pageNum='') =>
+    `<div style="height:580px;position:relative;overflow:hidden;background:${PAGE_BG};">${RULED}<div style="${PAD}">${inner}</div>${pageNum ? `<div class="journal-page-num">${pageNum}</div>` : ''}</div>`;
+
+  const label = (txt) =>
+    `<div style="font-family:'Playfair Display',serif;font-size:11px;color:var(--ink-ghost);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:1.75rem;">${txt}</div>`;
+
+  const step = (bg, textCol, labelCol, num, title, body, extra='') =>
+    `<div style="background:${bg};border-radius:2px;padding:14px 16px 18px;transform:rotate(${['-1.2deg','0.9deg','-0.7deg'][num-1]});box-shadow:2px 3px 10px rgba(28,43,32,0.14);position:relative;${extra}"><div style="position:absolute;top:0;left:0;right:0;height:5px;background:${labelCol};border-radius:2px 2px 0 0;"></div><div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:${labelCol.replace('0.12','0.45')};margin-bottom:5px;">step ${num}</div><div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:${textCol};margin-bottom:4px;">${title}</div><div style="font-size:12px;color:${textCol.replace(')',',0.6)')};line-height:1.55;">${body}</div></div>`;
+
+  // ── Shelf ─────────────────────────────────────────────────
+
+
+  // ── Load ──────────────────────────────────────────────────
+  function loadZine(key) {
+    activeZineKey = key;
+    zinePage = 0;
+    const lbl = document.getElementById('zine-current-label');
+    if (key === 'instructions' || key === 'current') {
+      if (lbl) lbl.textContent = '';
+      renderZine(key === 'current' ? zineData : []);
     } else {
       const pz = pastZines.find(p => p.key === key);
-      if (pz && label) label.textContent = `${pz.month} · ${pz.vol}`;
+      if (lbl) lbl.textContent = pz ? `${pz.month} · ${pz.vol}` : '';
       if (pz) renderZine(pz.data);
     }
   }
 
-  // Build an array of page spreads {left, right} from zine data
-  function buildPages(data) {
-    const pages = [];
-    const colors = ['#F1D4DC','#D8B7C9','#C9C3D9','#E3B8C2','#BFA0B8','#FBF0C0','#FAD9BC'];
-    const rotations = [-1.5, 1.2, -0.8, 1.8, -1.1, 0.9, -1.6, 1.3];
+  // ── Page builders ─────────────────────────────────────────
+  function buildCoverPage() {
+    return {
+      left: `<div style="height:580px;background:var(--green);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3.5rem 3rem;text-align:center;position:relative;overflow:hidden;"><div style="position:absolute;inset:0;background:repeating-linear-gradient(transparent 0,transparent 27px,rgba(255,255,255,0.05) 27px,rgba(255,255,255,0.05) 28px);pointer-events:none;"></div><div style="margin-bottom:2rem;animation:sway-empty 5s ease-in-out infinite;">${flowerSvg(64,'#2F5D50','#CFE8D5',2)}</div><div style="font-family:'Playfair Display',serif;font-size:42px;font-weight:700;color:#fff;line-height:1.05;margin-bottom:0.75rem;letter-spacing:-1px;">dump<br>dates</div><div style="font-size:11px;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.45);margin-top:0.5rem;">your group zine</div><div class="journal-page-num" style="bottom:16px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,0.2);">></div>`,
+      right: page(`${label('welcome')}<div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--ink);line-height:1.3;margin-bottom:1.5rem;">a monthly catch-up for people you actually care about.</div><div style="font-size:14px;color:var(--ink-faint);line-height:1.8;margin-bottom:1.25rem;">once a month, everyone picks questions, writes answers, and gets a little zine like this one.</div><div style="font-size:14px;color:var(--ink-faint);line-height:1.8;">it's like a group chat — but slower, and better.</div>${flowerSm('top:50%;right:18px;transform:translateY(-50%)',0.2,[6,-6,22])}`, 'ii')
+    };
+  }
 
-    // ── ONBOARDING ZINE — shown when no published questions yet ──
-    if (!data || data.length === 0) {
-      const leafSvg = `<svg viewBox="0 0 120 140" fill="none" class="zine-cover-leaf">
-        <path d="M60 130C60 130 10 90 10 45C10 22 28 5 50 5C55 5 60 7 60 7C60 7 65 5 70 5C92 5 110 22 110 45C110 90 60 130 60 130Z" fill="#2F5D50" fill-opacity="0.15" stroke="#2F5D50" stroke-width="2"/>
-        <path d="M60 10 Q70 50 60 130" stroke="#2F5D50" stroke-width="1.5" stroke-dasharray="4 6"/>
-        <path d="M60 55 Q80 48 92 35" stroke="#2F5D50" stroke-width="1.5"/>
-        <path d="M60 80 Q40 73 28 60" stroke="#2F5D50" stroke-width="1.5"/>
-      </svg>`;
+  function buildStepsPage() {
+    const s1 = step('#CFE8D5','#1C3A2A','rgba(47,93,80,0.12)',1,'pick questions','head to the question garden and choose what everyone answers this month');
+    const s2 = step('#F1D4DC','#5A1E2E','rgba(122,46,66,0.12)',2,'everyone answers','your group writes answers throughout the month — text, photos, whatever feels right','align-self:flex-end;width:90%;');
+    const s3 = step('#C9C3D9','#2A2448','rgba(60,53,96,0.12)',3,'read the zine','on the 1st, everyones answers appear here as a flippable zine');
+    const inviteRight = `${label('get started')}<div style="font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:var(--ink);line-height:1.3;margin-bottom:1rem;">invite your people</div><div style="font-size:14px;color:var(--ink-faint);line-height:1.7;margin-bottom:2rem;">share your invite code so friends can join — dumpdates works best with 3–8 people.</div><button onclick="copyInviteCode()" style="background:var(--green);color:#fff;border:none;border-radius:999px;padding:12px 22px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Montserrat',sans-serif;display:inline-flex;align-items:center;gap:8px;transition:opacity 0.15s;" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><rect x="1" y="4" width="9" height="9" rx="1.5" stroke="white" stroke-width="1.2"/><path d="M4 4V2.5C4 1.67 4.67 1 5.5 1H11.5C12.33 1 13 1.67 13 2.5V8.5C13 9.33 12.33 10 11.5 10H10" stroke="white" stroke-width="1.2"/></svg>copy invite code</button><div style="margin-top:1.5rem;font-size:13px;color:var(--ink-ghost);">or <span style="color:var(--green);font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:2px;" onclick="switchTab('questions',document.querySelector('.tab-btn'))">go to the question garden →</span></div>${flowerSm('top:24px;right:24px',0.3,[7,-2,36])}${flowerSm('bottom:40px;left:24px',0.25,[9,-4,28])}`;
+    return {
+      left:  page(`${label('how it works')}<div style="display:flex;flex-direction:column;gap:14px;">${s1}${s2}${s3}</div>`, 'iii'),
+      right: page(inviteRight, 'iv')
+    };
+  }
 
-      // Page 1: welcome cover (left) + how it works (right)
-      pages.push({
-        left: `<div class="zine-cover">
-          <div class="zine-cover-inner">
-            <div class="zine-cover-vol">your first issue</div>
-            <div class="zine-cover-deco">${leafSvg}</div>
-            <h1 class="zine-cover-title">dumpdates</h1>
-            <div class="zine-cover-sub">a monthly catch-up for friends</div>
-            <div class="zine-cover-qs" style="margin-top:1rem;">no issue published yet</div>
-          </div>
-        </div>`,
-        right: `<div class="zine-spread-right" style="display:flex;flex-direction:column;justify-content:center;padding:3rem 2rem;">
-          <div style="font-family:'Playfair Display',serif;font-size:13px;color:var(--ink-ghost);letter-spacing:0.06em;margin-bottom:1.5rem;">how it works</div>
-          <div style="display:flex;flex-direction:column;gap:1.5rem;">
-            <div style="display:flex;gap:1rem;align-items:flex-start;">
-              <div style="width:28px;height:28px;border-radius:50%;background:#CFE8D5;color:#2F5D50;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">1</div>
-              <div>
-                <div style="font-size:15px;font-weight:600;color:var(--ink);margin-bottom:3px;">pick your questions</div>
-                <div style="font-size:13px;color:var(--ink-faint);line-height:1.5;">head to the question garden and add questions to this month's issue</div>
-              </div>
-            </div>
-            <div style="display:flex;gap:1rem;align-items:flex-start;">
-              <div style="width:28px;height:28px;border-radius:50%;background:#F1D4DC;color:#7A2E42;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">2</div>
-              <div>
-                <div style="font-size:15px;font-weight:600;color:var(--ink);margin-bottom:3px;">invite your friends</div>
-                <div style="font-size:13px;color:var(--ink-faint);line-height:1.5;">share your group invite code — everyone answers in their own time</div>
-              </div>
-            </div>
-            <div style="display:flex;gap:1rem;align-items:flex-start;">
-              <div style="width:28px;height:28px;border-radius:50%;background:#C9C3D9;color:#3C3560;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</div>
-              <div>
-                <div style="font-size:15px;font-weight:600;color:var(--ink);margin-bottom:3px;">read the zine</div>
-                <div style="font-size:13px;color:var(--ink-faint);line-height:1.5;">on the 1st of the month, everyone's answers appear here as a flippable zine</div>
-              </div>
-            </div>
-          </div>
-        </div>`
-      });
-
-      // Page 2: invite prompt (left) + sample sticky spread (right)
-      const sampleStickies = [
-        { col: '#F1D4DC', rot: -1.5, text: 'what song has been on repeat lately?', name: 'you?' },
-        { col: '#FBF0C0', rot: 1.2,  text: 'best thing you spent money on this month', name: 'a friend' },
-        { col: '#C9C3D9', rot: -0.8, text: 'something you changed your mind about', name: 'another friend' },
-      ].map(s => `<div class="zine-sticky" style="background:${s.col};--r:${s.rot}deg;opacity:0.55;">
-        <div class="zine-sticky-inner">
-          <div class="zine-sticky-from" style="opacity:0.5;">${s.name}</div>
-          <div class="zine-sticky-text" style="color:rgba(28,43,32,0.45);">${s.text}</div>
-        </div>
-      </div>`).join('');
-
-      pages.push({
-        left: `<div class="zine-spread-left" style="display:flex;flex-direction:column;justify-content:center;padding:3rem 2rem;">
-          <div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--ink);line-height:1.3;margin-bottom:1.25rem;">get your friends in here</div>
-          <div style="font-size:15px;color:var(--ink-faint);line-height:1.6;margin-bottom:2rem;">dump dates works best with 3–8 friends. share your invite code to get everyone set up.</div>
-          <button onclick="copyInviteCode()" style="
-            background:var(--green);color:#fff;border:none;border-radius:999px;
-            padding:12px 20px;font-size:15px;font-weight:600;cursor:pointer;
-            font-family:'Montserrat',sans-serif;display:inline-flex;align-items:center;gap:8px;
-            width:fit-content;transition:opacity 0.15s;
-          " onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <rect x="1" y="4" width="9" height="9" rx="1.5" stroke="white" stroke-width="1.2"/>
-              <path d="M4 4V2.5C4 1.67 4.67 1 5.5 1H11.5C12.33 1 13 1.67 13 2.5V8.5C13 9.33 12.33 10 11.5 10H10" stroke="white" stroke-width="1.2"/>
-            </svg>
-            copy invite code
-          </button>
-          <div style="margin-top:1.5rem;font-size:13px;color:var(--ink-ghost);">or head to the <span style="color:var(--green);font-weight:600;cursor:pointer;" onclick="switchTab('questions',document.querySelector('.tab-btn'))">question garden</span> to start building this issue</div>
-        </div>`,
-        right: `<div class="zine-spread-right" style="position:relative;display:flex;flex-direction:column;justify-content:center;">
-          <div style="font-family:'Playfair Display',serif;font-size:13px;color:var(--ink-ghost);letter-spacing:0.06em;margin-bottom:1.25rem;padding:0 1.5rem;">what it'll look like…</div>
-          <div class="zine-stickies-area" style="padding:0 1.5rem;">${sampleStickies}</div>
-          <div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(247,249,244,0.95) 100%);pointer-events:none;"></div>
-        </div>`
-      });
-
-      // Page 3: back cover
-      pages.push({
-        left: `<div class="zine-back-left">
-          <div class="zine-back-inner">
-            <div class="zine-back-title">dumpdates</div>
-            <div class="zine-back-sub">your first issue awaits ♡</div>
-            <div class="zine-back-deco">
-              <svg viewBox="0 0 60 60" fill="none" width="60" height="60">
-                <circle cx="30" cy="30" r="28" stroke="#2F5D50" stroke-width="1" stroke-dasharray="4 4"/>
-                <path d="M30 10C30 10 15 20 15 32C15 38 20 43 30 43C40 43 45 38 45 32C45 20 30 10 30 10Z" fill="#2F5D50" fill-opacity="0.12" stroke="#2F5D50" stroke-width="1.2"/>
-              </svg>
-            </div>
-            <div class="zine-back-issue">vol. 01 · coming soon</div>
-          </div>
-        </div>`,
-        right: `<div class="zine-back-right"></div>`
-      });
-
-      return pages;
-    }
-
-    // Page 0: cover (left) + blank ruled page (right)
+  function buildIssueCover(data) {
+    const mo = currentIssue?.month || 'this month';
     const friendsHtml = (currentGroup ? [] : [
       {bg:'#CFE8D5',fg:'#2F5D50',init:'AL'},{bg:'#BFA0B8',fg:'#5A2E50',init:'JM'},
       {bg:'#E3B8C2',fg:'#7A2E42',init:'RP'},{bg:'#C9C3D9',fg:'#3C3560',init:'SK'}
-    ]).map(f => `<span class="zc-friend" style="background:${f.bg};color:${f.fg};">${f.init}</span>`).join('');
-
-    pages.push({
-      left: `<div class="zine-cover">
-        <div class="zine-cover-inner">
-          <div class="zine-cover-vol">vol. 03 · ${currentIssue?.month || 'march 2026'}</div>
-          <div class="zine-cover-deco">
-            <svg viewBox="0 0 120 140" fill="none" class="zine-cover-leaf">
-              <path d="M60 130C60 130 10 90 10 45C10 22 28 5 50 5C55 5 60 7 60 7C60 7 65 5 70 5C92 5 110 22 110 45C110 90 60 130 60 130Z" fill="#2F5D50" fill-opacity="0.15" stroke="#2F5D50" stroke-width="2"/>
-              <path d="M60 10 Q70 50 60 130" stroke="#2F5D50" stroke-width="1.5" stroke-dasharray="4 6"/>
-              <path d="M60 55 Q80 48 92 35" stroke="#2F5D50" stroke-width="1.5"/>
-              <path d="M60 80 Q40 73 28 60" stroke="#2F5D50" stroke-width="1.5"/>
-            </svg>
-          </div>
-          <h1 class="zine-cover-title">dumpdates</h1>
-          <div class="zine-cover-sub">a monthly catch-up for friends</div>
-          ${friendsHtml ? `<div class="zine-cover-friends">${friendsHtml}</div>` : ''}
-          <div class="zine-cover-qs">${data.length} question${data.length !== 1 ? 's' : ''} inside</div>
-        </div>
-      </div>`,
+    ]).map(f=>`<span class="zc-friend" style="background:${f.bg};color:${f.fg};">${f.init}</span>`).join('');
+    return {
+      left: `<div class="zine-cover"><div class="zine-cover-inner"><div class="zine-cover-vol">${mo}</div><div class="zine-cover-deco">${flowerSvg(80,'#2F5D50','#CFE8D5',1.5)}</div><h1 class="zine-cover-title">dumpdates</h1><div class="zine-cover-sub">a monthly catch-up for friends</div>${friendsHtml?`<div class="zine-cover-friends">${friendsHtml}</div>`:''}<div class="zine-cover-qs">${data.length} question${data.length!==1?'s':''} inside</div></div></div>`,
       right: `<div class="zine-blank-right"></div>`
-    });
+    };
+  }
 
-    // One spread per question
-    data.forEach((section, idx) => {
-      const stickies = section.answers.map((a, si) => {
-        const col = colors[(si + idx) % colors.length];
-        const rot = rotations[(si + idx * 2) % rotations.length];
-        return `<div class="zine-sticky" style="background:${col};--r:${rot}deg;animation-delay:${0.08 + si * 0.07}s;">
-          <div class="zine-sticky-inner">
-            <div class="zine-sticky-from">
-              <span class="zine-sticky-av" style="background:${a.bg};color:${a.fg};">${a.initials}</span>
-              ${a.name}
-            </div>
-            <div class="zine-sticky-text">${a.text}</div>
-          </div>
-        </div>`;
-      }).join('');
+  function buildAnswerSpread(section, idx) {
+    const colors = ['#F1D4DC','#D8B7C9','#C9C3D9','#E3B8C2','#BFA0B8','#FBF0C0','#FAD9BC'];
+    const rots   = [-1.5, 1.2, -0.8, 1.8, -1.1, 0.9, -1.6, 1.3];
+    const stickies = section.answers.map((a, si) => {
+      const col = colors[(si+idx)%colors.length];
+      const rot = rots[(si+idx*2)%rots.length];
+      return `<div class="zine-sticky" style="background:${col};--r:${rot}deg;animation-delay:${.08+si*.07}s;"><div class="zine-sticky-inner"><div class="zine-sticky-from"><span class="zine-sticky-av" style="background:${a.bg};color:${a.fg};">${a.initials}</span>${a.name}</div><div class="zine-sticky-text">${a.text}</div></div></div>`;
+    }).join('');
+    return {
+      left:  `<div class="zine-spread-left"><div class="zine-q-num">q.${String(idx+1).padStart(2,'0')}</div><div class="zine-q-text">${section.q}</div></div>`,
+      right: `<div class="zine-spread-right"><div class="zine-stickies-area">${stickies}</div></div>`
+    };
+  }
 
-      pages.push({
-        left: `<div class="zine-spread-left">
-          <div class="zine-q-num">q.${String(idx + 1).padStart(2,'0')}</div>
-          <div class="zine-q-text">${section.q}</div>
-          <div class="zine-page-num">${idx + 1}</div>
-        </div>`,
-        right: `<div class="zine-spread-right">
-          <div class="zine-stickies-area">${stickies}</div>
-        </div>`
-      });
-    });
-
-    // Back cover spread
-    pages.push({
-      left: `<div class="zine-back-left">
-        <div class="zine-back-inner">
-          <div class="zine-back-title">dumpdates</div>
-          <div class="zine-back-sub">until next month ♡</div>
-          <div class="zine-back-deco">
-            <svg viewBox="0 0 60 60" fill="none" width="60" height="60">
-              <circle cx="30" cy="30" r="28" stroke="#2F5D50" stroke-width="1" stroke-dasharray="4 4"/>
-              <path d="M30 10C30 10 15 20 15 32C15 38 20 43 30 43C40 43 45 38 45 32C45 20 30 10 30 10Z" fill="#2F5D50" fill-opacity="0.12" stroke="#2F5D50" stroke-width="1.2"/>
-            </svg>
-          </div>
-          <div class="zine-back-issue">${currentIssue?.month || 'march 2026'} · vol. 03</div>
-        </div>
-      </div>`,
+  function buildBackCover() {
+    const mo = currentIssue?.month || 'this month';
+    return {
+      left: `<div class="zine-back-left"><div class="zine-back-inner"><div class="zine-back-title">dumpdates</div><div class="zine-back-sub">until next month ♡</div><div class="zine-back-deco">${flowerSvg(60,'#5A8070','rgba(207,232,213,0.3)',1.2)}</div><div class="zine-back-issue">${mo}</div></div></div>`,
       right: `<div class="zine-back-right"></div>`
-    });
+    };
+  }
 
+  function buildGuidePage3() {
+    const flowerRow = [0,72,144,216,288].map(r =>
+      `<path fill="none" d="M0,0 C-4,-3 -6,-14 0,-20 C6,-14 4,-3 0,0Z" stroke="#5A8070" stroke-width="1.5" stroke-linecap="round" transform="rotate(${r})"/>`
+    ).join('') + `<circle fill="#CFE8D5" cx="0" cy="0" r="4" stroke="#5A8070" stroke-width="1.5"/>`;
+
+    const flower = (sz, rot, dur, delay, op) =>
+      `<div style="animation:sway-empty ${dur}s ${delay}s ease-in-out infinite;opacity:${op};display:inline-block;">
+        <svg width="${sz}" height="${sz}" viewBox="0 0 40 40" fill="none">
+          <g transform="translate(20,20) rotate(${rot})">${flowerRow}</g>
+        </svg>
+      </div>`;
+
+    const leftContent = `
+      ${label('your first issue')}
+      <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--ink);line-height:1.35;margin-bottom:1rem;">ready when you are.</div>
+      <div style="font-size:14px;color:var(--ink-faint);line-height:1.75;margin-bottom:1.75rem;">once you add questions and invite your group, this is where everyone's answers will live — as a flippable zine you can come back to any time.</div>
+      <div style="font-size:13px;color:var(--ink-ghost);line-height:1.6;border-left:2px solid var(--border);padding-left:12px;font-style:italic;">the first issue is always the hardest to start. just add one question.</div>`;
+
+    const rightContent = `
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:3rem 2rem;text-align:center;position:relative;">
+        <style>@keyframes sway-empty{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}</style>
+        <div style="position:absolute;top:32px;left:28px;">${flower(36, 15, 7, -2, 0.35)}</div>
+        <div style="position:absolute;top:24px;right:24px;">${flower(28, -20, 9, -5, 0.25)}</div>
+        <div style="position:absolute;bottom:48px;left:20px;">${flower(24, 30, 6, -3, 0.2)}</div>
+        <div style="position:absolute;bottom:40px;right:28px;">${flower(32, -10, 8, -7, 0.3)}</div>
+        <div style="animation:sway-empty 5s ease-in-out infinite;margin-bottom:1.5rem;">
+          <svg width="80" height="80" viewBox="0 0 40 40" fill="none">
+            <g transform="translate(20,20)">${flowerRow}</g>
+          </svg>
+        </div>
+        <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--ink);margin-bottom:0.5rem;">nothing here yet</div>
+        <div style="font-size:13px;color:var(--ink-faint);line-height:1.6;max-width:180px;">your zine will appear here once your group has answered some questions</div>
+      </div>`;
+
+    return {
+      left:  page(leftContent, 'v'),
+      right: `<div style="height:580px;position:relative;overflow:hidden;background:#F7F5F0;">${RULED}${rightContent}</div>`
+    };
+  }
+
+
+  // ── Build pages ───────────────────────────────────────────
+  function buildPages(data) {
+    if (!data || data.length === 0) {
+      return [buildCoverPage(), buildStepsPage(), buildGuidePage3()];
+    }
+    const pages = [buildIssueCover(data)];
+    data.forEach((section, i) => pages.push(buildAnswerSpread(section, i)));
+    pages.push(buildBackCover());
     return pages;
   }
 
+  // ── Render ────────────────────────────────────────────────
   function renderZine(data) {
     zinePages = buildPages(data);
-    zinePage = 0;
+    zinePage  = 0;
     renderBookPage(0);
   }
 
-  function renderBookPage(pageIdx) {
-    const book = document.getElementById('book-open');
-    if (!book) return;
-    if (!zinePages[pageIdx]) {
-      book.innerHTML = '';
-      updateNav();
-      return;
+  function renderBookPage(idx) {
+    const book = document.getElementById('journal-pages');
+    if (!book || !zinePages[idx]) return;
+    const pg = zinePages[idx];
+    let l = document.getElementById('page-left');
+    let r = document.getElementById('page-right');
+    if (!l || !r) {
+      book.innerHTML = '<div class="journal-page-left" id="page-left"></div><div class="journal-page-right" id="page-right"></div>';
+      l = document.getElementById('page-left');
+      r = document.getElementById('page-right');
     }
-    const pg = zinePages[pageIdx];
-    book.innerHTML = `
-      ${pg.left ? `<div class="book-page-static left">
-        ${pg.left}
-        ${pageIdx > 0 ? `<div class="page-edge left-edge" onclick="turnPage(-1)"><div class="page-edge-arrow"><svg width="10" height="16" viewBox="0 0 10 16" fill="none"><path d="M7 2L2 8L7 14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>` : ''}
-      </div>` : ''}
-      ${pg.right ? `<div class="book-page-static right">
-        ${pg.right}
-        ${pageIdx < zinePages.length - 1 ? `<div class="page-edge right-edge" onclick="turnPage(1)"><div class="page-edge-arrow"><svg width="10" height="16" viewBox="0 0 10 16" fill="none"><path d="M3 2L8 8L3 14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>` : ''}
-      </div>` : ''}`;
+    l.innerHTML = pg.left  || '';
+    r.innerHTML = pg.right || '';
+
+    // Page numbers — left page gets even number, right page gets odd
+    const leftNum  = idx * 2 + 1;
+    const rightNum = idx * 2 + 2;
+    const numStyle = 'position:absolute;bottom:14px;font-size:11px;color:rgba(28,43,32,0.22);font-family:Montserrat,sans-serif;z-index:5;pointer-events:none;';
+    const pnL = document.createElement('div');
+    pnL.style.cssText = numStyle + 'left:20px;';
+    pnL.textContent = leftNum;
+    l.appendChild(pnL);
+    const pnR = document.createElement('div');
+    pnR.style.cssText = numStyle + 'right:20px;';
+    pnR.textContent = rightNum;
+    r.appendChild(pnR);
+
+    // Left edge zone — always show (disabled style when can't go back)
+    const ezL = document.createElement('div');
+    ezL.className = 'page-edge-zone left-zone' + (idx === 0 ? ' edge-disabled' : '');
+    ezL.setAttribute('role', 'button');
+    ezL.onclick = () => idx > 0 && turnPage(-1);
+    ezL.innerHTML = '<div class="page-edge-icon"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M6 2L3 5L6 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>';
+    l.appendChild(ezL);
+
+    // Right edge zone — always show
+    const ezR = document.createElement('div');
+    ezR.className = 'page-edge-zone right-zone' + (idx >= zinePages.length - 1 ? ' edge-disabled' : '');
+    ezR.setAttribute('role', 'button');
+    ezR.onclick = () => idx < zinePages.length - 1 && turnPage(1);
+    ezR.innerHTML = '<div class="page-edge-icon"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M4 2L7 5L4 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>';
+    r.appendChild(ezR);
+
     updateNav();
   }
 
@@ -2788,56 +2960,35 @@
     if (next < 0 || next >= zinePages.length) return;
     isFlipping = true;
 
-    const flipper = document.getElementById('book-flipper');
-    const front   = document.getElementById('flipper-front');
-    const back    = document.getElementById('flipper-back');
-    const book    = document.getElementById('book-open');
-    if (!flipper || !book) { zinePage = next; renderBookPage(next); isFlipping = false; return; }
+    const l = document.getElementById('page-left');
+    const r = document.getElementById('page-right');
+    if (!l || !r) { zinePage = next; renderBookPage(next); isFlipping = false; return; }
 
-    const current = zinePages[zinePage];
-    const nextPg  = zinePages[next];
+    l.style.transition = r.style.transition = 'opacity 0.15s ease';
+    l.style.opacity = r.style.opacity = '0';
 
-    if (dir === 1) {
-      // Turning forward — flip right page away (left-origin flip)
-      flipper.className = 'book-flipper flip-right';
-      flipper.style.transformOrigin = 'left center';
-      front.innerHTML = current.right || '';
-      back.innerHTML  = nextPg.left   || '';
-    } else {
-      // Turning back — flip left page away (right-origin flip)
-      flipper.className = 'book-flipper flip-left';
-      flipper.style.transformOrigin = 'right center';
-      front.innerHTML = current.left || '';
-      back.innerHTML  = nextPg.right  || '';
-    }
-
-    // Show flipper over the book
-    flipper.style.display = 'block';
-    flipper.style.animation = 'none';
-    flipper.offsetHeight; // reflow
-
-    const animClass = dir === 1 ? 'flipping-forward' : 'flipping-back';
-    flipper.classList.add(animClass);
-
-    flipper.addEventListener('animationend', () => {
-      flipper.style.display = 'none';
-      flipper.classList.remove(animClass);
+    setTimeout(() => {
+      const pg = zinePages[next];
+      l.innerHTML = pg.left  || '';
+      r.innerHTML = pg.right || '';
       zinePage = next;
-      renderBookPage(next);
-      isFlipping = false;
-    }, { once: true });
+      requestAnimationFrame(() => {
+        l.style.opacity = r.style.opacity = '1';
+        setTimeout(() => {
+          l.style.transition = r.style.transition = '';
+          isFlipping = false;
+          updateNav();
+        }, 150);
+      });
+    }, 150);
   }
 
   function updateNav() {
-    const prev    = document.getElementById('zine-prev');
-    const next    = document.getElementById('zine-next');
     const counter = document.getElementById('zine-counter');
-    if (prev) prev.disabled = zinePage === 0;
-    if (next) next.disabled = zinePage === zinePages.length - 1;
     if (counter) {
-      if (zinePage === 0) counter.textContent = 'cover';
+      if (zinePage === 0)                         counter.textContent = 'cover';
       else if (zinePage === zinePages.length - 1) counter.textContent = 'back';
-      else counter.textContent = `${zinePage} / ${zinePages.length - 2}`;
+      else counter.textContent = `${zinePage} of ${zinePages.length - 2}`;
     }
   }
 
@@ -2899,6 +3050,31 @@
   ];
   let dummyIndex = Math.floor(Math.random() * dummyQuestions.length);
 
+  const dummyPolls = [
+    ["what's everyone's go-to comfort food?", ["pizza", "ice cream", "ramen", "grilled cheese"]],
+    ["best season of the year?", ["spring 🌸", "summer ☀️", "autumn 🍂", "winter ❄️"]],
+    ["how do you decompress after a hard day?", ["walk outside", "watch something", "talk to someone", "go straight to sleep"]],
+    ["what's your current vibe?", ["thriving honestly", "just surviving", "somewhere in between", "ask me tomorrow"]],
+    ["ideal friday night?", ["big group hangout", "quiet night in", "dinner with close friends", "spontaneous adventure"]],
+    ["how do you take your coffee?", ["black, no fuss", "lots of milk", "sweet and fancy", "i don't drink coffee"]],
+    ["what's your love language?", ["words of affirmation", "quality time", "acts of service", "gifts", "physical touch"]],
+    ["which are you?", ["morning person", "night owl", "depends on the day", "permanently tired"]],
+    ["how do you feel about birthdays?", ["love them, make it a week", "low-key is perfect", "prefer to ignore them", "it's complicated"]],
+    ["what's your texting style?", ["always fast to reply", "slow but thoughtful", "read and forget", "voice notes only"]],
+    ["how do you handle conflict?", ["address it immediately", "need time to cool down", "avoid it if possible", "depends on the person"]],
+    ["what's your relationship with social media?", ["very online", "lurker mostly", "posting occasionally", "trying to quit"]],
+    ["how are you sleeping lately?", ["like a log", "okay-ish", "not great", "what is sleep"]],
+    ["pick your travel style", ["luxury all the way", "budget adventure", "slow and local", "i don't travel enough"]],
+    ["what's your exercise vibe?", ["gym regular", "outdoor only", "sporadic at best", "what's exercise"]],
+    ["how do you feel about surprises?", ["love them!", "depends on the surprise", "please don't", "i like planning too much"]],
+    ["what are you most excited about this month?", ["a trip or event", "something at work", "spending time with people", "honestly just resting"]],
+    ["current mood in one word — pick one", ["grateful", "chaotic", "cozy", "restless"]],
+    ["what's your go-to when you're sad?", ["music", "food", "reaching out to someone", "time alone"]],
+    ["how do you feel about change?", ["love it, bring it", "okay with it gradually", "need time to adjust", "prefer stability"]],
+  ];
+  let dummyPollIndex = Math.floor(Math.random() * 20);
+
+
   async function generateQuestions() {
     const btn = document.getElementById('gen-btn-garden');
     const input = document.getElementById('garden-input');
@@ -2928,7 +3104,24 @@
     if (genSpinner) genSpinner.style.display = 'none';
     btn.disabled = false;
 
-    input.value = question;
+    if (isPollMode) {
+      // Fill in a sample poll question + options
+      const poll = dummyPolls[dummyPollIndex % dummyPolls.length];
+      dummyPollIndex++;
+      input.value = poll[0];
+      // Fill in options
+      const optInputs = document.querySelectorAll('.poll-inline-input');
+      poll[1].forEach((opt, i) => {
+        if (optInputs[i]) optInputs[i].value = opt;
+        else {
+          addInlinePollOption();
+          const newInputs = document.querySelectorAll('.poll-inline-input');
+          if (newInputs[i]) newInputs[i].value = opt;
+        }
+      });
+    } else {
+      input.value = question;
+    }
     input.focus();
     input.style.transition = 'background 0.4s';
     input.style.background = 'rgba(203,232,210,0.5)';
@@ -3011,19 +3204,22 @@
     renderFilters();
     renderGarden();
     renderAnswers();
-    renderShelf();
     renderZine(demoZineData);
   }
 
-  // ── PREVIEW MODE (quick dev shortcut) ─────────────────────
-  const isPreview = new URLSearchParams(window.location.search).has('preview');
-  if (isPreview && !isDemo) {
+  function enterPreview() {
     document.getElementById('auth-screen').classList.add('hidden');
+    document.body.classList.remove('auth-open');
     issueList = [1, 2, 3];
-    document.getElementById('current-month-badge').textContent = 'april 2026';
+    const badge = document.getElementById('current-month-badge');
+    if (badge) badge.textContent = 'april 2026';
     renderSlots(); renderFilters(); renderGarden(); renderAnswers();
-    renderShelf(); renderZine([]);
+    showHomeScreen([]);
   }
+
+  // ── PREVIEW MODE (URL shortcut still works too) ────────────
+  const isPreview = new URLSearchParams(window.location.search).has('preview');
+  if (isPreview && !isDemo) enterPreview();
 
 
   // ── HOME SCREEN ────────────────────────────────────────────
@@ -3599,6 +3795,8 @@
       garden.unshift({ id: localId, text, tag: 'mine', mine: true, type: 'text' });
       input.value = '';
     }
+    // Auto-add to issue too
+    addToIssue(localId);
     renderFilters();
     renderGarden();
 
@@ -3606,7 +3804,7 @@
     if (currentGroup && currentUser) {
       const { data: q } = await sb.from('questions').insert({
         group_id: currentGroup.id,
-        text, tag: 'mine', type: 'text',
+        text, tag: isPollMode ? 'poll' : 'mine', type: 'text',
         added_by: currentUser.id
       }).select().single();
       if (q) {
