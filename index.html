@@ -1712,7 +1712,7 @@
         <circle cx="210" cy="26" r="1.8" fill="#C9C3D9" opacity="0.8"/>
       </svg>
     </div>
-    <div style="text-align:center;margin-top:0.5rem;font-size:10px;color:var(--ink-ghost);font-family:'Montserrat',sans-serif;">2026-03-18 22:44:20 ET</div>
+    <div style="text-align:center;margin-top:0.5rem;font-size:10px;color:var(--ink-ghost);font-family:'Montserrat',sans-serif;">2026-03-18 22:49:08 ET</div>
   </div>
 </div>
 
@@ -1841,7 +1841,7 @@
       <path d="M13 15 Q9.5 13.5 7.5 11" stroke="#2F5D50" stroke-width="0.9"/>
     </svg>
     <span class="logo-text">dump dates</span>
-    <span style="font-size:10px;color:var(--ink-ghost);font-family:'Montserrat',sans-serif;font-weight:400;margin-left:4px;align-self:flex-end;padding-bottom:4px;" title="last updated">2026-03-18 22:44:20 ET</span>
+    <span style="font-size:10px;color:var(--ink-ghost);font-family:'Montserrat',sans-serif;font-weight:400;margin-left:4px;align-self:flex-end;padding-bottom:4px;" title="last updated">2026-03-18 22:49:08 ET</span>
   </a>
   <!-- CENTERED TABS -->
   <div class="header-tabs">
@@ -3034,12 +3034,10 @@
   try {
     sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
   } catch(e) {
-    console.warn('Supabase failed to load:', e);
-    // Show auth screen anyway so page isn't blank
     document.getElementById('auth-screen').innerHTML = `
       <div class="auth-card" style="text-align:center;">
         <div class="auth-logo"><span class="auth-logo-text">dump dates</span></div>
-        <p style="color:var(--ink-faint);font-size:14px;margin-bottom:1rem;">couldn't connect — check your internet connection and refresh</p>
+        <p style="color:var(--ink-faint);font-size:14px;margin-bottom:1rem;">couldn't connect — check your internet and refresh</p>
         <button class="auth-btn" onclick="location.reload()">try again</button>
       </div>`;
   }
@@ -3120,6 +3118,7 @@
           </svg>
           account created!
         </span>`;
+        if (data?.user) await onSignedIn(data.user);
       } else {
         const { data, error } = await sb.auth.signInWithPassword({ email, password });
         if (error) throw error;
@@ -3130,6 +3129,7 @@
           </svg>
           loading your garden…
         </span>`;
+        if (data?.user) await onSignedIn(data.user);
       }
     } catch (e) {
       err.textContent = e.message;
@@ -3473,60 +3473,62 @@
 
   // ── INIT ──────────────────────────────────────────────────
 
-  // Listen for auth state changes
-  sb.auth.onAuthStateChange(async (event, session) => {
-    console.log('auth state change:', event, session?.user?.email);
-    if (event === 'SIGNED_OUT') return;
-    if (session?.user) {
-      currentUser = session.user;
-      console.log('user found, loading home screen...');
-
-      // Small delay to ensure DOM is ready
-      await new Promise(r => setTimeout(r, 300));
-
-      let memberships = [];
-      try {
-        const { data: mData } = await sb
-          .from('group_members')
-          .select('group_id')
-          .eq('user_id', currentUser.id);
-
-        if (mData && mData.length > 0) {
-          const groupIds = mData.map(m => m.group_id);
-          const { data: gData } = await sb.from('groups').select('id, name').in('id', groupIds);
-          memberships = mData.map(m => ({
-            group_id: m.group_id,
-            groups: gData?.find(g => g.id === m.group_id) || { id: m.group_id, name: 'unnamed group' }
-          }));
-        }
-      } catch (err) {
-        console.error('membership fetch error:', err);
-      }
-      document.getElementById('auth-screen').classList.add('hidden');
-      showHomeScreen(memberships);
-    }
-  });
-
-  // Initial render while waiting for auth check
   renderSlots();
   renderFilters();
   renderGarden();
+  setIssueDateCopy();
 
-  // ── ISSUE DATE COPY ──────────────────────────────────────────
-  (function() {
+  async function boot() {
+    if (!sb) return;
+    const { data: { session } } = await sb.auth.getSession();
+    if (session?.user) {
+      await onSignedIn(session.user);
+    }
+    // Only listen for future sign-in / sign-out events after initial check
+    sb.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'SIGNED_IN' && session?.user && !currentUser) {
+        await onSignedIn(session.user);
+      }
+      if (event === 'SIGNED_OUT') {
+        currentUser = null;
+        currentGroup = null;
+        location.reload();
+      }
+    });
+  }
+
+  async function onSignedIn(user) {
+    currentUser = user;
+    let memberships = [];
+    try {
+      const { data: mData } = await sb.from('group_members')
+        .select('group_id').eq('user_id', user.id);
+      if (mData?.length) {
+        const { data: gData } = await sb.from('groups')
+          .select('id, name').in('id', mData.map(m => m.group_id));
+        memberships = mData.map(m => ({
+          group_id: m.group_id,
+          groups: gData?.find(g => g.id === m.group_id) || { id: m.group_id, name: 'group' }
+        }));
+      }
+    } catch(e) { console.error(e); }
+    document.getElementById('auth-screen').classList.add('hidden');
+    showHomeScreen(memberships);
+  }
+
+  boot();
+
+  function setIssueDateCopy() {
     const now = new Date();
-    const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
-    const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0); // last day of current month
-    const monthNames = ['january','february','march','april','may','june','july','august','september','october','november','december'];
-    const nextMonthName = monthNames[nextMonth.getMonth()];
-    const lastDayNum = lastDay.getDate();
-    const currentMonthName = monthNames[now.getMonth()];
+    const months = ['january','february','march','april','may','june','july','august','september','october','november','december'];
+    const nextMonth = months[(now.getMonth() + 1) % 12];
+    const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+    const copy = `for ${nextMonth} · submit by ${months[now.getMonth()]} ${lastDay}`;
     const sub = document.getElementById('issue-section-sub');
-    if (sub) sub.textContent = `for ${nextMonthName} · submit by ${currentMonthName} ${lastDayNum}`;
-    // Also update answer section sub
+    if (sub) sub.textContent = copy;
     const answerSub = document.querySelector('#answer .section-sub');
-    if (answerSub) answerSub.textContent = `for ${nextMonthName} · submit by ${currentMonthName} ${lastDayNum}`;
-  })();
+    if (answerSub) answerSub.textContent = copy;
+  }
 
 </script>
 
