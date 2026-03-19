@@ -7,39 +7,49 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   <title>dump dates</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'><path d='M13 23C13 23 4 17 4 10C4 6.13 7.13 3 11 3C12 3 13 3.2 13 3.2C13 3.2 14 3 15 3C18.87 3 22 6.13 22 10C22 17 13 23 13 23Z' fill='%233A7D44'/></svg>" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'><path d='M13 23C13 23 4 17 4 10C4 6.13 7.13 3 11 3C12 3 13 3.2 13 3.2C13 3.2 14 3 15 3C18.87 3 22 6.13 22 10C22 17 13 23 13 23Z' fill='%232F5D50'/></svg>" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg:          #E8F0E3;
-      --bg-mid:      #DDE8D7;
-      --surface:     #F0F5EC;
-      --surface-alt: #E4EDE0;
-      --border:      #C6D9BE;
-      --border-mid:  #B0C9A6;
-      --ink:         #1E2A1A;
-      --ink-mid:     #4A5E44;
-      --ink-faint:   #7A9170;
-      --ink-ghost:   #A8BFA0;
-      --green:       #3A7D44;
-      --green-light: #D4EBDA;
-      --bloom:       #B85C38;
-      --bloom-light: #F5E4DC;
+      /* ── Garden greens (ui chrome) ── */
+      --bg:          #EAF0E8;
+      --bg-mid:      #DDE8DB;
+      --surface:     #F2F6F0;
+      --surface-alt: #E5EDE3;
+      --border:      #C4DCC8;
+      --border-mid:  #AECDB5;
+      --ink:         #1C2B20;
+      --ink-mid:     #2F5D50;
+      --ink-faint:   #5A7D6A;
+      --ink-ghost:   #94B5A0;
+      --green:       #2F5D50;
+      --green-light: #C2DACC;
+      /* ── Remove/danger accent ── */
+      --bloom:       #9B5B72;
+      --bloom-light: #F1D4DC;
+      /* ── Flower sticky note palette ── */
+      --sticky-petal:    #F1D4DC;
+      --sticky-mauve:    #D8B7C9;
+      --sticky-lavender: #C9C3D9;
+      --sticky-heather:  #E3B8C2;
+      --sticky-plum:     #BFA0B8;
+      --sticky-yellow:   #FBF0C0;
+      --sticky-peach:    #FAD9BC;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
 
     body {
-      font-family: 'Jost', sans-serif;
+      font-family: 'Montserrat', sans-serif;
       background: var(--bg);
       color: var(--ink);
       min-height: 100vh;
-      font-size: 16px;
-      line-height: 1.6;
+      font-size: 18px;
+      line-height: 1.65;
     }
 
     /* HEADER */
@@ -50,16 +60,25 @@
       position: sticky;
       top: 0;
       z-index: 100;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      height: 62px;
+      gap: 1rem;
+    }
+
+    .header-tabs {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      height: 62px;
+      justify-content: center;
+      height: 100%;
+      gap: 4px;
     }
 
     .logo { display: flex; align-items: center; gap: 9px; text-decoration: none; }
     .logo-text {
       font-family: 'Playfair Display', serif;
-      font-style: italic;
+      
       font-size: 24px;
       color: var(--ink);
       letter-spacing: -0.5px;
@@ -67,11 +86,11 @@
 
     .month-badge {
       font-size: 12px;
-      font-weight: 500;
+      font-weight: 700;
       background: var(--green-light);
       color: var(--green);
       padding: 4px 13px;
-      border-radius: 20px;
+      border-radius: 999px;
       letter-spacing: 0.03em;
       border: 1px solid var(--border);
     }
@@ -92,25 +111,16 @@
     .av-3 { background: #EDE0D4; color: #5C3820; }
     .av-4 { background: #EDE8D0; color: #5C4A18; }
 
-    /* TABS */
-    .nav-tabs {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      padding: 0 2rem;
-      display: flex;
-      overflow-x: auto;
-    }
-
     .tab-btn {
-      padding: 14px 22px; border: none; background: none;
-      font-family: 'Jost', sans-serif; font-size: 14px; font-weight: 400;
+      padding: 7px 18px; border: none; background: none;
+      font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 400;
       color: var(--ink-ghost); cursor: pointer;
-      border-bottom: 2px solid transparent; margin-bottom: -1px;
-      transition: color 0.2s, border-color 0.2s;
+      border-radius: 999px;
+      transition: color 0.15s, background 0.15s;
       white-space: nowrap; letter-spacing: 0.02em;
     }
-    .tab-btn:hover  { color: var(--ink-mid); }
-    .tab-btn.active { color: var(--ink); border-bottom-color: var(--green); font-weight: 500; }
+    .tab-btn:hover  { color: var(--ink-mid); background: var(--surface-alt); }
+    .tab-btn.active { color: var(--ink); background: var(--green-light); font-weight: 500; color: var(--green); }
 
     /* MAIN */
     main {
@@ -142,10 +152,10 @@
 
     .section-title {
       font-family: 'Playfair Display', serif;
-      font-size: 24px; font-weight: 400;
+      font-size: 24px; font-weight: 700;
       margin-bottom: 4px; letter-spacing: -0.3px;
     }
-    .section-sub { font-size: 14px; color: var(--ink-faint); margin-bottom: 1.5rem; }
+    .section-sub { font-size: 16px; color: var(--ink-faint); margin-bottom: 1.5rem; }
 
     /* COUNTDOWN */
     .countdown-strip {
@@ -156,14 +166,14 @@
     }
     .countdown-days {
       font-family: 'Playfair Display', serif;
-      font-size: 38px; color: var(--green); line-height: 1; font-style: italic;
+      font-size: 38px; color: var(--green); line-height: 1; 
     }
     .countdown-detail { font-size: 13px; color: var(--ink-faint); margin-top: 2px; }
     .countdown-main   { font-size: 15px; color: var(--ink-mid); margin-bottom: 2px; }
 
     /* ── THIS ISSUE SLOTS ── */
     .slots-label {
-      font-size: 11px; font-weight: 500; letter-spacing: 0.1em;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
       text-transform: uppercase; color: var(--ink-ghost);
       margin-bottom: 10px;
     }
@@ -187,14 +197,14 @@
     .slot-num {
       font-family: 'Playfair Display', serif;
       font-size: 20px; color: var(--ink-ghost);
-      min-width: 20px; font-style: italic; line-height: 1;
+      min-width: 20px;  line-height: 1;
       flex-shrink: 0;
     }
     .issue-slot.filled .slot-num { color: var(--green); }
 
     .slot-body { flex: 1; min-width: 0; }
     .slot-text {
-      font-size: 15px; color: var(--ink-faint); font-style: italic; line-height: 1.35;
+      font-size: 15px; color: var(--ink-faint);  line-height: 1.35;
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
     .issue-slot.filled .slot-text { color: var(--ink); font-style: normal; }
@@ -213,7 +223,7 @@
     /* ── GARDEN PAPER SHEET ── */
 
     .garden-paper {
-      background: #f8fdf4;
+      background: #F7F9F4;
       border-radius: 3px;
       box-shadow:
         0 2px 4px rgba(30,42,26,0.07),
@@ -239,11 +249,7 @@
       display: flex; flex-direction: column; align-items: center;
       justify-content: space-evenly; pointer-events: none;
     }
-    .garden-paper .sheet-hole {
-      width: 16px; height: 16px; border-radius: 50%;
-      background: var(--bg); border: 1px solid rgba(30,42,26,0.10);
-      box-shadow: inset 0 1px 3px rgba(0,0,0,0.12); flex-shrink: 0;
-    }
+    .garden-paper
 
     .garden-paper-content {
       position: relative;
@@ -252,7 +258,7 @@
 
     .garden-paper-title {
       font-family: 'Playfair Display', serif;
-      font-size: 22px; font-weight: 400; font-style: italic;
+      font-size: 22px; font-weight: 700; 
       color: #243020; margin-bottom: 4px;
     }
     .garden-paper-sub {
@@ -267,19 +273,19 @@
       flex: 1; padding: 9px 13px;
       border: 1px solid rgba(180,210,170,0.7); border-radius: 4px;
       font-size: 14px; background: rgba(255,255,255,0.7); color: #243020;
-      font-family: 'Jost', sans-serif; outline: none;
+      font-family: 'Montserrat', sans-serif; outline: none;
       transition: border-color 0.2s, background 0.2s;
       box-shadow: inset 0 1px 2px rgba(0,0,0,0.04);
     }
     .garden-add-row input:focus {
       border-color: rgba(90,140,80,0.6); background: rgba(255,255,255,0.95);
     }
-    .garden-add-row input::placeholder { color: #b0c8a8; font-style: italic; }
+    .garden-add-row input::placeholder { color: #b0c8a8;  }
 
     .btn-ghost {
       padding: 9px 18px; border: 1px solid rgba(90,140,80,0.4); border-radius: 4px;
-      background: rgba(255,255,255,0.6); font-size: 13px; color: #3A7D44;
-      cursor: pointer; font-family: 'Jost', sans-serif; font-weight: 500;
+      background: rgba(255,255,255,0.6); font-size: 13px; color: #2F5D50;
+      cursor: pointer; font-family: 'Montserrat', sans-serif; font-weight: 500;
       transition: background 0.15s, border-color 0.15s; white-space: nowrap;
     }
     .btn-ghost:hover { background: rgba(255,255,255,0.9); border-color: rgba(90,140,80,0.7); }
@@ -292,11 +298,11 @@
       padding: 4px 12px; border-radius: 3px;
       border: 1px solid rgba(180,210,170,0.6); background: rgba(255,255,255,0.5);
       font-size: 11px; color: #7a9a72; cursor: pointer;
-      font-family: 'Jost', sans-serif; transition: all 0.15s;
+      font-family: 'Montserrat', sans-serif; transition: all 0.15s;
       letter-spacing: 0.03em;
     }
-    .filter-btn:hover  { background: rgba(255,255,255,0.85); color: #3A7D44; }
-    .filter-btn.active { background: #DCEDC8; color: #3A7D44; border-color: rgba(90,140,80,0.5); font-weight: 500; }
+    .filter-btn:hover  { background: rgba(255,255,255,0.85); color: #2F5D50; }
+    .filter-btn.active { background: #DCEDC8; color: #2F5D50; border-color: rgba(90,140,80,0.5); font-weight: 500; border-radius: 999px; }
 
     /* Sticky grid on the paper */
     .garden-stickies {
@@ -310,20 +316,14 @@
       position: relative;
       padding: 12px 12px 28px;
       border-radius: 2px;
-      min-height: 120px;
+      aspect-ratio: 1 / 1;
       display: flex;
       flex-direction: column;
       cursor: default;
       transition: transform 0.18s, box-shadow 0.18s;
       box-shadow: 2px 3px 8px rgba(30,42,26,0.13), 0 1px 0 rgba(255,255,255,0.5) inset;
     }
-    .garden-sticky::after {
-      content: '';
-      position: absolute; bottom: 0; right: 0;
-      width: 16px; height: 16px;
-      background: linear-gradient(225deg, rgba(0,0,0,0.09) 50%, transparent 50%);
-      border-radius: 0 0 2px 0;
-    }
+    .garden-sticky::after { content: none; }
 
     .garden-sticky:nth-child(3n+1) { transform: rotate(-1.2deg); }
     .garden-sticky:nth-child(3n+2) { transform: rotate(0.7deg);  }
@@ -336,13 +336,13 @@
       z-index: 2;
     }
 
-    /* Colour palette — same as answer stickies */
-    .gs-yellow { background: #FFF9C4; }
-    .gs-green  { background: #DCEDC8; }
-    .gs-blue   { background: #C8E6FA; }
-    .gs-pink   { background: #FADADD; }
-    .gs-peach  { background: #FFE0CC; }
-    .gs-lavender { background: #E8DAFF; }
+    /* Flower palette — matches answer + zine stickies */
+    .gs-yellow   { background: #FBF0C0; }
+    .gs-green    { background: #F1D4DC; }
+    .gs-blue     { background: #C9C3D9; }
+    .gs-pink     { background: #E3B8C2; }
+    .gs-peach    { background: #FAD9BC; }
+    .gs-lavender { background: #D8B7C9; }
 
     /* In-issue sticky gets a green tint overlay */
     .garden-sticky.in-issue { opacity: 0.5; }
@@ -353,13 +353,13 @@
     }
 
     .gs-tag {
-      font-size: 10px; font-weight: 500; letter-spacing: 0.06em;
+      font-size: 12px; font-weight: 500; letter-spacing: 0.06em;
       text-transform: uppercase; color: rgba(30,42,26,0.38);
       margin-bottom: 7px;
     }
     .gs-text {
-      font-family: 'Jost', sans-serif;
-      font-size: 13px; line-height: 1.55; color: #2a2a1a;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 16px; line-height: 1.55; color: #2a2a1a;
       flex: 1;
     }
 
@@ -370,19 +370,19 @@
     }
 
     .gs-btn {
-      width: 22px; height: 22px; border-radius: 50%;
+      width: 32px; height: 32px; border-radius: 50%;
       border: none; background: transparent;
       cursor: pointer; display: flex; align-items: center; justify-content: center;
       color: rgba(30,42,26,0.3); transition: all 0.15s; flex-shrink: 0;
       opacity: 0;
     }
     .garden-sticky:hover .gs-btn { opacity: 1; }
-    .gs-btn.add:hover { color: #3A7D44; background: rgba(58,125,68,0.15); }
+    .gs-btn.add:hover { color: #2F5D50; background: rgba(58,125,68,0.15); }
     .gs-btn.del:hover { color: #B85C38; background: rgba(184,92,56,0.12); }
-    .gs-btn.added { opacity: 1; color: #3A7D44; background: rgba(58,125,68,0.15); cursor: default; }
+    .gs-btn.added { opacity: 1; color: #2F5D50; background: rgba(58,125,68,0.15); cursor: default; }
 
     .gs-in-badge {
-      font-size: 10px; font-weight: 500; color: #3A7D44;
+      font-size: 10px; font-weight: 500; color: #2F5D50;
       letter-spacing: 0.04em; opacity: 0;
     }
     .garden-sticky.in-issue .gs-in-badge { opacity: 1; }
@@ -390,7 +390,89 @@
     .garden-empty {
       grid-column: 1 / -1;
       padding: 2rem 0; text-align: center;
-      font-size: 14px; color: #9ab898; font-style: italic;
+      font-size: 14px; color: #9ab898; 
+    }
+
+    /* ── GARDEN WRITE STICKY ── */
+    .garden-write-sticky {
+      border-radius: 2px;
+      aspect-ratio: unset;
+      padding: 0;
+      display: flex; flex-direction: column;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.10), 0 3px 8px rgba(0,0,0,0.08), 0 6px 16px rgba(0,0,0,0.07);
+      margin-bottom: 1.25rem;
+    }
+    .garden-write-sticky::before {
+      content: ''; display: block; height: 6px;
+      border-radius: 2px 2px 0 0; background: inherit; filter: brightness(0.88); flex-shrink: 0;
+    }
+    .garden-write-sticky .gs-tag {
+      padding: 8px 12px 0; font-size: 11px;
+    }
+    .garden-write-textarea {
+      flex: 1; background: transparent; border: none; outline: none;
+      resize: none; font-family: 'Montserrat', sans-serif;
+      font-size: 16px; line-height: 1.5; color: rgba(0,0,0,0.75);
+      padding: 8px 12px; width: 100%; min-height: 72px;
+    }
+    .garden-write-textarea::placeholder { color: rgba(0,0,0,0.28); }
+    .garden-write-actions {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 8px 12px 10px; border-top: 1px solid rgba(0,0,0,0.07); gap: 8px;
+    }
+    .garden-ai-btn {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 12px; font-weight: 500; color: var(--green);
+      background: none; border: none; cursor: pointer;
+      font-family: 'Montserrat', sans-serif; padding: 0;
+      transition: opacity 0.15s;
+    }
+    .garden-ai-btn:hover { opacity: 0.75; }
+    .poll-toggle-btn {
+      display: flex; align-items: center; gap: 5px;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.04em;
+      color: rgba(0,0,0,0.35); background: none; border: 1.5px solid rgba(0,0,0,0.15);
+      border-radius: 999px; padding: 3px 9px; cursor: pointer;
+      font-family: 'Montserrat', sans-serif; transition: all 0.15s;
+    }
+    .poll-toggle-btn:hover { color: rgba(0,0,0,0.55); border-color: rgba(0,0,0,0.3); }
+    .poll-toggle-btn.active { background: rgba(0,0,0,0.08); color: rgba(0,0,0,0.65); border-color: rgba(0,0,0,0.25); }
+
+    .poll-inline-row {
+      display: flex; align-items: center; gap: 7px; margin-bottom: 5px;
+    }
+    .poll-inline-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: rgba(0,0,0,0.2); flex-shrink: 0;
+    }
+    .poll-inline-input {
+      flex: 1; background: rgba(255,255,255,0.5); border: none;
+      border-bottom: 1px solid rgba(0,0,0,0.15); outline: none;
+      font-size: 13px; font-family: 'Montserrat', sans-serif;
+      color: rgba(0,0,0,0.65); padding: 3px 0;
+    }
+    .poll-inline-input::placeholder { color: rgba(0,0,0,0.25); }
+    .poll-add-option-inline {
+      font-size: 11px; color: rgba(0,0,0,0.4); background: none; border: none;
+      cursor: pointer; padding: 4px 0; font-family: 'Montserrat', sans-serif;
+      transition: color 0.15s;
+    }
+    .poll-add-option-inline:hover { color: rgba(0,0,0,0.65); }
+
+    .garden-add-btn {
+      font-size: 13px; font-weight: 600; color: var(--green);
+      background: var(--green-light); border: 1px solid var(--border-mid);
+      border-radius: 999px; padding: 6px 16px; cursor: pointer;
+      font-family: 'Montserrat', sans-serif; transition: background 0.15s;
+    }
+    .garden-add-btn:hover { background: var(--border); }
+
+    /* Poll stickies get a little bar-chart badge */
+    .garden-sticky .poll-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 10px; font-weight: 500; color: rgba(30,42,26,0.5);
+      text-transform: uppercase; letter-spacing: 0.06em;
+      margin-bottom: 6px;
     }
 
     /* ── ANSWERS — paper + sticky notes ── */
@@ -400,7 +482,7 @@
     .progress-wrap { margin-bottom: 2rem; max-width: 700px; margin-left: auto; margin-right: auto; }
     .progress-label {
       display: flex; justify-content: space-between;
-      font-size: 13px; color: var(--ink-faint); margin-bottom: 8px;
+      font-size: 14px; color: var(--ink-faint); margin-bottom: 8px;
     }
     .progress-track { height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
     .progress-bar   { height: 100%; background: var(--green); border-radius: 2px; transition: width 0.4s ease; }
@@ -409,191 +491,126 @@
 
     /* ── NOTEBOOK PAPER SHEET ── */
     .paper-sheet {
-      background: #f9fef6;
-      border-radius: 2px;
+      background: #fafdf7;
+      border-radius: 3px;
       box-shadow:
-        0 1px 1px rgba(0,0,0,0.04),
-        0 4px 8px rgba(30,42,26,0.08),
-        0 12px 32px rgba(30,42,26,0.10),
-        1px 0 0 #e8e0d0,
-        -1px 0 0 #e8e0d0;
+        0 2px 4px rgba(0,0,0,0.06),
+        0 8px 24px rgba(0,0,0,0.09),
+        0 20px 48px rgba(0,0,0,0.07);
       margin-bottom: 3.5rem;
       position: relative;
       overflow: hidden;
     }
 
-    /* Spiral binding shadow on left edge */
-    .paper-sheet::before {
+    /* Pink top strip (like a real notepad header) */
+    .paper-sheet::after {
       content: '';
       position: absolute;
-      left: 0; top: 0; bottom: 0;
-      width: 56px;
-      background: linear-gradient(to right, #f0ebe0 0%, #f5f0e8 60%, transparent 100%);
+      top: 0; left: 0; right: 0;
+      height: 36px;
+      background: #f5e8ee;
+      border-bottom: 1px solid #e8c8d4;
       pointer-events: none;
       z-index: 1;
     }
 
-    /* Ruled lines */
+    /* Ruled lines — tight, starting right after the header strip */
     .sheet-ruled {
       position: absolute;
       inset: 0;
       background: repeating-linear-gradient(
         transparent 0px,
-        transparent 28px,
-        #c8dff0 28px,
-        #c8dff0 29px
+        transparent 23px,
+        #dae8f2 23px,
+        #dae8f2 24px
       );
-      background-position: 0 84px;
+      background-position: 0 36px;
       pointer-events: none;
+      z-index: 0;
     }
 
     /* Red margin line */
     .sheet-margin {
       position: absolute;
-      left: 80px; top: 0; bottom: 0;
+      left: 52px; top: 36px; bottom: 0;
       width: 1px;
-      background: rgba(220, 60, 60, 0.35);
+      background: rgba(210, 60, 80, 0.4);
       pointer-events: none;
       z-index: 2;
     }
 
-    /* Spiral holes — more realistic */
-    .sheet-holes {
-      position: absolute;
-      left: 0; top: 0; bottom: 0;
-      width: 56px;
-      display: flex; flex-direction: column;
-      align-items: center;
-      padding: 40px 0;
-      gap: 0;
-      justify-content: space-evenly;
-      pointer-events: none;
-      z-index: 3;
-    }
-
-    .sheet-hole {
-      width: 18px; height: 18px; border-radius: 50%;
-      background: var(--bg);
-      border: 1px solid rgba(30,42,26,0.15);
-      box-shadow:
-        inset 0 2px 4px rgba(0,0,0,0.18),
-        inset 0 1px 2px rgba(0,0,0,0.10),
-        0 1px 0 rgba(255,255,255,0.5);
-      flex-shrink: 0;
-      position: relative;
-    }
-
-    /* Spiral wire going through the holes */
-    .sheet-hole::before {
-      content: '';
-      position: absolute;
-      left: 50%; top: -6px; bottom: -6px;
-      width: 2px; margin-left: -1px;
-      background: rgba(160,150,130,0.4);
-      border-radius: 1px;
-    }
-
-    /* Content area — indented past the margin */
+    /* Content area */
     .sheet-content {
       position: relative;
-      padding: 2rem 2.5rem 2.5rem 6rem;
-      min-height: 220px;
+      padding: 1.5rem 3rem 3rem 3rem;
+      min-height: 300px;
       z-index: 4;
     }
 
+    /* Header label sits in the pink strip */
     .sheet-q-label {
-      font-size: 11px; font-weight: 500; letter-spacing: 0.1em;
-      text-transform: uppercase; color: #a8c4a0;
-      margin-bottom: 12px; font-family: 'Jost', sans-serif;
-      line-height: 28px; /* sit on a rule line */
+      font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+      text-transform: uppercase; color: #a07080;
+      height: 36px; line-height: 36px;
+      margin-bottom: 1.5rem;
+      font-family: 'Montserrat', sans-serif;
     }
 
     .sheet-q-text {
       font-family: 'Playfair Display', serif;
-      font-size: 22px; font-weight: 400; line-height: 1.45;
+      font-size: 24px; font-weight: 700; line-height: 1.45;
       color: #1e2c1a;
       margin-bottom: 2rem;
       max-width: 560px;
     }
 
-    /* Grid for sticky notes */
-    .stickies-grid {
+    /* Grid for sticky notes — same pattern as garden but bigger */
+    .answers-sticky-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
       gap: 20px;
-      margin-top: 0.5rem;
-      padding-bottom: 1.5rem;
+      align-items: start;
+    }
+
+    /* Question label inside each sticky */
+    .sticky-q-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: rgba(0,0,0,0.5);
+      margin-bottom: 8px;
+      line-height: 1.4;
+      letter-spacing: 0;
     }
 
     @media (max-width: 600px) {
-      .stickies-grid { grid-template-columns: 1fr; }
-      .sheet-content { padding: 1.5rem 1rem 1.5rem 1.25rem; }
-      .sheet-margin  { display: none; }
-      .sheet-holes   { display: none; }
-      .paper-sheet::before { display: none; }
-      .sheet-q-text  { font-size: 18px; }
+      .answers-sticky-grid { grid-template-columns: 1fr; gap: 14px; }
+      .sticky { aspect-ratio: unset; min-height: 160px; padding-bottom: 32px; }
+      .zine-sticky { aspect-ratio: unset; min-height: 120px; }
+      .garden-sticky { aspect-ratio: unset; min-height: 110px; }
     }
 
     /* ── STICKY NOTES ── */
     .sticky {
       position: relative;
-      padding: 0;
-      border-radius: 1px;
+      padding: 14px 14px 40px;
+      border-radius: 2px;
       display: flex;
       flex-direction: column;
-      min-height: 170px;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      /* Realistic sticky note shadow — slightly lifted at bottom */
-      box-shadow:
-        0 1px 2px rgba(0,0,0,0.10),
-        0 3px 6px rgba(0,0,0,0.08),
-        0 6px 16px rgba(0,0,0,0.07),
-        2px 8px 20px rgba(0,0,0,0.06);
+      aspect-ratio: 1 / 1;
+      transition: transform 0.18s, box-shadow 0.18s;
+      box-shadow: 2px 3px 8px rgba(30,42,26,0.13), 0 1px 0 rgba(255,255,255,0.5) inset;
     }
 
-    /* Top fold / glue strip */
-    .sticky::before {
-      content: '';
-      display: block;
-      height: 6px;
-      border-radius: 1px 1px 0 0;
-      background: inherit;
-      filter: brightness(0.88);
-      flex-shrink: 0;
-    }
-
-    /* Bottom curl effect */
-    .sticky::after {
-      content: '';
-      position: absolute;
-      bottom: 0; right: 0;
-      width: 28px; height: 28px;
-      background: linear-gradient(
-        225deg,
-        rgba(0,0,0,0.13) 0%,
-        rgba(0,0,0,0.06) 40%,
-        transparent 60%
-      );
-      border-radius: 0 0 1px 0;
-      pointer-events: none;
-    }
+    /* No glue strip, no corner triangle */
+    .sticky::before { content: none; }
 
     .sticky-inner {
       flex: 1;
-      padding: 10px 13px 12px;
       display: flex;
       flex-direction: column;
-      /* Horizontal ruled lines on the sticky */
-      background: repeating-linear-gradient(
-        transparent 0px,
-        transparent 23px,
-        rgba(0,0,0,0.07) 23px,
-        rgba(0,0,0,0.07) 24px
-      );
-      background-position: 0 32px;
     }
 
-    /* Tilt angles */
+    /* Tilt angles — same as garden */
     .sticky:nth-child(1) { transform: rotate(-1.2deg); }
     .sticky:nth-child(2) { transform: rotate(0.8deg);  }
     .sticky:nth-child(3) { transform: rotate(-0.5deg); }
@@ -602,36 +619,31 @@
     .sticky:nth-child(6) { transform: rotate(0.6deg);  }
 
     .sticky:hover {
-      transform: rotate(0deg) translateY(-4px) scale(1.01) !important;
-      box-shadow:
-        0 2px 4px rgba(0,0,0,0.12),
-        0 8px 20px rgba(0,0,0,0.12),
-        0 16px 40px rgba(0,0,0,0.10),
-        4px 16px 32px rgba(0,0,0,0.08);
+      transform: rotate(0deg) translateY(-3px) scale(1.02) !important;
+      box-shadow: 3px 6px 18px rgba(30,42,26,0.18), 0 1px 0 rgba(255,255,255,0.5) inset;
       z-index: 10;
     }
 
     /* Colour variants — richer, more saturated */
-    .sticky-yellow { background: #FFF176; }
-    .sticky-yellow .sticky-inner { background-image: repeating-linear-gradient(transparent 0px, transparent 23px, rgba(180,150,0,0.12) 23px, rgba(180,150,0,0.12) 24px); background-position: 0 32px; }
+    /* Flower sticky notes — pinks, purples, soft yellow, peach */
+    .sticky-petal    { background: #F1D4DC; }
+    .sticky-mauve    { background: #D8B7C9; }
+    .sticky-lavender { background: #C9C3D9; }
+    .sticky-heather  { background: #E3B8C2; }
+    .sticky-plum     { background: #BFA0B8; }
+    .sticky-yellow   { background: #FBF0C0; }
+    .sticky-peach    { background: #FAD9BC; }
 
-    .sticky-green  { background: #CCFF90; }
-    .sticky-green .sticky-inner { background-image: repeating-linear-gradient(transparent 0px, transparent 23px, rgba(0,120,0,0.10) 23px, rgba(0,120,0,0.10) 24px); background-position: 0 32px; }
+    .sticky-petal { background-image: repeating-linear-gradient(transparent 0px, transparent 23px, rgba(155,80,100,0.08) 23px, rgba(155,80,100,0.08) 24px); background-position: 0 36px; }
+    .sticky-mauve { background-image: repeating-linear-gradient(transparent 0px, transparent 23px, rgba(130,70,110,0.08) 23px, rgba(130,70,110,0.08) 24px); background-position: 0 36px; }
+    .sticky-peach { background-image: repeating-linear-gradient(transparent 0px, transparent 23px, rgba(160,90,40,0.10) 23px, rgba(160,90,40,0.10) 24px); background-position: 0 36px; }
 
-    .sticky-blue   { background: #80D8FF; }
-    .sticky-blue .sticky-inner { background-image: repeating-linear-gradient(transparent 0px, transparent 23px, rgba(0,80,180,0.10) 23px, rgba(0,80,180,0.10) 24px); background-position: 0 32px; }
-
-    .sticky-pink   { background: #FF80AB; }
-    .sticky-pink .sticky-inner { background-image: repeating-linear-gradient(transparent 0px, transparent 23px, rgba(180,0,80,0.10) 23px, rgba(180,0,80,0.10) 24px); background-position: 0 32px; }
-
-    .sticky-peach  { background: #FFCC80; }
-    .sticky-peach .sticky-inner { background-image: repeating-linear-gradient(transparent 0px, transparent 23px, rgba(160,80,0,0.10) 23px, rgba(160,80,0,0.10) 24px); background-position: 0 32px; }
-
-    .sticky-mine   { background: #FFFF8D; }
-    .sticky-mine .sticky-inner { background-image: repeating-linear-gradient(transparent 0px, transparent 23px, rgba(150,140,0,0.12) 23px, rgba(150,140,0,0.12) 24px); background-position: 0 32px; }
+    /* "Your answer" sticky — warm pale yellow */
+    .sticky-mine   { background: #FBF0C0; }
+    .sticky-mine { background-image: repeating-linear-gradient(transparent 0px, transparent 23px, rgba(160,130,0,0.10) 23px, rgba(160,130,0,0.10) 24px); background-position: 0 36px; }
 
     .sticky-from {
-      font-size: 10px; font-weight: 500; letter-spacing: 0.08em;
+      font-size: 12px; font-weight: 500; letter-spacing: 0.08em;
       text-transform: uppercase; color: rgba(0,0,0,0.4);
       margin-bottom: 7px; display: flex; align-items: center; gap: 5px;
     }
@@ -644,8 +656,8 @@
     }
 
     .sticky-body {
-      font-family: 'Jost', sans-serif;
-      font-size: 13px; line-height: 24px; /* match ruled lines */
+      font-family: 'Montserrat', sans-serif;
+      font-size: 16px; line-height: 28px;
       color: rgba(0,0,0,0.75);
       flex: 1;
     }
@@ -656,14 +668,14 @@
       background: transparent;
       border: none; outline: none;
       resize: none;
-      font-family: 'Jost', sans-serif;
-      font-size: 13px; line-height: 24px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 16px; line-height: 28px;
       color: rgba(0,0,0,0.75);
       width: 100%;
       min-height: 72px;
       caret-color: rgba(0,0,0,0.6);
     }
-    .sticky-textarea::placeholder { color: rgba(0,0,0,0.25); font-style: italic; }
+    .sticky-textarea::placeholder { color: rgba(0,0,0,0.25);  }
 
     .sticky-actions {
       display: flex; align-items: center; justify-content: space-between;
@@ -671,20 +683,25 @@
       border-top: 1px solid rgba(0,0,0,0.1);
     }
 
-    .sticky-saved {
-      font-size: 10px; color: rgba(0,100,0,0.7); opacity: 0;
-      transition: opacity 0.3s; display: flex; align-items: center; gap: 4px;
-    }
-    .sticky-saved.show { opacity: 1; }
 
-    .sticky-save-btn {
-      padding: 3px 12px; border-radius: 2px;
-      background: rgba(0,0,0,0.08); color: rgba(0,0,0,0.55);
-      border: 1px solid rgba(0,0,0,0.15);
-      font-size: 11px; cursor: pointer; font-family: 'Jost', sans-serif;
-      font-weight: 500; transition: background 0.15s;
+
+    .sticky-photo-btn {
+      position: absolute;
+      bottom: 10px; right: 10px;
+      width: 28px; height: 28px; border-radius: 50%;
+      border: 1.5px solid rgba(0,0,0,0.18);
+      background: rgba(255,255,255,0.5);
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      color: rgba(0,0,0,0.45); transition: all 0.15s;
     }
-    .sticky-save-btn:hover { background: rgba(0,0,0,0.14); }
+    .sticky-photo-btn:hover { background: rgba(255,255,255,0.85); color: rgba(0,0,0,0.7); border-color: rgba(0,0,0,0.3); }
+
+    .sticky-autosave {
+      font-size: 10px; color: rgba(0,0,0,0.3);
+      text-align: right; margin-top: 6px;
+      min-height: 14px; transition: opacity 0.3s;
+      font-family: 'Montserrat', sans-serif;
+    }
 
     /* Upload zone inside sticky */
     .sticky-upload {
@@ -719,7 +736,7 @@
     .sheet-generator-label {
       font-size: 11px; font-weight: 500; letter-spacing: 0.1em;
       text-transform: uppercase; color: #a8c4a0;
-      margin-bottom: 1rem; font-family: 'Jost', sans-serif;
+      margin-bottom: 1rem; font-family: 'Montserrat', sans-serif;
       display: flex; align-items: center; gap: 7px;
     }
 
@@ -736,7 +753,7 @@
       font-size: 13px;
       color: #3a5035;
       cursor: pointer;
-      font-family: 'Jost', sans-serif;
+      font-family: 'Montserrat', sans-serif;
       line-height: 1.3;
       transition: background 0.15s, border-color 0.15s, transform 0.1s;
       text-align: left;
@@ -755,7 +772,7 @@
       border: 1px solid rgba(150, 190, 140, 0.6);
       border-radius: 20px;
       font-size: 12px; color: #6a9060;
-      cursor: pointer; font-family: 'Jost', sans-serif;
+      cursor: pointer; font-family: 'Montserrat', sans-serif;
       transition: background 0.15s, border-color 0.15s;
       font-weight: 500;
     }
@@ -775,7 +792,7 @@
 
     .gen-error {
       font-size: 12px; color: rgba(180,80,60,0.7);
-      font-style: italic; margin-top: 4px;
+       margin-top: 4px;
     }
       text-align: center; padding: 2.5rem 0 2rem;
       border-bottom: 1px solid var(--border); margin-bottom: 2.5rem;
@@ -786,18 +803,18 @@
     }
     .letter-masthead h1 {
       font-family: 'Playfair Display', serif;
-      font-size: 44px; font-style: italic; font-weight: 400;
+      font-size: 44px;  font-weight: 700;
       letter-spacing: -1px; margin-bottom: 6px;
     }
     .letter-month {
-      font-size: 13px; color: var(--ink-faint); margin-bottom: 1.25rem;
+      font-size: 14px; color: var(--ink-faint); margin-bottom: 1.25rem;
       letter-spacing: 0.08em; text-transform: uppercase;
     }
     .friend-chips { display: flex; justify-content: center; flex-wrap: wrap; gap: 6px; }
     .friend-chip {
       display: inline-flex; align-items: center; gap: 6px;
       background: var(--surface); border: 1px solid var(--border);
-      border-radius: 20px; padding: 4px 12px 4px 5px;
+      border-radius: 999px; padding: 4px 12px 4px 5px;
       font-size: 13px; color: var(--ink-mid);
     }
     .chip-av {
@@ -828,9 +845,9 @@
       .month-badge { font-size: 11px; padding: 3px 9px; display: none; }
       header span[title="last updated"] { display: none; }
 
-      /* Nav tabs */
-      .nav-tabs { padding: 0; }
-      .tab-btn { padding: 11px 0; font-size: 12px; flex: 1; text-align: center; letter-spacing: 0; }
+      /* Nav tabs — now in header */
+      .tab-btn { padding: 6px 12px; font-size: 11px; }
+      header { grid-template-columns: auto 1fr auto; gap: 0.5rem; padding: 0 1rem; }
 
       /* Main */
       main { padding: 1.25rem 0.875rem 5rem; }
@@ -853,7 +870,6 @@
       .garden-paper { border-radius: 8px; }
       .garden-paper-content { padding: 1.25rem 1rem 1.5rem 1rem; }
       .garden-paper-title { font-size: 18px; }
-      .sheet-holes { display: none; }
       .sheet-margin { display: none; }
       .garden-paper .sheet-ruled { background-position: 0 56px; }
 
@@ -867,10 +883,11 @@
 
       /* Filter pills */
       .garden-filters { gap: 5px; }
-      .filter-btn { font-size: 11px; padding: 4px 10px; }
+      .filter-btn { font-size: 11px; padding: 4px 10px;   border-radius: 999px;
+    }
 
       /* Garden stickies */
-      .garden-stickies { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+      .garden-stickies { grid-template-columns: 1fr; gap: 10px; }
       .garden-sticky { min-height: 90px; padding: 10px 10px 22px; }
       .gs-text { font-size: 12px; line-height: 1.35; }
       .gs-tag { font-size: 10px; }
@@ -885,7 +902,10 @@
       .sheet-content { padding: 1.25rem 1rem 1.5rem 1rem; }
       .sheet-q-text { font-size: 17px; }
       .sheet-q-label { font-size: 10px; }
-      .stickies-grid { grid-template-columns: 1fr; gap: 12px; }
+      .sheet-content { padding: 1.25rem 1rem 1.5rem 1.25rem; }
+      .sheet-margin { display: none; }
+      .paper-sheet::before { display: none; }
+      .answers-sticky-grid { grid-template-columns: 1fr; gap: 12px; }
       .sticky { min-height: 130px; }
       .sticky-textarea { min-height: 80px; font-size: 14px; }
 
@@ -911,7 +931,7 @@
 
     @media (max-width: 380px) {
       .garden-stickies { grid-template-columns: 1fr; }
-      .tab-btn { font-size: 11px; padding: 11px 0; }
+      .tab-btn { font-size: 11px; padding: 6px 10px; }
       .auth-card { padding: 1.75rem 1rem; }
     }
 
@@ -1044,7 +1064,7 @@
     /* ── PAGE CONTENT STYLES ── */
 
     /* COVER */
-    .zine-cover { background: #f0f5eb; border-radius: 4px 0 0 4px; }
+    .zine-cover { background: #EEF5EE; border-radius: 4px 0 0 4px; }
 
     .zine-cover-inner {
       width: 100%;
@@ -1072,7 +1092,7 @@
 
     .zine-cover-title {
       font-family: 'Playfair Display', serif;
-      font-style: italic; font-size: 64px; font-weight: 400;
+       font-size: 64px; font-weight: 700;
       letter-spacing: -3px; line-height: 1; color: var(--ink);
       margin-bottom: 0.5rem;
     }
@@ -1088,13 +1108,13 @@
 
     .zine-cover-qs {
       font-size: 12px; color: var(--ink-ghost);
-      border: 1px solid var(--border); border-radius: 20px;
+      border: 1px solid var(--border); border-radius: 999px;
       padding: 5px 16px; letter-spacing: 0.04em;
     }
 
     /* Blank right page when cover is showing */
     .zine-blank-right {
-      background: #fafdf6;
+      background: #F7F9F4;
       border-radius: 0 4px 4px 0;
       min-height: 520px;
       background-image: repeating-linear-gradient(transparent, transparent 31px, #d5e8f0 31px, #d5e8f0 32px);
@@ -1103,7 +1123,7 @@
 
     /* SPREAD pages */
     .zine-spread-left {
-      background: #f0f5eb;
+      background: #EEF5EE;
       padding: 3rem 2rem 2rem 2.5rem;
       display: flex; flex-direction: column;
       position: relative;
@@ -1113,7 +1133,7 @@
     }
 
     .zine-spread-right {
-      background: #f9fef6;
+      background: #F7F9F4;
       padding: 2rem 1.5rem;
       overflow-y: auto;
       min-height: 520px;
@@ -1122,19 +1142,19 @@
     }
 
     .zine-q-num {
-      font-family: 'Playfair Display', serif; font-style: italic;
+      font-family: 'Playfair Display', serif; 
       font-size: 13px; color: var(--ink-ghost);
       letter-spacing: 0.06em; margin-bottom: 1rem;
     }
 
     .zine-q-text {
       font-family: 'Playfair Display', serif;
-      font-size: 24px; font-weight: 400; line-height: 1.45; color: var(--ink); flex: 1;
+      font-size: 24px; font-weight: 700; line-height: 1.45; color: var(--ink); flex: 1;
     }
 
     .zine-page-num {
       position: absolute; bottom: 1.5rem; left: 2rem;
-      font-family: 'Playfair Display', serif; font-style: italic;
+      font-family: 'Playfair Display', serif; 
       font-size: 13px; color: var(--ink-ghost);
     }
 
@@ -1146,7 +1166,8 @@
 
     /* Zine stickies — use same improved style */
     .zine-sticky {
-      border-radius: 1px;
+      border-radius: 2px;
+      aspect-ratio: 1 / 1;
       box-shadow: 0 2px 4px rgba(0,0,0,0.10), 0 6px 16px rgba(0,0,0,0.08), 2px 8px 20px rgba(0,0,0,0.06);
       position: relative;
       opacity: 0;
@@ -1161,12 +1182,7 @@
       content: ''; display: block; height: 5px;
       border-radius: 1px 1px 0 0; background: inherit; filter: brightness(0.88);
     }
-    .zine-sticky::after {
-      content: ''; position: absolute; bottom: 0; right: 0;
-      width: 22px; height: 22px;
-      background: linear-gradient(225deg, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0.05) 40%, transparent 60%);
-      border-radius: 0 0 1px 0; pointer-events: none;
-    }
+    .zine-sticky::after { content: none; }
     .zine-sticky:hover {
       transform: translateY(-3px) rotate(0deg) !important;
       box-shadow: 0 4px 8px rgba(0,0,0,0.14), 0 12px 28px rgba(0,0,0,0.12);
@@ -1181,7 +1197,7 @@
 
     .zine-sticky-from {
       display: flex; align-items: center; gap: 5px;
-      font-size: 10px; font-weight: 500; letter-spacing: 0.08em;
+      font-size: 12px; font-weight: 500; letter-spacing: 0.08em;
       text-transform: uppercase; margin-bottom: 6px; opacity: 0.5;
     }
     .zine-sticky-av {
@@ -1190,8 +1206,8 @@
       display: inline-flex; align-items: center; justify-content: center;
     }
     .zine-sticky-text {
-      font-family: 'Jost', sans-serif;
-      font-size: 13px; line-height: 24px; color: rgba(0,0,0,0.75);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 16px; line-height: 28px; color: rgba(0,0,0,0.75);
     }
 
     /* BACK COVER */
@@ -1212,8 +1228,8 @@
       padding: 4rem 2rem; text-align: center; width: 100%;
     }
     .zine-back-title {
-      font-family: 'Playfair Display', serif; font-style: italic;
-      font-size: 48px; font-weight: 400; color: #E8F0E3;
+      font-family: 'Playfair Display', serif; 
+      font-size: 48px; font-weight: 700; color: #E8F0E3;
       letter-spacing: -2px; margin-bottom: 0.5rem;
     }
     .zine-back-sub   { font-size: 15px; color: #7A9170; margin-bottom: 2.5rem; letter-spacing: 0.03em; }
@@ -1237,15 +1253,15 @@
     .zine-nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
 
     .zine-nav-counter {
-      font-family: 'Playfair Display', serif; font-style: italic;
-      font-size: 16px; color: var(--ink-faint);
+      font-family: 'Playfair Display', serif; 
+      font-size: 18px; color: var(--ink-faint);
       min-width: 80px; text-align: center;
     }
 
     /* SHELF */
     .zine-shelf-wrap { max-width: 860px; margin: 0 auto 1.5rem; padding: 0 1.5rem; }
     .zine-shelf-label {
-      font-size: 11px; font-weight: 500; letter-spacing: 0.1em;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
       text-transform: uppercase; color: var(--ink-ghost);
       margin-bottom: 0.9rem; display: flex; align-items: center; gap: 6px;
     }
@@ -1258,7 +1274,7 @@
     .zine-shelf-item.active-issue { opacity: 0.45; cursor: default; transform: none; }
     .zine-mini-cover {
       width: 90px; height: 118px; border-radius: 3px;
-      border-left: 5px solid var(--green); background: #f0f5eb;
+      border-left: 5px solid var(--green); background: #EEF5EE;
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       padding: 10px 8px;
       box-shadow: 2px 3px 10px rgba(30,42,26,0.14), 1px 0 0 var(--border) inset;
@@ -1270,7 +1286,7 @@
       content: ''; position: absolute; top: 0; right: 0; bottom: 0; width: 8px;
       background: linear-gradient(to right, transparent, rgba(255,255,255,0.5));
     }
-    .zine-mini-title { font-family: 'Playfair Display', serif; font-style: italic; font-size: 17px; color: var(--ink); letter-spacing: -0.5px; margin-bottom: 4px; }
+    .zine-mini-title { font-family: 'Playfair Display', serif;  font-size: 17px; color: var(--ink); letter-spacing: -0.5px; margin-bottom: 4px; }
     .zine-mini-vol   { font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 8px; }
     .zine-mini-dots  { display: flex; gap: 3px; }
     .zine-mini-dot   { width: 6px; height: 6px; border-radius: 50%; }
@@ -1305,7 +1321,11 @@
 
     /* ── AUTH SCREEN ── */
   #auth-screen {
-    position: fixed; inset: 0; background: var(--bg);
+    position: fixed; inset: 0;
+    background-color: var(--bg);
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='600' viewBox='0 0 600 600'><path d='M 373.9,48.3 C 373.6,59.7 380.1,61.8 384.3,60.4 C 384.7,57.1 384.7,49.1 373.9,48.3' stroke='%232A5248' stroke-width='0.91' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 373.9,48.3 C 366.3,56.2 369.7,62.9 372.0,62.4 C 376.2,62.0 379.9,58.1 373.9,48.3' stroke='%232A5248' stroke-width='0.91' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 373.9,48.3 C 361.8,48.2 361.0,54.8 361.3,58.1 C 364.4,60.7 372.5,58.7 373.9,48.3' stroke='%232A5248' stroke-width='0.91' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 373.9,48.3 C 364.6,39.5 359.1,44.1 356.2,46.3 C 360.4,49.6 364.0,55.5 373.9,48.3' stroke='%232A5248' stroke-width='0.91' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 373.9,48.3 C 373.6,36.5 368.2,36.3 363.2,34.8 C 361.6,38.3 362.9,45.3 373.9,48.3' stroke='%232A5248' stroke-width='0.91' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 373.9,48.3 C 382.0,40.3 378.5,33.8 375.9,32.7 C 371.1,32.8 368.7,38.9 373.9,48.3' stroke='%232A5248' stroke-width='0.91' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 373.9,48.3 C 385.0,48.3 386.8,42.5 386.5,37.1 C 381.7,35.7 376.9,36.4 373.9,48.3' stroke='%232A5248' stroke-width='0.91' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 373.9,48.3 C 382.5,55.2 387.8,52.7 391.2,50.4 C 387.7,46.3 382.7,42.2 373.9,48.3' stroke='%232A5248' stroke-width='0.91' fill='none' stroke-linecap='round' stroke-linejoin='round'/><circle cx='373.9' cy='48.3' r='5.0' stroke='%232A5248' stroke-width='0.91' fill='%23F1D4DC' opacity='0.75'/><path d='M 507.9,81.1 C 509.9,89.0 514.1,87.9 515.5,86.0 C 515.3,84.1 516.1,79.2 507.9,81.1' stroke='%232A5248' stroke-width='0.70' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 507.9,81.1 C 501.9,84.9 503.1,90.0 504.7,90.5 C 508.1,90.0 510.0,87.6 507.9,81.1' stroke='%232A5248' stroke-width='0.70' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 507.9,81.1 C 503.0,76.8 498.3,78.9 497.6,82.0 C 498.6,83.0 503.4,85.8 507.9,81.1' stroke='%232A5248' stroke-width='0.70' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 507.9,81.1 C 510.8,73.3 505.7,71.9 504.7,71.4 C 502.0,74.8 502.4,78.1 507.9,81.1' stroke='%232A5248' stroke-width='0.70' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 507.9,81.1 C 514.1,82.2 514.9,77.2 515.1,75.6 C 513.4,73.8 510.0,73.3 507.9,81.1' stroke='%232A5248' stroke-width='0.70' fill='none' stroke-linecap='round' stroke-linejoin='round'/><circle cx='507.9' cy='81.1' r='3.0' stroke='%232A5248' stroke-width='0.70' fill='%23FBF0C0' opacity='0.75'/><path d='M 332.5,414.5 C 328.9,418.4 331.6,420.6 333.4,420.9 C 336.0,421.0 336.8,418.0 332.5,414.5' stroke='%232A5248' stroke-width='0.70' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 332.5,414.5 C 329.0,411.8 327.6,414.9 326.1,415.5 C 326.8,417.3 329.1,417.0 332.5,414.5' stroke='%232A5248' stroke-width='0.70' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 332.5,414.5 C 334.5,409.2 333.9,408.2 330.9,407.3 C 330.7,410.0 328.7,410.7 332.5,414.5' stroke='%232A5248' stroke-width='0.70' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 332.5,414.5 C 335.6,417.2 338.8,415.6 338.8,413.2 C 337.5,410.9 335.3,411.1 332.5,414.5' stroke='%232A5248' stroke-width='0.70' fill='none' stroke-linecap='round' stroke-linejoin='round'/><circle cx='332.5' cy='414.5' r='2.0' stroke='%232A5248' stroke-width='0.70' fill='%23E3B8C2' opacity='0.75'/><path d='M 437.2,119.6 C 434.8,129.8 440.8,132.3 445.0,131.8 C 445.5,128.4 446.5,122.9 437.2,119.6' stroke='%232A5248' stroke-width='0.76' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 437.2,119.6 C 429.2,124.3 428.6,128.7 431.1,130.9 C 435.8,132.5 440.3,129.6 437.2,119.6' stroke='%232A5248' stroke-width='0.76' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 437.2,119.6 C 429.2,114.1 425.4,116.5 423.5,120.1 C 426.1,123.4 429.6,127.1 437.2,119.6' stroke='%232A5248' stroke-width='0.76' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 437.2,119.6 C 438.5,109.6 433.3,107.9 428.8,107.9 C 428.1,112.0 427.4,117.3 437.2,119.6' stroke='%232A5248' stroke-width='0.76' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 437.2,119.6 C 446.5,115.0 444.1,111.5 443.5,108.0 C 438.9,107.3 435.3,110.4 437.2,119.6' stroke='%232A5248' stroke-width='0.76' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 437.2,119.6 C 445.5,126.3 449.3,122.6 451.1,118.1 C 448.3,115.3 444.2,113.4 437.2,119.6' stroke='%232A5248' stroke-width='0.76' fill='none' stroke-linecap='round' stroke-linejoin='round'/><circle cx='437.2' cy='119.6' r='4.1' stroke='%232A5248' stroke-width='0.76' fill='%23C9C3D9' opacity='0.75'/><path d='M 89.2,236.4 C 88.1,227.9 82.7,227.1 80.0,229.6 C 78.7,233.1 79.1,237.6 89.2,236.4' stroke='%232A5248' stroke-width='0.72' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 89.2,236.4 C 95.8,229.5 94.1,226.7 90.2,224.6 C 87.6,226.0 85.1,228.4 89.2,236.4' stroke='%232A5248' stroke-width='0.72' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 89.2,236.4 C 98.5,239.5 100.4,234.0 100.4,231.9 C 98.2,230.0 93.1,229.2 89.2,236.4' stroke='%232A5248' stroke-width='0.72' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 89.2,236.4 C 91.0,244.5 96.2,244.7 98.6,244.2 C 99.4,240.0 97.1,236.0 89.2,236.4' stroke='%232A5248' stroke-width='0.72' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 89.2,236.4 C 81.0,243.6 85.8,246.5 87.3,250.2 C 90.6,248.7 94.6,244.2 89.2,236.4' stroke='%232A5248' stroke-width='0.72' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 89.2,236.4 C 81.2,233.6 77.5,238.3 76.6,241.9 C 80.8,243.9 84.3,244.6 89.2,236.4' stroke='%232A5248' stroke-width='0.72' fill='none' stroke-linecap='round' stroke-linejoin='round'/><circle cx='89.2' cy='236.4' r='3.9' stroke='%232A5248' stroke-width='0.72' fill='%23C9C3D9' opacity='0.75'/><path d='M 319.2,550.8 C 313.3,556.0 313.7,560.9 316.3,563.6 C 318.2,560.8 322.9,557.6 319.2,550.8' stroke='%232A5248' stroke-width='0.70' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 319.2,550.8 C 310.8,548.0 308.4,551.2 308.0,553.4 C 308.8,557.2 314.0,558.7 319.2,550.8' stroke='%232A5248' stroke-width='0.70' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 319.2,550.8 C 316.7,542.1 313.0,541.7 310.8,543.3 C 309.4,546.1 312.0,549.5 319.2,550.8' stroke='%232A5248' stroke-width='0.70' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 319.2,550.8 C 327.3,546.3 324.1,541.7 322.1,539.2 C 320.4,540.3 316.5,542.1 319.2,550.8' stroke='%232A5248' stroke-width='0.70' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 319.2,550.8 C 327.1,554.6 329.3,551.0 331.5,548.1 C 329.3,546.5 323.8,544.9 319.2,550.8' stroke='%232A5248' stroke-width='0.70' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 319.2,550.8 C 319.0,559.7 324.5,559.9 327.1,559.4 C 328.0,557.2 326.6,551.5 319.2,550.8' stroke='%232A5248' stroke-width='0.70' fill='none' stroke-linecap='round' stroke-linejoin='round'/><circle cx='319.2' cy='550.8' r='3.6' stroke='%232A5248' stroke-width='0.70' fill='%23D8B7C9' opacity='0.75'/><path d='M 494.2,236.5 C 493.7,244.2 496.9,246.3 499.3,245.0 C 501.2,242.6 502.3,239.8 494.2,236.5' stroke='%232A5248' stroke-width='0.70' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 494.2,236.5 C 488.0,239.7 487.8,243.0 490.0,245.0 C 491.8,245.3 495.8,243.5 494.2,236.5' stroke='%232A5248' stroke-width='0.70' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 494.2,236.5 C 488.3,231.6 484.8,234.3 483.9,236.8 C 484.5,239.2 487.7,241.0 494.2,236.5' stroke='%232A5248' stroke-width='0.70' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 494.2,236.5 C 494.7,228.5 491.5,227.1 488.4,226.5 C 488.8,229.9 487.8,233.4 494.2,236.5' stroke='%232A5248' stroke-width='0.70' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 494.2,236.5 C 501.4,232.9 501.0,228.7 499.1,227.2 C 497.3,226.8 493.8,230.3 494.2,236.5' stroke='%232A5248' stroke-width='0.70' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 494.2,236.5 C 501.1,241.0 504.0,237.9 505.3,236.3 C 502.2,232.6 499.7,230.7 494.2,236.5' stroke='%232A5248' stroke-width='0.70' fill='none' stroke-linecap='round' stroke-linejoin='round'/><circle cx='494.2' cy='236.5' r='3.2' stroke='%232A5248' stroke-width='0.70' fill='%23C9C3D9' opacity='0.75'/><path d='M 407.0,397.3 C 403.2,410.4 410.7,415.8 416.6,414.3 C 418.7,411.2 419.9,402.7 407.0,397.3' stroke='%232A5248' stroke-width='1.12' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 407.0,397.3 C 393.9,401.3 393.1,409.1 396.8,412.9 C 401.8,414.2 409.4,412.6 407.0,397.3' stroke='%232A5248' stroke-width='1.12' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 407.0,397.3 C 397.0,388.0 389.9,391.5 386.8,397.0 C 390.6,400.1 395.7,405.3 407.0,397.3' stroke='%232A5248' stroke-width='1.12' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 407.0,397.3 C 408.0,383.8 402.7,380.1 397.1,378.5 C 394.1,383.4 393.9,391.0 407.0,397.3' stroke='%232A5248' stroke-width='1.12' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 407.0,397.3 C 419.3,392.7 418.8,383.8 417.4,380.5 C 411.9,379.5 406.1,384.2 407.0,397.3' stroke='%232A5248' stroke-width='1.12' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 407.0,397.3 C 418.1,407.7 424.1,402.0 425.5,397.3 C 424.2,392.5 419.4,388.1 407.0,397.3' stroke='%232A5248' stroke-width='1.12' fill='none' stroke-linecap='round' stroke-linejoin='round'/><circle cx='407.0' cy='397.3' r='6.1' stroke='%232A5248' stroke-width='1.12' fill='%23FAD9BC' opacity='0.75'/><path d='M 280.0,178.1 C 278.1,173.9 275.4,175.3 273.4,175.7 C 274.0,176.4 274.1,179.2 280.0,178.1' stroke='%232A5248' stroke-width='0.70' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 280.0,178.1 C 283.6,175.6 284.8,172.9 282.9,171.3 C 281.3,173.0 278.2,172.8 280.0,178.1' stroke='%232A5248' stroke-width='0.70' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 280.0,178.1 C 281.9,181.8 284.9,182.1 286.3,180.3 C 285.0,177.9 284.6,177.2 280.0,178.1' stroke='%232A5248' stroke-width='0.70' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 280.0,178.1 C 276.3,179.4 275.3,183.2 277.2,184.5 C 279.7,184.3 282.6,182.8 280.0,178.1' stroke='%232A5248' stroke-width='0.70' fill='none' stroke-linecap='round' stroke-linejoin='round'/><circle cx='280.0' cy='178.1' r='2.1' stroke='%232A5248' stroke-width='0.70' fill='%23FAD9BC' opacity='0.75'/><path d='M 156.4,52.0 C 160.6,60.8 166.2,59.8 167.9,57.0 C 168.5,53.8 165.3,49.0 156.4,52.0' stroke='%232A5248' stroke-width='0.75' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 156.4,52.0 C 150.0,61.2 155.5,63.3 157.6,63.6 C 161.3,62.9 163.8,57.9 156.4,52.0' stroke='%232A5248' stroke-width='0.75' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 156.4,52.0 C 146.5,52.3 144.5,57.3 145.7,59.8 C 149.5,60.6 154.1,59.9 156.4,52.0' stroke='%232A5248' stroke-width='0.75' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 156.4,52.0 C 152.9,43.6 147.0,44.5 143.2,45.7 C 144.2,50.8 147.5,55.5 156.4,52.0' stroke='%232A5248' stroke-width='0.75' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 156.4,52.0 C 161.4,43.6 157.9,40.1 155.5,39.6 C 152.9,40.6 150.0,45.1 156.4,52.0' stroke='%232A5248' stroke-width='0.75' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 156.4,52.0 C 166.7,51.0 166.3,48.2 168.5,43.6 C 163.2,44.0 160.4,42.9 156.4,52.0' stroke='%232A5248' stroke-width='0.75' fill='none' stroke-linecap='round' stroke-linejoin='round'/><circle cx='156.4' cy='52.0' r='4.1' stroke='%232A5248' stroke-width='0.75' fill='%23C9C3D9' opacity='0.75'/><path d='M 147.7,299.6 C 142.9,298.4 142.3,298.5 142.3,301.3 C 142.9,302.6 144.8,303.4 147.7,299.6' stroke='%232A5248' stroke-width='0.70' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 147.7,299.6 C 149.5,295.9 148.2,294.0 146.8,294.2 C 144.5,294.2 144.5,296.6 147.7,299.6' stroke='%232A5248' stroke-width='0.70' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 147.7,299.6 C 150.6,300.5 151.7,299.1 154.0,298.2 C 152.0,296.6 149.1,296.2 147.7,299.6' stroke='%232A5248' stroke-width='0.70' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 147.7,299.6 C 146.5,303.0 148.0,304.0 149.3,304.6 C 150.4,304.0 151.2,302.1 147.7,299.6' stroke='%232A5248' stroke-width='0.70' fill='none' stroke-linecap='round' stroke-linejoin='round'/><circle cx='147.7' cy='299.6' r='1.7' stroke='%232A5248' stroke-width='0.70' fill='%23FAD9BC' opacity='0.75'/><path d='M 429.8,320.7 C 434.2,319.6 434.3,319.6 435.4,316.9 C 433.8,316.4 432.1,317.8 429.8,320.7' stroke='%232A5248' stroke-width='0.70' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 429.8,320.7 C 429.7,324.5 430.9,326.4 433.9,325.8 C 433.7,323.0 433.3,322.4 429.8,320.7' stroke='%232A5248' stroke-width='0.70' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 429.8,320.7 C 426.0,321.2 424.1,323.4 425.0,325.1 C 425.8,324.2 429.8,325.7 429.8,320.7' stroke='%232A5248' stroke-width='0.70' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 429.8,320.7 C 429.2,315.3 428.5,314.5 426.7,316.4 C 425.3,316.4 425.9,318.5 429.8,320.7' stroke='%232A5248' stroke-width='0.70' fill='none' stroke-linecap='round' stroke-linejoin='round'/><circle cx='429.8' cy='320.7' r='1.9' stroke='%232A5248' stroke-width='0.70' fill='%23E3B8C2' opacity='0.75'/><path d='M 563.6,108.3 C 570.7,107.6 569.9,102.4 570.0,100.3 C 568.4,101.8 563.7,101.7 563.6,108.3' stroke='%232A5248' stroke-width='0.70' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 563.6,108.3 C 566.8,113.5 570.9,113.9 573.1,112.7 C 571.9,110.2 570.9,105.5 563.6,108.3' stroke='%232A5248' stroke-width='0.70' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 563.6,108.3 C 558.3,113.1 560.7,116.8 562.4,117.8 C 564.7,117.2 567.8,113.4 563.6,108.3' stroke='%232A5248' stroke-width='0.70' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 563.6,108.3 C 557.7,106.1 555.5,108.7 554.5,111.1 C 555.1,111.2 559.7,113.4 563.6,108.3' stroke='%232A5248' stroke-width='0.70' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 563.6,108.3 C 564.2,101.4 561.3,100.3 559.6,100.5 C 557.7,102.9 557.1,106.9 563.6,108.3' stroke='%232A5248' stroke-width='0.70' fill='none' stroke-linecap='round' stroke-linejoin='round'/><circle cx='563.6' cy='108.3' r='2.9' stroke='%232A5248' stroke-width='0.70' fill='%23FBF0C0' opacity='0.75'/><path d='M 549.7,491.2 C 553.3,505.5 560.1,506.1 566.8,506.5 C 566.1,500.8 565.1,491.2 549.7,491.2' stroke='%232A5248' stroke-width='1.17' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 549.7,491.2 C 540.4,503.7 543.7,508.4 549.2,511.7 C 553.3,510.6 558.4,504.1 549.7,491.2' stroke='%232A5248' stroke-width='1.17' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 549.7,491.2 C 533.7,491.0 532.9,497.2 534.1,502.9 C 538.5,506.5 546.0,506.2 549.7,491.2' stroke='%232A5248' stroke-width='1.17' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 549.7,491.2 C 541.2,479.0 532.7,481.1 528.9,486.1 C 531.5,491.5 534.7,498.8 549.7,491.2' stroke='%232A5248' stroke-width='1.17' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 549.7,491.2 C 552.4,475.9 546.9,472.7 542.0,473.4 C 537.8,476.6 536.7,483.6 549.7,491.2' stroke='%232A5248' stroke-width='1.17' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 549.7,491.2 C 563.3,483.9 561.9,476.4 560.5,472.2 C 554.9,473.1 548.7,477.6 549.7,491.2' stroke='%232A5248' stroke-width='1.17' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 549.7,491.2 C 563.0,497.6 568.5,491.6 571.7,486.8 C 566.8,483.7 560.2,480.6 549.7,491.2' stroke='%232A5248' stroke-width='1.17' fill='none' stroke-linecap='round' stroke-linejoin='round'/><circle cx='549.7' cy='491.2' r='6.4' stroke='%232A5248' stroke-width='1.17' fill='%23FAD9BC' opacity='0.75'/><path d='M 442.4,215.3 C 428.1,209.9 423.0,216.5 420.3,221.9 C 425.9,226.0 433.7,229.4 442.4,215.3' stroke='%232A5248' stroke-width='1.19' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 442.4,215.3 C 437.2,200.5 428.4,202.6 424.1,205.3 C 423.3,210.2 426.0,217.7 442.4,215.3' stroke='%232A5248' stroke-width='1.19' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 442.4,215.3 C 448.0,202.0 442.7,195.1 437.4,196.8 C 431.9,198.5 430.7,206.4 442.4,215.3' stroke='%232A5248' stroke-width='1.19' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 442.4,215.3 C 457.0,208.8 454.7,200.6 451.7,197.7 C 446.9,197.0 440.0,199.4 442.4,215.3' stroke='%232A5248' stroke-width='1.19' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 442.4,215.3 C 456.8,221.3 460.9,215.2 464.0,209.1 C 459.7,205.1 451.6,201.7 442.4,215.3' stroke='%232A5248' stroke-width='1.19' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 442.4,215.3 C 449.5,229.5 456.3,227.6 459.4,224.9 C 459.8,219.9 455.9,213.6 442.4,215.3' stroke='%232A5248' stroke-width='1.19' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 442.4,215.3 C 435.2,230.3 442.6,234.3 448.8,235.1 C 452.8,231.3 454.4,222.8 442.4,215.3' stroke='%232A5248' stroke-width='1.19' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 442.4,215.3 C 429.6,222.0 429.2,230.7 432.9,232.8 C 436.3,232.9 444.2,229.4 442.4,215.3' stroke='%232A5248' stroke-width='1.19' fill='none' stroke-linecap='round' stroke-linejoin='round'/><circle cx='442.4' cy='215.3' r='6.5' stroke='%232A5248' stroke-width='1.19' fill='%23F1D4DC' opacity='0.75'/><path d='M 304.1,140.4 C 297.6,133.6 294.2,134.5 291.0,137.4 C 292.9,140.7 295.7,142.9 304.1,140.4' stroke='%232A5248' stroke-width='0.71' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 304.1,140.4 C 308.9,132.0 305.8,129.6 303.1,128.5 C 300.1,129.4 297.7,133.5 304.1,140.4' stroke='%232A5248' stroke-width='0.71' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 304.1,140.4 C 313.1,142.6 315.1,138.7 316.5,135.8 C 312.2,134.7 308.5,131.7 304.1,140.4' stroke='%232A5248' stroke-width='0.71' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 304.1,140.4 C 305.1,149.1 308.8,151.5 312.2,150.9 C 313.3,146.4 311.7,143.3 304.1,140.4' stroke='%232A5248' stroke-width='0.71' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 304.1,140.4 C 296.6,142.7 296.0,148.5 297.6,149.9 C 300.6,151.5 305.7,149.4 304.1,140.4' stroke='%232A5248' stroke-width='0.71' fill='none' stroke-linecap='round' stroke-linejoin='round'/><circle cx='304.1' cy='140.4' r='3.9' stroke='%232A5248' stroke-width='0.71' fill='%23F1D4DC' opacity='0.75'/><path d='M 352.4,294.0 C 367.9,291.8 368.7,285.5 368.7,279.2 C 362.6,278.2 354.7,279.7 352.4,294.0' stroke='%232A5248' stroke-width='1.15' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 352.4,294.0 C 362.2,304.5 369.8,300.4 371.0,295.9 C 370.9,293.1 366.2,285.9 352.4,294.0' stroke='%232A5248' stroke-width='1.15' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 352.4,294.0 C 349.7,308.8 357.5,312.4 362.9,313.0 C 366.3,308.1 366.2,300.3 352.4,294.0' stroke='%232A5248' stroke-width='1.15' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 352.4,294.0 C 340.7,301.5 342.7,308.7 346.0,311.0 C 351.2,312.8 357.5,307.8 352.4,294.0' stroke='%232A5248' stroke-width='1.15' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 352.4,294.0 C 338.9,289.0 335.2,295.6 334.8,299.5 C 336.0,302.6 343.5,306.6 352.4,294.0' stroke='%232A5248' stroke-width='1.15' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 352.4,294.0 C 348.4,278.9 340.3,280.6 335.2,282.0 C 334.6,287.1 338.2,294.4 352.4,294.0' stroke='%232A5248' stroke-width='1.15' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 352.4,294.0 C 360.3,282.0 355.3,276.8 351.1,273.2 C 345.6,277.3 341.6,282.2 352.4,294.0' stroke='%232A5248' stroke-width='1.15' fill='none' stroke-linecap='round' stroke-linejoin='round'/><circle cx='352.4' cy='294.0' r='6.3' stroke='%232A5248' stroke-width='1.15' fill='%23C9C3D9' opacity='0.75'/><path d='M 161.9,162.7 C 165.6,169.9 169.1,170.0 171.5,167.6 C 172.4,165.9 169.8,162.4 161.9,162.7' stroke='%232A5248' stroke-width='0.70' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 161.9,162.7 C 155.8,168.6 156.9,172.1 159.0,173.4 C 163.4,173.0 166.1,168.8 161.9,162.7' stroke='%232A5248' stroke-width='0.70' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 161.9,162.7 C 156.4,159.3 152.5,161.4 150.5,163.4 C 152.3,166.5 157.0,167.1 161.9,162.7' stroke='%232A5248' stroke-width='0.70' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 161.9,162.7 C 162.9,155.4 160.1,152.5 157.3,151.7 C 157.0,155.1 156.2,157.6 161.9,162.7' stroke='%232A5248' stroke-width='0.70' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 161.9,162.7 C 169.5,162.0 171.7,158.7 169.9,154.8 C 168.7,155.6 164.5,154.1 161.9,162.7' stroke='%232A5248' stroke-width='0.70' fill='none' stroke-linecap='round' stroke-linejoin='round'/><circle cx='161.9' cy='162.7' r='3.4' stroke='%232A5248' stroke-width='0.70' fill='%23FBF0C0' opacity='0.75'/><path d='M 553.3,317.3 C 540.6,310.3 537.0,315.5 534.8,320.1 C 536.9,322.8 543.7,326.0 553.3,317.3' stroke='%232A5248' stroke-width='1.06' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 553.3,317.3 C 551.4,304.0 543.5,302.2 538.2,303.9 C 539.3,309.7 540.5,315.5 553.3,317.3' stroke='%232A5248' stroke-width='1.06' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 553.3,317.3 C 561.0,307.6 559.0,301.2 554.9,298.4 C 550.8,301.0 546.8,305.2 553.3,317.3' stroke='%232A5248' stroke-width='1.06' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 553.3,317.3 C 565.9,317.5 569.0,310.7 569.4,306.2 C 565.8,305.1 557.1,305.7 553.3,317.3' stroke='%232A5248' stroke-width='1.06' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 553.3,317.3 C 559.8,328.8 567.4,325.4 572.5,322.5 C 569.7,318.1 565.8,312.4 553.3,317.3' stroke='%232A5248' stroke-width='1.06' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 553.3,317.3 C 549.9,329.6 556.3,335.1 559.9,333.8 C 562.9,330.4 564.7,325.2 553.3,317.3' stroke='%232A5248' stroke-width='1.06' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 553.3,317.3 C 540.9,323.6 541.5,329.5 544.9,333.1 C 549.2,333.4 555.4,329.8 553.3,317.3' stroke='%232A5248' stroke-width='1.06' fill='none' stroke-linecap='round' stroke-linejoin='round'/><circle cx='553.3' cy='317.3' r='5.8' stroke='%232A5248' stroke-width='1.06' fill='%23FAD9BC' opacity='0.75'/><path d='M 314.7,356.5 C 317.0,353.1 316.4,350.3 315.1,350.0 C 313.1,351.5 311.0,353.2 314.7,356.5' stroke='%232A5248' stroke-width='0.70' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 314.7,356.5 C 319.9,357.7 320.7,357.4 320.7,354.9 C 319.3,352.9 316.6,352.4 314.7,356.5' stroke='%232A5248' stroke-width='0.70' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 314.7,356.5 C 314.9,360.6 317.3,363.3 318.0,361.5 C 319.6,360.5 319.2,357.9 314.7,356.5' stroke='%232A5248' stroke-width='0.70' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 314.7,356.5 C 309.6,357.7 308.6,361.1 310.6,361.6 C 312.7,362.1 315.4,360.7 314.7,356.5' stroke='%232A5248' stroke-width='0.70' fill='none' stroke-linecap='round' stroke-linejoin='round'/><path d='M 314.7,356.5 C 313.1,351.3 309.2,352.9 308.3,354.5 C 307.5,355.0 309.2,357.8 314.7,356.5' stroke='%232A5248' stroke-width='0.70' fill='none' stroke-linecap='round' stroke-linejoin='round'/><circle cx='314.7' cy='356.5' r='2.1' stroke='%232A5248' stroke-width='0.70' fill='%23D8B7C9' opacity='0.75'/></svg>");
+    background-size: 600px 600px;
+    background-repeat: repeat;
     display: flex; align-items: center; justify-content: center;
     z-index: 1000; padding: 1.5rem;
   }
@@ -1323,7 +1343,7 @@
     margin-bottom: 2rem; justify-content: center;
   }
   .auth-logo-text {
-    font-family: 'Playfair Display', serif; font-style: italic;
+    font-family: 'Playfair Display', serif; 
     font-size: 26px; color: var(--ink);
   }
 
@@ -1334,33 +1354,42 @@
   .auth-tab {
     flex: 1; padding: 10px; text-align: center;
     font-size: 14px; color: var(--ink-ghost); cursor: pointer;
-    border: none; background: none; font-family: 'Jost', sans-serif;
+    border: none; background: none; font-family: 'Montserrat', sans-serif;
     border-bottom: 2px solid transparent; margin-bottom: -1px;
     transition: color 0.15s, border-color 0.15s;
   }
   .auth-tab.active { color: var(--ink); border-bottom-color: var(--green); font-weight: 500; }
 
   .auth-field { margin-bottom: 1rem; }
-  .auth-field label { display: block; font-size: 13px; color: var(--ink-faint); margin-bottom: 5px; }
+  .auth-field label { display: block; font-size: 14px; color: var(--ink-faint); margin-bottom: 5px; }
   .auth-field input {
-    width: 100%; padding: 10px 14px;
+    width: 100%; padding: 11px 14px;
     border: 1px solid var(--border); border-radius: 8px;
-    font-size: 15px; background: var(--bg); color: var(--ink);
-    font-family: 'Jost', sans-serif; outline: none;
+    font-size: 16px; background: var(--bg); color: var(--ink);
+    font-family: 'Montserrat', sans-serif; outline: none;
     transition: border-color 0.2s;
   }
   .auth-field input:focus { border-color: var(--border-mid); background: var(--surface); }
 
   .auth-btn {
-    width: 100%; padding: 11px; border-radius: 8px;
+    width: 100%; padding: 11px; border-radius: 999px;
     background: var(--green); color: #fff; border: none;
-    font-size: 15px; font-weight: 500; cursor: pointer;
-    font-family: 'Jost', sans-serif; margin-top: 0.5rem;
+    font-size: 16px; font-weight: 500; cursor: pointer;
+    font-family: 'Montserrat', sans-serif; margin-top: 0.5rem;
     transition: opacity 0.15s;
   }
   .auth-btn:hover { opacity: 0.88; }
   .auth-btn:disabled { opacity: 0.5; cursor: not-allowed; }
   @keyframes spin { to { transform: rotate(360deg); } }
+
+  .auth-card { transition: height 0.3s ease; }
+
+  .auth-field { overflow: hidden; transition: max-height 0.35s ease, opacity 0.3s ease, margin 0.35s ease; }
+  .auth-field.collapsing { max-height: 0 !important; opacity: 0; margin-bottom: 0 !important; }
+  .auth-field.expanding { max-height: 120px; opacity: 1; }
+
+  .auth-tab { transition: color 0.2s, border-color 0.2s; }
+  .auth-submit-wrap { overflow: hidden; transition: max-height 0.25s ease; }
 
   .auth-error {
     font-size: 13px; color: var(--bloom);
@@ -1394,7 +1423,7 @@
     transition: border-color 0.15s, background 0.15s;
   }
   .group-option:hover { border-color: var(--green); background: var(--green-light); }
-  .group-option-title { font-size: 15px; font-weight: 500; margin-bottom: 3px; }
+  .group-option-title { font-size: 15px; font-weight: 700; margin-bottom: 3px; }
   .group-option-sub { font-size: 13px; color: var(--ink-faint); }
 
   .group-form { display: none; margin-top: 1rem; }
@@ -1403,7 +1432,7 @@
     width: 100%; padding: 10px 14px;
     border: 1px solid var(--border); border-radius: 8px;
     font-size: 15px; background: var(--bg); color: var(--ink);
-    font-family: 'Jost', sans-serif; outline: none; margin-bottom: 10px;
+    font-family: 'Montserrat', sans-serif; outline: none; margin-bottom: 10px;
     transition: border-color 0.2s;
   }
   .group-form input:focus { border-color: var(--border-mid); }
@@ -1436,26 +1465,194 @@
     display: block; width: 100%; padding: 8px 10px;
     font-size: 14px; color: var(--ink-mid); cursor: pointer;
     border: none; background: none; text-align: left;
-    border-radius: 6px; font-family: 'Jost', sans-serif;
+    border-radius: 6px; font-family: 'Montserrat', sans-serif;
     transition: background 0.1s;
   }
   .user-dropdown-item:hover { background: var(--surface-alt); }
   .user-dropdown-item.danger { color: var(--bloom); }
 
 
+
+  /* ── BOTANICAL DECORATIONS ── */
+  .auth-card-flowers {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 1.5rem;
+    opacity: 0.35;
+    pointer-events: none;
+  }
+  .page-flowers {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    pointer-events: none;
+    overflow: hidden;
+    height: 90px;
+    z-index: 0;
+    opacity: 0.18;
+  }
+
+  /* ── HOMEPAGE ── */
+  #home-screen {
+    position: fixed; inset: 0; background: var(--bg);
+    z-index: 500; overflow-y: auto;
+    display: flex; flex-direction: column;
+  }
+  #home-screen.hidden { display: none; }
+
+  .home-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.25rem 2rem; border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    position: sticky; top: 0; z-index: 10;
+  }
+  .home-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px; color: var(--ink); font-weight: 700;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .home-avatar {
+    width: 38px; height: 38px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 600; cursor: pointer;
+    border: 2px solid var(--border); transition: border-color 0.15s;
+    position: relative;
+  }
+  .home-avatar:hover { border-color: var(--border-mid); }
+
+  .home-avatar-menu {
+    position: absolute; top: calc(100% + 8px); right: 0;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.10);
+    min-width: 180px; z-index: 200; display: none; overflow: hidden;
+  }
+  .home-avatar-menu.open { display: block; }
+  .home-avatar-menu-item {
+    display: block; width: 100%; padding: 10px 14px;
+    font-size: 14px; color: var(--ink-mid); cursor: pointer;
+    border: none; background: none; text-align: left;
+    font-family: 'Montserrat', sans-serif; transition: background 0.1s;
+  }
+  .home-avatar-menu-item:hover { background: var(--surface-alt); }
+  .home-avatar-menu-item.danger { color: var(--bloom); }
+
+  .home-body {
+    max-width: 560px; margin: 0 auto;
+    padding: 3rem 1.5rem 6rem;
+    flex: 1;
+  }
+
+  .home-greeting {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px; font-weight: 700; color: var(--ink);
+    margin-bottom: 0.25rem; line-height: 1.2;
+  }
+  .home-sub {
+    font-size: 15px; color: var(--ink-faint); margin-bottom: 2.5rem;
+  }
+
+  .home-section-label {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--ink-ghost);
+    margin-bottom: 0.75rem;
+  }
+
+  .group-card-home {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 14px; padding: 1.25rem 1.5rem;
+    margin-bottom: 10px; cursor: pointer;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .group-card-home:hover {
+    border-color: var(--border-mid);
+    box-shadow: 0 4px 16px rgba(30,42,26,0.08);
+  }
+  .group-card-icon {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: var(--green-light); color: var(--green);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 700; flex-shrink: 0;
+    font-family: 'Playfair Display', serif;
+  }
+  .group-card-info { flex: 1; }
+  .group-card-name {
+    font-size: 17px; font-weight: 600; color: var(--ink); margin-bottom: 2px;
+  }
+  .group-card-meta {
+    font-size: 13px; color: var(--ink-faint);
+  }
+  .group-card-arrow {
+    color: var(--ink-ghost);
+  }
+
+  .home-empty {
+    text-align: center; padding: 3rem 1rem;
+    border: 1.5px dashed var(--border); border-radius: 14px;
+    margin-bottom: 1rem;
+  }
+  .home-empty-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px; font-weight: 700; color: var(--ink);
+    margin-bottom: 0.5rem;
+  }
+  .home-empty-sub {
+    font-size: 15px; color: var(--ink-faint); margin-bottom: 1.5rem;
+    line-height: 1.6;
+  }
+
+  .home-actions {
+    display: flex; gap: 10px; flex-wrap: wrap; margin-top: 1.5rem;
+  }
+
+  .home-profile-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 14px; padding: 1.25rem 1.5rem;
+    margin-top: 2rem; display: flex; align-items: center; gap: 1rem;
+  }
+  .home-profile-avatar {
+    width: 52px; height: 52px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 700; flex-shrink: 0;
+  }
+  .home-profile-name {
+    font-size: 16px; font-weight: 600; color: var(--ink);
+  }
+  .home-profile-email {
+    font-size: 13px; color: var(--ink-faint);
+  }
+
+  /* group setup forms — now inside home screen */
+  .home-form-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 14px; padding: 1.5rem;
+    margin-top: 1rem;
+  }
+  .home-form-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px; font-weight: 700; margin-bottom: 6px;
+  }
+  .home-form-sub { font-size: 14px; color: var(--ink-faint); margin-bottom: 1.25rem; }
+
+  @media (max-width: 600px) {
+    .home-header { padding: 1rem; }
+    .home-body { padding: 2rem 1rem 5rem; }
+    .home-greeting { font-size: 26px; }
+  }
   </style>
 </head>
 <body>
 
 <!-- AUTH SCREEN -->
 <div id="auth-screen">
+
   <div class="auth-card">
     <div class="auth-logo">
       <svg width="24" height="24" viewBox="0 0 26 26" fill="none">
-        <path d="M13 23C13 23 4 17 4 10C4 6.13 7.13 3 11 3C12 3 13 3.2 13 3.2C13 3.2 14 3 15 3C18.87 3 22 6.13 22 10C22 17 13 23 13 23Z" fill="#3A7D44" fill-opacity="0.18" stroke="#3A7D44" stroke-width="1.1"/>
-        <path d="M13 4.5 Q15.5 10 13 23" stroke="#3A7D44" stroke-width="0.8" stroke-dasharray="1.5 2.5"/>
-        <path d="M13 11 Q16.5 9.5 18.5 7" stroke="#3A7D44" stroke-width="0.9"/>
-        <path d="M13 15 Q9.5 13.5 7.5 11" stroke="#3A7D44" stroke-width="0.9"/>
+        <path d="M13 23C13 23 4 17 4 10C4 6.13 7.13 3 11 3C12 3 13 3.2 13 3.2C13 3.2 14 3 15 3C18.87 3 22 6.13 22 10C22 17 13 23 13 23Z" fill="#2F5D50" fill-opacity="0.18" stroke="#2F5D50" stroke-width="1.1"/>
+        <path d="M13 4.5 Q15.5 10 13 23" stroke="#2F5D50" stroke-width="0.8" stroke-dasharray="1.5 2.5"/>
+        <path d="M13 11 Q16.5 9.5 18.5 7" stroke="#2F5D50" stroke-width="0.9"/>
+        <path d="M13 15 Q9.5 13.5 7.5 11" stroke="#2F5D50" stroke-width="0.9"/>
       </svg>
       <span class="auth-logo-text">dump dates</span>
     </div>
@@ -1471,17 +1668,128 @@
       <label>password</label>
       <input type="password" id="auth-password" placeholder="••••••••" />
     </div>
-    <div class="auth-field" id="auth-name-field" style="display:none;">
+    <div class="auth-field collapsing" id="auth-name-field">
       <label>your display name</label>
       <input type="text" id="auth-displayname" placeholder="how friends will see you" />
     </div>
     <button class="auth-btn" id="auth-submit-btn" onclick="handleAuth()">log in</button>
     <div class="auth-error" id="auth-error"></div>
-    <div style="text-align:center;margin-top:1.25rem;font-size:10px;color:var(--ink-ghost);font-family:'Jost',sans-serif;">2026-03-18 15:25:54 ET</div>
+    <!-- card bottom flowers -->
+    <div class="auth-card-flowers">
+      <svg width="240" height="48" viewBox="0 0 240 48" fill="none">
+        <!-- left daisy -->
+        <path d="M30 28 C30 28 30 20 30 16 C30 13 32 11 30 10 C28 11 30 13 30 16" stroke="#2F5D50" stroke-width="1" stroke-linecap="round"/>
+        <path d="M30 28 C26 24 22 22 19 21 C17 20 16 18 18 16 C19 18 21 20 25 22" stroke="#2F5D50" stroke-width="1" stroke-linecap="round"/>
+        <path d="M30 28 C34 24 38 22 41 21 C43 20 44 18 42 16 C41 18 39 20 35 22" stroke="#2F5D50" stroke-width="1" stroke-linecap="round"/>
+        <path d="M30 28 C26 25 24 21 22 18 C21 16 19 15 20 13 C22 14 24 16 26 20" stroke="#2F5D50" stroke-width="1" stroke-linecap="round"/>
+        <path d="M30 28 C34 25 36 21 38 18 C39 16 41 15 40 13 C38 14 36 16 34 20" stroke="#2F5D50" stroke-width="1" stroke-linecap="round"/>
+        <path d="M30 28 C30 34 29 40 29 44" stroke="#2F5D50" stroke-width="1" stroke-linecap="round"/>
+        <circle cx="30" cy="28" r="3.5" stroke="#2F5D50" stroke-width="1" fill="none"/>
+        <circle cx="30" cy="28" r="1.8" fill="#FBF0C0" opacity="0.8"/>
+        <!-- leaf sprigs -->
+        <path d="M55 44 C55 44 62 34 70 28 C76 23 84 21 88 18" stroke="#2F5D50" stroke-width="1" stroke-linecap="round"/>
+        <path d="M68 30 C68 30 66 24 63 20 C61 17 57 16 56 18 C58 20 61 21 64 24" stroke="#2F5D50" stroke-width="0.9" stroke-linecap="round"/>
+        <!-- center small flower -->
+        <path d="M120 22 C120 22 120 14 120 10 C120 7 122 5 120 4 C118 5 120 7 120 10" stroke="#2F5D50" stroke-width="1" stroke-linecap="round"/>
+        <path d="M120 22 C116 18 112 17 109 16 C107 15 106 13 108 12 C109 13 111 15 115 17" stroke="#2F5D50" stroke-width="1" stroke-linecap="round"/>
+        <path d="M120 22 C124 18 128 17 131 16 C133 15 134 13 132 12 C131 13 129 15 125 17" stroke="#2F5D50" stroke-width="1" stroke-linecap="round"/>
+        <path d="M120 22 C116 19 115 15 113 12 C112 10 110 9 111 7 C113 8 115 10 117 14" stroke="#2F5D50" stroke-width="1" stroke-linecap="round"/>
+        <path d="M120 22 C124 19 125 15 127 12 C128 10 130 9 129 7 C127 8 125 10 123 14" stroke="#2F5D50" stroke-width="1" stroke-linecap="round"/>
+        <path d="M120 22 C120 30 119 38 119 44" stroke="#2F5D50" stroke-width="1" stroke-linecap="round"/>
+        <circle cx="120" cy="22" r="3" stroke="#2F5D50" stroke-width="1" fill="none"/>
+        <circle cx="120" cy="22" r="1.5" fill="#F1D4DC" opacity="0.8"/>
+        <!-- right sprigs -->
+        <path d="M155 44 C155 44 162 34 170 28" stroke="#2F5D50" stroke-width="1" stroke-linecap="round"/>
+        <path d="M163 33 C163 33 160 27 157 23 C155 20 151 19 150 21 C152 23 155 24 158 27" stroke="#2F5D50" stroke-width="0.9" stroke-linecap="round"/>
+        <!-- right daisy -->
+        <path d="M210 26 C210 26 210 18 210 14 C210 11 212 9 210 8 C208 9 210 11 210 14" stroke="#2F5D50" stroke-width="1" stroke-linecap="round"/>
+        <path d="M210 26 C206 22 202 21 199 20 C197 19 196 17 198 15 C199 17 201 19 205 21" stroke="#2F5D50" stroke-width="1" stroke-linecap="round"/>
+        <path d="M210 26 C214 22 218 21 221 20 C223 19 224 17 222 15 C221 17 219 19 215 21" stroke="#2F5D50" stroke-width="1" stroke-linecap="round"/>
+        <path d="M210 26 C207 22 205 18 203 15 C202 13 200 12 201 10 C203 11 205 13 207 17" stroke="#2F5D50" stroke-width="1" stroke-linecap="round"/>
+        <path d="M210 26 C213 22 215 18 217 15 C218 13 220 12 219 10 C217 11 215 13 213 17" stroke="#2F5D50" stroke-width="1" stroke-linecap="round"/>
+        <path d="M210 26 C210 33 209 40 209 44" stroke="#2F5D50" stroke-width="1" stroke-linecap="round"/>
+        <circle cx="210" cy="26" r="3.5" stroke="#2F5D50" stroke-width="1" fill="none"/>
+        <circle cx="210" cy="26" r="1.8" fill="#C9C3D9" opacity="0.8"/>
+      </svg>
+    </div>
+    <div style="text-align:center;margin-top:0.5rem;font-size:10px;color:var(--ink-ghost);font-family:'Montserrat',sans-serif;">2026-03-18 22:36:46 ET</div>
   </div>
 </div>
 
-<!-- GROUP SETUP SCREEN -->
+
+<!-- HOME SCREEN -->
+<div id="home-screen" class="hidden">
+  <div class="home-header">
+    <div class="home-logo">
+      <svg width="22" height="22" viewBox="0 0 26 26" fill="none">
+        <path d="M13 23C13 23 4 17 4 10C4 6.13 7.13 3 11 3C12 3 13 3.2 13 3.2C13 3.2 14 3 15 3C18.87 3 22 6.13 22 10C22 17 13 23 13 23Z" fill="#2F5D50" fill-opacity="0.18" stroke="#2F5D50" stroke-width="1.1"/>
+        <path d="M13 4.5 Q15.5 10 13 23" stroke="#2F5D50" stroke-width="0.8" stroke-dasharray="1.5 2.5"/>
+        <path d="M13 11 Q16.5 9.5 18.5 7" stroke="#2F5D50" stroke-width="0.9"/>
+        <path d="M13 15 Q9.5 13.5 7.5 11" stroke="#2F5D50" stroke-width="0.9"/>
+      </svg>
+      dump dates
+    </div>
+    <div style="position:relative;">
+      <div class="home-avatar" id="home-avatar-btn" onclick="toggleHomeMenu()">?</div>
+      <div class="home-avatar-menu" id="home-avatar-menu">
+        <div style="padding:10px 14px 8px;border-bottom:1px solid var(--border);font-size:13px;color:var(--ink-faint);" id="home-menu-name">—</div>
+        <button class="home-avatar-menu-item danger" onclick="signOut()">sign out</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="home-body">
+    <div class="home-greeting" id="home-greeting">hey there 👋</div>
+    <div class="home-sub" id="home-sub">your groups are below</div>
+
+    <!-- Groups list -->
+    <div id="home-groups-list"></div>
+
+    <!-- Create / join actions -->
+    <div class="home-actions" id="home-actions">
+      <button class="auth-btn" style="width:auto;padding:10px 22px;font-size:15px;" onclick="showHomeForm('create')">+ create a group</button>
+      <button class="btn-ghost" style="font-size:15px;" onclick="showHomeForm('join')">join with code</button>
+    </div>
+
+    <!-- Create form -->
+    <div class="home-form-card" id="home-create-form" style="display:none;">
+      <div class="home-form-title">create a group</div>
+      <div class="home-form-sub">what do you want to call your group?</div>
+      <input type="text" id="home-group-name" placeholder="e.g. the usual suspects"
+        style="width:100%;padding:11px 14px;border:1px solid var(--border);border-radius:999px;font-size:16px;background:var(--bg);color:var(--ink);font-family:'Montserrat',sans-serif;outline:none;margin-bottom:10px;" />
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button class="auth-btn" style="width:auto;padding:10px 22px;" onclick="createGroupFromHome()">create group</button>
+        <button class="btn-ghost" onclick="hideHomeForms()">cancel</button>
+      </div>
+      <div class="auth-error" id="home-create-error"></div>
+    </div>
+
+    <!-- Join form -->
+    <div class="home-form-card" id="home-join-form" style="display:none;">
+      <div class="home-form-title">join a group</div>
+      <div class="home-form-sub">enter the invite code a friend sent you</div>
+      <input type="text" id="home-group-code" placeholder="INVITE CODE"
+        style="width:100%;padding:11px 14px;border:1px solid var(--border);border-radius:999px;font-size:16px;background:var(--bg);color:var(--ink);font-family:'Montserrat',sans-serif;outline:none;margin-bottom:10px;text-transform:uppercase;letter-spacing:0.1em;" />
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button class="auth-btn" style="width:auto;padding:10px 22px;" onclick="joinGroupFromHome()">join group</button>
+        <button class="btn-ghost" onclick="hideHomeForms()">cancel</button>
+      </div>
+      <div class="auth-error" id="home-join-error"></div>
+    </div>
+
+    <!-- Profile card -->
+    <div class="home-section-label" style="margin-top:2.5rem;">your profile</div>
+    <div class="home-profile-card">
+      <div class="home-profile-avatar" id="home-profile-avatar">?</div>
+      <div>
+        <div class="home-profile-name" id="home-profile-name">—</div>
+        <div class="home-profile-email" id="home-profile-email">—</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- GROUP SETUP SCREEN (legacy, kept for join flow) -->
 <div id="group-screen" class="hidden">
   <div class="group-card">
     <div id="group-choose">
@@ -1527,25 +1835,25 @@
 <header>
   <a class="logo" href="#">
     <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
-      <path d="M13 23C13 23 4 17 4 10C4 6.13 7.13 3 11 3C12 3 13 3.2 13 3.2C13 3.2 14 3 15 3C18.87 3 22 6.13 22 10C22 17 13 23 13 23Z" fill="#3A7D44" fill-opacity="0.18" stroke="#3A7D44" stroke-width="1.1"/>
-      <path d="M13 4.5 Q15.5 10 13 23" stroke="#3A7D44" stroke-width="0.8" stroke-dasharray="1.5 2.5"/>
-      <path d="M13 11 Q16.5 9.5 18.5 7" stroke="#3A7D44" stroke-width="0.9"/>
-      <path d="M13 15 Q9.5 13.5 7.5 11" stroke="#3A7D44" stroke-width="0.9"/>
+      <path d="M13 23C13 23 4 17 4 10C4 6.13 7.13 3 11 3C12 3 13 3.2 13 3.2C13 3.2 14 3 15 3C18.87 3 22 6.13 22 10C22 17 13 23 13 23Z" fill="#2F5D50" fill-opacity="0.18" stroke="#2F5D50" stroke-width="1.1"/>
+      <path d="M13 4.5 Q15.5 10 13 23" stroke="#2F5D50" stroke-width="0.8" stroke-dasharray="1.5 2.5"/>
+      <path d="M13 11 Q16.5 9.5 18.5 7" stroke="#2F5D50" stroke-width="0.9"/>
+      <path d="M13 15 Q9.5 13.5 7.5 11" stroke="#2F5D50" stroke-width="0.9"/>
     </svg>
     <span class="logo-text">dump dates</span>
-    <span style="font-size:10px;color:var(--ink-ghost);font-family:'Jost',sans-serif;font-weight:400;margin-left:4px;align-self:flex-end;padding-bottom:4px;" title="last updated">2026-03-18 15:25:54 ET</span>
+    <span style="font-size:10px;color:var(--ink-ghost);font-family:'Montserrat',sans-serif;font-weight:400;margin-left:4px;align-self:flex-end;padding-bottom:4px;" title="last updated">2026-03-18 22:36:46 ET</span>
   </a>
-  <div class="header-right" style="position:relative;">
-    <span class="month-badge" id="current-month-badge">—</span>
-    <button class="user-menu-btn" id="user-menu-btn" onclick="toggleUserMenu()" style="display:none;">?</button>
+  <!-- CENTERED TABS -->
+  <div class="header-tabs">
+    <button class="tab-btn active" onclick="switchTab('questions', this)">question garden</button>
+    <button class="tab-btn" onclick="switchTab('answer', this)">your answers</button>
+    <button class="tab-btn" onclick="switchTab('letter', this)">read the zine</button>
+  </div>
+  <!-- header-right goes to col 3 -->
+  <div class="header-right" style="position:relative;justify-self:end;">
+    <button class="home-avatar" id="user-menu-btn" onclick="toggleUserMenu()" style="display:none;border:none;cursor:pointer;background:var(--green-light);color:var(--green);">?</button>
   </div>
 </header>
-
-<div class="nav-tabs">
-  <button class="tab-btn active" onclick="switchTab('questions', this)">question garden</button>
-  <button class="tab-btn" onclick="switchTab('answer', this)">your answers</button>
-  <button class="tab-btn" onclick="switchTab('letter', this)">read the zine</button>
-</div>
 
 <main>
 
@@ -1553,10 +1861,12 @@
   <div id="questions" class="section active">
 
     <!-- THIS ISSUE -->
-    <div class="section-title">this issue</div>
-    <div class="section-sub">questions for april · answers due april 1st</div>
+    <div style="display:flex;align-items:baseline;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:0.25rem;">
+      <div class="section-title" style="margin-bottom:0;" id="issue-section-title">this issue's questions</div>
+      <div class="section-sub" style="margin-bottom:0;white-space:nowrap;" id="issue-section-sub"></div>
+    </div>
     <div id="issue-list"></div>
-    <div id="issue-empty" style="font-size:14px;color:var(--ink-ghost);font-style:italic;padding:1rem 0 0.5rem;">no questions yet — add some from the garden below</div>
+    <div id="issue-empty" style="font-size:14px;color:var(--ink-ghost);padding:1rem 0 0.5rem;">no questions yet — add some from the garden below</div>
 
     <!-- GARDEN as a sheet of paper -->
     <div class="garden-paper">
@@ -1572,26 +1882,49 @@
       </div>
       <div class="garden-paper-content">
         <div class="garden-paper-title">question garden</div>
-        <div class="garden-paper-sub">write your own, generate ideas, or pick from the collection below</div>
+        <div class="garden-paper-sub">write your own, generate ideas, or pick from the collection below — all questions accept images and text</div>
 
-        <div class="garden-add-row">
-          <input type="text" id="garden-input" placeholder="write your own question…" />
-          <button class="btn-ghost" onclick="plantQuestion()">add</button>
+        <!-- Write-your-own sticky note -->
+        <div class="garden-write-sticky gs-yellow">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px 0;">
+            <div class="gs-tag" style="margin-bottom:0;">yours</div>
+            <button class="poll-toggle-btn" id="poll-toggle" onclick="togglePollMode()" title="make this a poll">
+              <svg width="11" height="11" viewBox="0 0 16 16" fill="none">
+                <rect x="1" y="9" width="3" height="6" rx="1" fill="currentColor" opacity="0.5"/>
+                <rect x="6" y="5" width="3" height="10" rx="1" fill="currentColor" opacity="0.7"/>
+                <rect x="11" y="1" width="3" height="14" rx="1" fill="currentColor"/>
+              </svg>
+              poll
+            </button>
+          </div>
+          <textarea
+            id="garden-input"
+            class="garden-write-textarea"
+            placeholder="write your own question here…"
+            rows="2"
+          ></textarea>
+          <!-- Poll options — hidden by default -->
+          <div id="poll-options-inline" style="display:none;padding:0 12px 6px;display:none;">
+            <div style="font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:rgba(0,0,0,0.35);margin-bottom:6px;">options</div>
+            <div id="poll-options-list">
+              <div class="poll-inline-row"><span class="poll-inline-dot"></span><input class="poll-inline-input" placeholder="option 1" /></div>
+              <div class="poll-inline-row"><span class="poll-inline-dot"></span><input class="poll-inline-input" placeholder="option 2" /></div>
+            </div>
+            <button class="poll-add-option-inline" onclick="addInlinePollOption()">+ add option</button>
+          </div>
+          <div class="garden-write-actions">
+            <button class="garden-ai-btn" id="gen-btn-garden" onclick="generateQuestions()">
+              <div class="gen-spinner" id="gen-spinner" style="display:none;width:13px;height:13px;border-radius:50%;border:2px solid rgba(47,93,80,0.25);border-top-color:#2F5D50;animation:spin 0.7s linear infinite;flex-shrink:0;"></div>
+              <svg id="gen-icon" width="13" height="13" viewBox="0 0 24 24" fill="none">
+                <path d="M12 2L13.5 8.5L20 7L15.5 12L20 17L13.5 15.5L12 22L10.5 15.5L4 17L8.5 12L4 7L10.5 8.5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+              </svg>
+              generate with AI
+            </button>
+            <button class="garden-add-btn" onclick="plantQuestion()">add →</button>
+          </div>
         </div>
 
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:1.25rem;flex-wrap:wrap;">
-          <button class="gen-btn" id="gen-btn-garden" onclick="generateQuestions()">
-            <svg class="gen-icon" width="11" height="11" viewBox="0 0 11 11" fill="none">
-              <path d="M9.5 5.5A4 4 0 1 1 5.5 1.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
-              <path d="M7.5 1l2 .5-.5 2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <div class="gen-spinner"></div>
-            generate ideas with AI
-          </button>
-          <span style="font-size:12px;color:var(--ink-ghost);">all questions accept text + photos</span>
-        </div>
-
-        <div style="font-size:11px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-ghost);margin-bottom:0.75rem;">suggested prompts</div>
+        <div style="font-size:11px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-ghost);margin-bottom:0.75rem;margin-top:1.5rem;">suggested prompts</div>
         <div class="garden-filters" id="garden-filters"></div>
         <div class="garden-stickies" id="garden-list"></div>
       </div>
@@ -1602,17 +1935,13 @@
   <!-- ANSWERS -->
   <div id="answer" class="section">
     <div class="answer-section-header">
-      <div class="section-title">your answers</div>
-      <div class="section-sub">answering for april · due april 1st</div>
-      <div class="progress-wrap">
-        <div class="progress-label">
-          <span id="progress-label-text">0 of 3 answered</span>
-          <span id="progress-pct">0%</span>
-        </div>
-        <div class="progress-track">
-          <div class="progress-bar" id="progress-bar" style="width:0%"></div>
-        </div>
+      <div style="margin-bottom:2rem;">
+        <div class="section-title">your answers</div>
+        <div class="section-sub">answering for april · due april 1st</div>
       </div>
+      <span id="progress-pct" style="display:none"></span>
+      <span id="progress-label-text" style="display:none"></span>
+      <div id="progress-bar" style="display:none"></div>
     </div>
     <div id="answer-questions"></div>
   </div>
@@ -1684,8 +2013,10 @@
     { id: 16, text: "a view you've seen recently that stuck with you",                 tag: "photo",    mine: false, type: "photo" },
     { id: 17, text: "something you made, cooked, or built lately",                     tag: "photo",    mine: false, type: "photo" },
     { id: 18, text: "a corner of your life that feels most like you right now",        tag: "photo",    mine: false, type: "photo" },
+    { id: 19, text: "what should we theme next month's issue?",                          tag: "poll",     mine: false, type: "text", poll: true, options: ["seasons / nature", "nostalgia", "ambitions", "open topic"] },
+    { id: 20, text: "pick a group challenge for next month",                              tag: "poll",     mine: false, type: "text", poll: true, options: ["read the same book", "try a new recipe", "go somewhere new", "a digital detox day"] },
   ];
-  let nextId = 19;
+  let nextId = 21;
   let activeFilter = 'all';
 
   // No seed — starts empty
@@ -1730,8 +2061,11 @@
       if (!item) return '';
       return `
         <div class="issue-slot filled" style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--surface);border:1px solid var(--border-mid);border-radius:12px;margin-bottom:8px;">
-          <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:18px;color:var(--green);min-width:20px;">${i + 1}</div>
-          <div style="flex:1;font-size:15px;color:var(--ink);line-height:1.4;">${item.text}</div>
+          <div style="font-family:'Playfair Display',serif;font-size:18px;color:var(--green);min-width:20px;">${i + 1}</div>
+          <div style="flex:1;">
+            <div style="font-size:16px;color:var(--ink);line-height:1.4;">${item.text}</div>
+            ${item.tag === 'poll' ? '<div style="display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--bloom);background:var(--bloom-light);padding:2px 8px;border-radius:999px;"><svg width="8" height="8" viewBox="0 0 16 16" fill="none"><rect x="1" y="9" width="3" height="6" rx="1" fill="currentColor" opacity="0.6"/><rect x="6" y="5" width="3" height="10" rx="1" fill="currentColor" opacity="0.8"/><rect x="11" y="1" width="3" height="14" rx="1" fill="currentColor"/></svg> poll</div>' : ''}
+          </div>
           <button onclick="removeFromIssue(${id})" title="remove" style="width:26px;height:26px;border-radius:50%;border:1px solid transparent;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ink-ghost);transition:all 0.15s;" onmouseover="this.style.background='var(--bloom-light)';this.style.color='var(--bloom)'" onmouseout="this.style.background='transparent';this.style.color='var(--ink-ghost)'">
             <svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1 1L8 8M8 1L1 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
           </button>
@@ -1774,12 +2108,17 @@
     document.getElementById('garden-list').innerHTML = filtered.map((item, idx) => {
       const inIssue = isInIssue(item.id);
       const color = item.mine ? 'gs-peach' : gsColors[item.id % gsColors.length];
+      const isPoll = item.tag === 'poll';
+      const isPhoto = item.type === 'photo';
       return `
         <div class="garden-sticky ${color} ${inIssue ? 'in-issue' : ''}">
-          ${item.type === 'photo'
+          ${isPhoto
             ? '<span class="photo-badge"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1 3.5C1 2.95 1.45 2.5 2 2.5h.7l.6-1h2.4l.6 1H7.5C8.05 2.5 8.5 2.95 8.5 3.5v3.5C8.5 7.55 8.05 8 7.5 8h-5C1.95 8 1 7.55 1 7V3.5z" stroke="currentColor" stroke-width="0.8"/><circle cx="4.75" cy="5.25" r="1.25" stroke="currentColor" stroke-width="0.8"/></svg> photo</span>'
-            : `<div class="gs-tag">${item.tag}</div>`}
+            : isPoll
+              ? `<div class="poll-badge"><svg width="9" height="9" viewBox="0 0 16 16" fill="none"><rect x="1" y="9" width="3" height="6" rx="1" fill="currentColor" opacity="0.5"/><rect x="6" y="5" width="3" height="10" rx="1" fill="currentColor" opacity="0.7"/><rect x="11" y="1" width="3" height="14" rx="1" fill="currentColor"/></svg> poll</div>`
+              : `<div class="gs-tag">${item.tag}</div>`}
           <div class="gs-text">${item.text}</div>
+          ${isPoll && item.options ? `<div style="margin-top:6px;display:flex;flex-direction:column;gap:3px;">${item.options.map(o => `<div style="font-size:11px;color:rgba(30,42,26,0.5);padding:2px 0;border-top:1px solid rgba(0,0,0,0.06);">${o}</div>`).join('')}</div>` : ''}
           <div class="gs-actions">
             <span class="gs-in-badge">${inIssue ? '✓ in issue' : ''}</span>
             <div style="display:flex;gap:4px;">
@@ -1814,9 +2153,32 @@
     renderGarden();
   }
 
-  document.getElementById('garden-input').addEventListener('keydown', e => {
-    if (e.key === 'Enter') plantQuestion();
-  });
+  // garden-input is now a textarea — Enter adds newline, user clicks 'add →'
+
+  let isPollMode = false;
+
+  function togglePollMode() {
+    isPollMode = !isPollMode;
+    const btn = document.getElementById('poll-toggle');
+    const opts = document.getElementById('poll-options-inline');
+    const sticky = btn.closest('.garden-write-sticky');
+    btn.classList.toggle('active', isPollMode);
+    opts.style.display = isPollMode ? 'block' : 'none';
+    sticky.classList.toggle('gs-lavender', isPollMode);
+    sticky.classList.toggle('gs-yellow', !isPollMode);
+    document.getElementById('garden-input').placeholder = isPollMode
+      ? 'what should the group vote on?'
+      : 'write your own question here…';
+  }
+
+  function addInlinePollOption() {
+    const list = document.getElementById('poll-options-list');
+    const count = list.querySelectorAll('.poll-inline-input').length + 1;
+    const row = document.createElement('div');
+    row.className = 'poll-inline-row';
+    row.innerHTML = `<span class="poll-inline-dot"></span><input class="poll-inline-input" placeholder="option ${count}" />`;
+    list.appendChild(row);
+  }
 
   // ── ANSWERS ───────────────────────────────────────────────
 
@@ -1827,7 +2189,7 @@
     document.getElementById('progress-bar').style.width = pct + '%';
     document.getElementById('progress-pct').textContent = pct + '%';
     const total = getIssueQuestionTexts().length || 8;
-    document.getElementById('progress-label-text').textContent = `${filled} of ${total} answered`;
+    document.getElementById('progress-label-text').textContent = `${filled} of ${total}`;
   }
 
   function getIssueQuestions() {
@@ -1838,7 +2200,7 @@
   }
 
   // Sticky colours cycle by position
-  const stickyColors = ['sticky-yellow', 'sticky-green', 'sticky-blue', 'sticky-pink', 'sticky-peach'];
+  const stickyColors = ['sticky-petal', 'sticky-mauve', 'sticky-lavender', 'sticky-heather', 'sticky-plum', 'sticky-yellow', 'sticky-peach'];
 
   function renderAnswers() {
     updateProgress();
@@ -1846,98 +2208,81 @@
     const qs = qItems.map(g => g.text);
     if (qs.length === 0) {
       document.getElementById('answer-questions').innerHTML =
-        '<div style="text-align:center;padding:3rem 0;color:var(--ink-ghost);font-style:italic;font-size:15px;max-width:700px;margin:0 auto;">no questions in this issue yet — head to the question garden to add some</div>';
+        '<div style="text-align:center;padding:3rem 0;color:var(--ink-ghost);font-size:15px;max-width:700px;margin:0 auto;">no questions in this issue yet — head to the question garden to add some</div>';
       return;
     }
-    document.getElementById('answer-questions').innerHTML = qs.map((q, i) => `
+
+    // Build all sticky notes as one list
+    const stickiesHtml = qs.map((q, i) => {
+      const qItem = getItemById(issueList[i]);
+      const isPhoto = qItem && qItem.type === 'photo';
+      const color = stickyColors[i % stickyColors.length];
+
+      if (isPhoto) {
+        return `<div class="sticky ${color}">
+          <div class="sticky-q-label">${i + 1}. ${q}</div>
+          ${photosByQ[i] && photosByQ[i].length > 0
+            ? `<div class="sticky-photo-uploaded" id="photo-grid-${i}" onclick="triggerUpload(${i})">
+                <img src="${photosByQ[i][0]}" alt="your photo" />
+               </div>`
+            : `<div class="sticky-photo-upload" onclick="triggerUpload(${i})" id="photo-grid-${i}">
+                <svg width="20" height="20" viewBox="0 0 22 22" fill="none">
+                  <rect x="1" y="4" width="20" height="15" rx="2" stroke="currentColor" stroke-width="1.2"/>
+                  <path d="M1 11l5-5 4 4 4-3 6 6" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+                  <circle cx="7" cy="9" r="2" stroke="currentColor" stroke-width="1"/>
+                </svg>
+                tap to add photo
+              </div>`
+          }
+          <textarea class="sticky-caption" placeholder="caption (optional)…"
+            oninput="onAnswerInput(${i}, this.value)">${answers[i] || ''}</textarea>
+          <div class="sticky-autosave" id="saved-${i}"></div>
+        </div>`;
+      }
+
+      return `<div class="sticky ${color}">
+        <div class="sticky-q-label">${i + 1}. ${q}</div>
+        <textarea class="sticky-textarea"
+          placeholder="write something here…"
+          oninput="onAnswerInput(${i}, this.value)">${answers[i] || ''}</textarea>
+        <div class="sticky-upload" onclick="triggerUpload(${i})">
+          <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+            <rect x="0.5" y="0.5" width="10" height="10" rx="1.5" stroke="currentColor" stroke-width="0.8"/>
+            <path d="M0.5 7.5L3 5L5 7L7 5.5L10.5 8.5" stroke="currentColor" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="3.5" cy="3.5" r="0.8" fill="currentColor"/>
+          </svg>
+          add a photo
+        </div>
+        <div class="photo-grid" id="photo-grid-${i}"></div>
+        <div class="sticky-autosave" id="saved-${i}"></div>
+      </div>`;
+    }).join('');
+
+    // Count holes based on content height — more holes for more questions
+
+    document.getElementById('answer-questions').innerHTML = `
       <div class="paper-sheet">
         <div class="sheet-ruled"></div>
         <div class="sheet-margin"></div>
-        <div class="sheet-holes">
-          <div class="sheet-hole"></div>
-          <div class="sheet-hole"></div>
-          <div class="sheet-hole"></div>
-          <div class="sheet-hole"></div>
-          <div class="sheet-hole"></div>
-        </div>
+        
         <div class="sheet-content">
-          <div class="sheet-q-label">question ${i + 1}</div>
-          <div class="sheet-q-text">${q}</div>
-          <div class="stickies-grid">
-
-            <!-- Your answer sticky — adapts to text vs photo type -->
-            ${(function() {
-              const qItem = getItemById(issueList[i]);
-              const isPhoto = qItem && qItem.type === 'photo';
-              if (isPhoto) {
-                return `<div class="sticky sticky-mine" style="grid-column:1/-1;">
-                  <div class="sticky-inner">
-                    <div class="sticky-from" style="color:rgba(0,60,140,0.5);">
-                      <span class="sticky-avatar" style="background:#C8E6FA;color:#185FA5;">you</span>
-                      your photo
-                    </div>
-                    ${photosByQ[i] && photosByQ[i].length > 0
-                      ? `<div class="sticky-photo-uploaded" id="photo-grid-${i}">
-                          <img src="${photosByQ[i][0]}" alt="your photo" />
-                         </div>`
-                      : `<div class="sticky-photo-upload" onclick="triggerUpload(${i})" id="photo-grid-${i}">
-                          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-                            <rect x="1" y="4" width="20" height="15" rx="2" stroke="currentColor" stroke-width="1.2"/>
-                            <path d="M1 11l5-5 4 4 4-3 6 6" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
-                            <circle cx="7" cy="9" r="2" stroke="currentColor" stroke-width="1"/>
-                          </svg>
-                          tap to add your photo
-                        </div>`
-                    }
-                    <textarea class="sticky-caption" placeholder="add a caption (optional)…"
-                      oninput="onAnswerInput(${i}, this.value)">${answers[i] || ''}</textarea>
-                    <div class="sticky-actions">
-                      <span class="sticky-saved ${savedFlags[i] ? 'show' : ''}" id="saved-${i}">saved</span>
-                      <button class="sticky-save-btn" onclick="saveAnswer(${i})">save</button>
-                    </div>
-                  </div>
-                </div>`;
-              }
-              return `<div class="sticky sticky-mine">
-                <div class="sticky-inner">
-                  <div class="sticky-from">
-                    <span class="sticky-avatar" style="background:#D8EED4;color:#2A5C26;">you</span>
-                    your answer
-                  </div>
-                  <textarea class="sticky-textarea"
-                    placeholder="write something here…"
-                    oninput="onAnswerInput(${i}, this.value)">${answers[i] || ''}</textarea>
-                  <div class="sticky-upload" onclick="triggerUpload(${i})">
-                    <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
-                      <rect x="0.5" y="0.5" width="10" height="10" rx="1.5" stroke="currentColor" stroke-width="0.8"/>
-                      <path d="M0.5 7.5L3 5L5 7L7 5.5L10.5 8.5" stroke="currentColor" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round"/>
-                      <circle cx="3.5" cy="3.5" r="0.8" fill="currentColor"/>
-                    </svg>
-                    add a photo
-                  </div>
-                  <div class="photo-grid" id="photo-grid-${i}"></div>
-                  <div class="sticky-actions">
-                    <span class="sticky-saved ${savedFlags[i] ? 'show' : ''}" id="saved-${i}">saved</span>
-                    <button class="sticky-save-btn" onclick="saveAnswer(${i})">save</button>
-                  </div>
-                </div>
-              </div>`;
-            })()}
-
-
-          </div>
-
+          <div class="answers-sticky-grid">${stickiesHtml}</div>
         </div>
-      </div>`).join('');
+      </div>`;
+
     photosByQ.forEach((photos, i) => renderPhotos(i, photos));
   }
 
+  const autosaveTimers = {};
+
   function onAnswerInput(i, val) {
     answers[i] = val;
-    savedFlags[i] = false;
-    const el = document.getElementById('saved-' + i);
-    if (el) el.classList.remove('show');
     updateProgress();
+    const el = document.getElementById('saved-' + i);
+    if (el) el.textContent = '';
+    // Debounced autosave — 800ms after last keystroke
+    clearTimeout(autosaveTimers[i]);
+    autosaveTimers[i] = setTimeout(() => saveAnswer(i), 800);
   }
 
 
@@ -2047,13 +2392,119 @@
   // Build an array of page spreads {left, right} from zine data
   function buildPages(data) {
     const pages = [];
-    const colors = ['#FFF176','#CCFF90','#80D8FF','#FF80AB','#FFCC80','#E040FB'];
+    const colors = ['#F1D4DC','#D8B7C9','#C9C3D9','#E3B8C2','#BFA0B8','#FBF0C0','#FAD9BC'];
     const rotations = [-1.5, 1.2, -0.8, 1.8, -1.1, 0.9, -1.6, 1.3];
+
+    // ── ONBOARDING ZINE — shown when no published questions yet ──
+    if (!data || data.length === 0) {
+      const leafSvg = `<svg viewBox="0 0 120 140" fill="none" class="zine-cover-leaf">
+        <path d="M60 130C60 130 10 90 10 45C10 22 28 5 50 5C55 5 60 7 60 7C60 7 65 5 70 5C92 5 110 22 110 45C110 90 60 130 60 130Z" fill="#2F5D50" fill-opacity="0.15" stroke="#2F5D50" stroke-width="2"/>
+        <path d="M60 10 Q70 50 60 130" stroke="#2F5D50" stroke-width="1.5" stroke-dasharray="4 6"/>
+        <path d="M60 55 Q80 48 92 35" stroke="#2F5D50" stroke-width="1.5"/>
+        <path d="M60 80 Q40 73 28 60" stroke="#2F5D50" stroke-width="1.5"/>
+      </svg>`;
+
+      // Page 1: welcome cover (left) + how it works (right)
+      pages.push({
+        left: `<div class="zine-cover">
+          <div class="zine-cover-inner">
+            <div class="zine-cover-vol">your first issue</div>
+            <div class="zine-cover-deco">${leafSvg}</div>
+            <h1 class="zine-cover-title">dump dates</h1>
+            <div class="zine-cover-sub">a monthly catch-up for friends</div>
+            <div class="zine-cover-qs" style="margin-top:1rem;">no issue published yet</div>
+          </div>
+        </div>`,
+        right: `<div class="zine-spread-right" style="display:flex;flex-direction:column;justify-content:center;padding:3rem 2rem;">
+          <div style="font-family:'Playfair Display',serif;font-size:13px;color:var(--ink-ghost);letter-spacing:0.06em;margin-bottom:1.5rem;">how it works</div>
+          <div style="display:flex;flex-direction:column;gap:1.5rem;">
+            <div style="display:flex;gap:1rem;align-items:flex-start;">
+              <div style="width:28px;height:28px;border-radius:50%;background:#CFE8D5;color:#2F5D50;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">1</div>
+              <div>
+                <div style="font-size:15px;font-weight:600;color:var(--ink);margin-bottom:3px;">pick your questions</div>
+                <div style="font-size:13px;color:var(--ink-faint);line-height:1.5;">head to the question garden and add questions to this month's issue</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:1rem;align-items:flex-start;">
+              <div style="width:28px;height:28px;border-radius:50%;background:#F1D4DC;color:#7A2E42;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">2</div>
+              <div>
+                <div style="font-size:15px;font-weight:600;color:var(--ink);margin-bottom:3px;">invite your friends</div>
+                <div style="font-size:13px;color:var(--ink-faint);line-height:1.5;">share your group invite code — everyone answers in their own time</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:1rem;align-items:flex-start;">
+              <div style="width:28px;height:28px;border-radius:50%;background:#C9C3D9;color:#3C3560;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</div>
+              <div>
+                <div style="font-size:15px;font-weight:600;color:var(--ink);margin-bottom:3px;">read the zine</div>
+                <div style="font-size:13px;color:var(--ink-faint);line-height:1.5;">on the 1st of the month, everyone's answers appear here as a flippable zine</div>
+              </div>
+            </div>
+          </div>
+        </div>`
+      });
+
+      // Page 2: invite prompt (left) + sample sticky spread (right)
+      const sampleStickies = [
+        { col: '#F1D4DC', rot: -1.5, text: 'what song has been on repeat lately?', name: 'you?' },
+        { col: '#FBF0C0', rot: 1.2,  text: 'best thing you spent money on this month', name: 'a friend' },
+        { col: '#C9C3D9', rot: -0.8, text: 'something you changed your mind about', name: 'another friend' },
+      ].map(s => `<div class="zine-sticky" style="background:${s.col};--r:${s.rot}deg;opacity:0.55;">
+        <div class="zine-sticky-inner">
+          <div class="zine-sticky-from" style="opacity:0.5;">${s.name}</div>
+          <div class="zine-sticky-text" style="color:rgba(0,0,0,0.45);">${s.text}</div>
+        </div>
+      </div>`).join('');
+
+      pages.push({
+        left: `<div class="zine-spread-left" style="display:flex;flex-direction:column;justify-content:center;padding:3rem 2rem;">
+          <div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--ink);line-height:1.3;margin-bottom:1.25rem;">get your friends in here</div>
+          <div style="font-size:15px;color:var(--ink-faint);line-height:1.6;margin-bottom:2rem;">dump dates works best with 3–8 friends. share your invite code to get everyone set up.</div>
+          <button onclick="copyInviteCode()" style="
+            background:var(--green);color:#fff;border:none;border-radius:999px;
+            padding:12px 20px;font-size:15px;font-weight:600;cursor:pointer;
+            font-family:'Montserrat',sans-serif;display:inline-flex;align-items:center;gap:8px;
+            width:fit-content;transition:opacity 0.15s;
+          " onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <rect x="1" y="4" width="9" height="9" rx="1.5" stroke="white" stroke-width="1.2"/>
+              <path d="M4 4V2.5C4 1.67 4.67 1 5.5 1H11.5C12.33 1 13 1.67 13 2.5V8.5C13 9.33 12.33 10 11.5 10H10" stroke="white" stroke-width="1.2"/>
+            </svg>
+            copy invite code
+          </button>
+          <div style="margin-top:1.5rem;font-size:13px;color:var(--ink-ghost);">or head to the <span style="color:var(--green);font-weight:600;cursor:pointer;" onclick="switchTab('questions',document.querySelector('.tab-btn'))">question garden</span> to start building this issue</div>
+        </div>`,
+        right: `<div class="zine-spread-right" style="position:relative;display:flex;flex-direction:column;justify-content:center;">
+          <div style="font-family:'Playfair Display',serif;font-size:13px;color:var(--ink-ghost);letter-spacing:0.06em;margin-bottom:1.25rem;padding:0 1.5rem;">what it'll look like…</div>
+          <div class="zine-stickies-area" style="padding:0 1.5rem;">${sampleStickies}</div>
+          <div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(247,249,244,0.95) 100%);pointer-events:none;"></div>
+        </div>`
+      });
+
+      // Page 3: back cover
+      pages.push({
+        left: `<div class="zine-back-left">
+          <div class="zine-back-inner">
+            <div class="zine-back-title">dump dates</div>
+            <div class="zine-back-sub">your first issue awaits ♡</div>
+            <div class="zine-back-deco">
+              <svg viewBox="0 0 60 60" fill="none" width="60" height="60">
+                <circle cx="30" cy="30" r="28" stroke="#3A7D44" stroke-width="1" stroke-dasharray="4 4"/>
+                <path d="M30 10C30 10 15 20 15 32C15 38 20 43 30 43C40 43 45 38 45 32C45 20 30 10 30 10Z" fill="#3A7D44" fill-opacity="0.12" stroke="#3A7D44" stroke-width="1.2"/>
+              </svg>
+            </div>
+            <div class="zine-back-issue">vol. 01 · coming soon</div>
+          </div>
+        </div>`,
+        right: `<div class="zine-back-right"></div>`
+      });
+
+      return pages;
+    }
 
     // Page 0: cover (left) + blank ruled page (right)
     const friendsHtml = (currentGroup ? [] : [
-      {bg:'#D8EED4',fg:'#2A5C26',init:'AL'},{bg:'#D0E8E0',fg:'#1A5A48',init:'JM'},
-      {bg:'#EDE0D4',fg:'#5C3820',init:'RP'},{bg:'#EDE8D0',fg:'#5C4A18',init:'SK'}
+      {bg:'#CFE8D5',fg:'#2F5D50',init:'AL'},{bg:'#BFA0B8',fg:'#5A2E50',init:'JM'},
+      {bg:'#E3B8C2',fg:'#7A2E42',init:'RP'},{bg:'#C9C3D9',fg:'#3C3560',init:'SK'}
     ]).map(f => `<span class="zc-friend" style="background:${f.bg};color:${f.fg};">${f.init}</span>`).join('');
 
     pages.push({
@@ -2062,10 +2513,10 @@
           <div class="zine-cover-vol">vol. 03 · ${currentIssue?.month || 'march 2026'}</div>
           <div class="zine-cover-deco">
             <svg viewBox="0 0 120 140" fill="none" class="zine-cover-leaf">
-              <path d="M60 130C60 130 10 90 10 45C10 22 28 5 50 5C55 5 60 7 60 7C60 7 65 5 70 5C92 5 110 22 110 45C110 90 60 130 60 130Z" fill="#3A7D44" fill-opacity="0.15" stroke="#3A7D44" stroke-width="2"/>
-              <path d="M60 10 Q70 50 60 130" stroke="#3A7D44" stroke-width="1.5" stroke-dasharray="4 6"/>
-              <path d="M60 55 Q80 48 92 35" stroke="#3A7D44" stroke-width="1.5"/>
-              <path d="M60 80 Q40 73 28 60" stroke="#3A7D44" stroke-width="1.5"/>
+              <path d="M60 130C60 130 10 90 10 45C10 22 28 5 50 5C55 5 60 7 60 7C60 7 65 5 70 5C92 5 110 22 110 45C110 90 60 130 60 130Z" fill="#2F5D50" fill-opacity="0.15" stroke="#2F5D50" stroke-width="2"/>
+              <path d="M60 10 Q70 50 60 130" stroke="#2F5D50" stroke-width="1.5" stroke-dasharray="4 6"/>
+              <path d="M60 55 Q80 48 92 35" stroke="#2F5D50" stroke-width="1.5"/>
+              <path d="M60 80 Q40 73 28 60" stroke="#2F5D50" stroke-width="1.5"/>
             </svg>
           </div>
           <h1 class="zine-cover-title">dump dates</h1>
@@ -2113,8 +2564,8 @@
           <div class="zine-back-sub">until next month ♡</div>
           <div class="zine-back-deco">
             <svg viewBox="0 0 60 60" fill="none" width="60" height="60">
-              <circle cx="30" cy="30" r="28" stroke="#3A7D44" stroke-width="1" stroke-dasharray="4 4"/>
-              <path d="M30 10C30 10 15 20 15 32C15 38 20 43 30 43C40 43 45 38 45 32C45 20 30 10 30 10Z" fill="#3A7D44" fill-opacity="0.12" stroke="#3A7D44" stroke-width="1.2"/>
+              <circle cx="30" cy="30" r="28" stroke="#2F5D50" stroke-width="1" stroke-dasharray="4 4"/>
+              <path d="M30 10C30 10 15 20 15 32C15 38 20 43 30 43C40 43 45 38 45 32C45 20 30 10 30 10Z" fill="#2F5D50" fill-opacity="0.12" stroke="#2F5D50" stroke-width="1.2"/>
             </svg>
           </div>
           <div class="zine-back-issue">${currentIssue?.month || 'march 2026'} · vol. 03</div>
@@ -2207,59 +2658,120 @@
     }
   }
 
+
+  // ── POLL QUESTION ─────────────────────────────────────────
+
+  function addPollQuestion() {
+    const overlay = document.createElement('div');
+    overlay.className = 'poll-modal-overlay';
+    overlay.innerHTML = `
+      <div class="poll-modal" onclick="event.stopPropagation()">
+        <h3>add a poll</h3>
+        <p>ask your group a multiple-choice question</p>
+        <input class="poll-question-input" id="poll-q-input" placeholder="e.g. what should we do for the summer issue?" />
+        <div id="poll-options">
+          <div class="poll-option-row"><input class="poll-option-input" placeholder="option 1" /><button class="poll-remove-btn" onclick="removePollOption(this)"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1 1L8 8M8 1L1 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button></div>
+          <div class="poll-option-row"><input class="poll-option-input" placeholder="option 2" /><button class="poll-remove-btn" onclick="removePollOption(this)"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1 1L8 8M8 1L1 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button></div>
+        </div>
+        <button class="poll-add-option" onclick="addPollOption()">+ add option</button>
+        <div class="poll-actions">
+          <button class="btn-ghost" onclick="this.closest('.poll-modal-overlay').remove()">cancel</button>
+          <button class="auth-btn" style="width:auto;padding:10px 24px;border-radius:999px;" onclick="submitPoll()">add to garden</button>
+        </div>
+      </div>`;
+    overlay.onclick = () => overlay.remove();
+    document.body.appendChild(overlay);
+    document.getElementById('poll-q-input').focus();
+  }
+
+  function addPollOption() {
+    const container = document.getElementById('poll-options');
+    if (!container) return;
+    const count = container.children.length + 1;
+    const row = document.createElement('div');
+    row.className = 'poll-option-row';
+    row.innerHTML = `<input class="poll-option-input" placeholder="option ${count}" /><button class="poll-remove-btn" onclick="removePollOption(this)"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1 1L8 8M8 1L1 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>`;
+    container.appendChild(row);
+  }
+
+  function removePollOption(btn) {
+    const container = document.getElementById('poll-options');
+    if (container && container.children.length > 2) btn.closest('.poll-option-row').remove();
+  }
+
+  function submitPoll() {
+    const q = document.getElementById('poll-q-input')?.value.trim();
+    if (!q) return;
+    const options = Array.from(document.querySelectorAll('.poll-option-input'))
+      .map(i => i.value.trim()).filter(Boolean);
+    if (options.length < 2) return;
+    const text = `${q} (${options.join(' / ')})`;
+    garden.unshift({ id: nextId++, text, tag: 'poll', mine: true, type: 'text' });
+    document.querySelector('.poll-modal-overlay')?.remove();
+    renderFilters();
+    renderGarden();
+  }
+
   // ── QUESTION GENERATOR ────────────────────────────────────
+
+  const dummyQuestions = [
+    "what's a small habit you've picked up recently that you didn't expect to stick?",
+    "if your current mood was a weather forecast, what would it say?",
+    "what's something you bought recently that felt like a tiny act of self care?",
+    "what's a corner of the internet you've been living in lately?",
+    "describe the last time you laughed until it hurt",
+    "what's a rule you've made for yourself that no one else knows about?",
+    "what's something you used to be embarrassed about that you're now kind of proud of?",
+    "what are you currently pretending not to be stressed about?",
+    "what song would be playing if your life had a soundtrack this month?",
+    "what's the most recent thing you googled that you'd never admit to?",
+    "what's a small thing that made you feel genuinely at home lately?",
+    "what's something you've been meaning to say to someone but haven't yet?",
+    "if you had to eat one meal every day for the next month, what would it be and why?",
+    "what's a childhood belief you've recently had to update?",
+    "what's the nicest thing a stranger has done for you recently?",
+    "what's something you've been doing alone that you secretly love?",
+    "describe your current life using only three emojis",
+    "what's the best piece of unsolicited advice you've received this year?",
+    "what's a phase you went through that you look back on with pure affection?",
+    "if your apartment/room could talk, what would it say about you right now?",
+  ];
+  let dummyIndex = Math.floor(Math.random() * dummyQuestions.length);
 
   async function generateQuestions() {
     const btn = document.getElementById('gen-btn-garden');
     const input = document.getElementById('garden-input');
     if (!btn || !input) return;
 
-    btn.classList.add('loading');
     btn.disabled = true;
+    const genIcon = document.getElementById('gen-icon');
+    const genSpinner = document.getElementById('gen-spinner');
+    if (genIcon) genIcon.style.display = 'none';
+    if (genSpinner) genSpinner.style.display = 'flex';
 
-    const qs = getIssueQuestionTexts();
-    const context = qs.length ? `The group is currently answering: "${qs.join('", "')}". ` : '';
-    const existing = garden.map(g => g.text).slice(0, 10).join('; ');
+    // Fake a short loading moment for delight
+    await new Promise(r => setTimeout(r, 600 + Math.random() * 400));
 
-    try {
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 200,
-          messages: [{
-            role: 'user',
-            content: `You are helping a friend group come up with fun, personal, and thoughtful questions for their monthly zine called "dump dates". ${context}Some questions they already have: ${existing}.
-
-Generate exactly 1 fresh, interesting question for friends to answer about their lives. Make it playful, specific, and feel like something you'd genuinely want to answer. Avoid clichés.
-
-Return ONLY the question string, no quotes, no punctuation other than the question mark, nothing else.`
-          }]
-        })
-      });
-
-      const data = await res.json();
-      const question = (data.content?.[0]?.text || '').trim().replace(/^["']|["']$/g, '');
-
-      btn.classList.remove('loading');
-      btn.disabled = false;
-
-      if (question) {
-        input.value = question;
-        input.focus();
-        // Highlight the field briefly
-        input.style.transition = 'background 0.3s';
-        input.style.background = 'var(--green-light)';
-        setTimeout(() => { input.style.background = ''; }, 600);
-      }
-
-    } catch (err) {
-      btn.classList.remove('loading');
-      btn.disabled = false;
-      input.placeholder = 'couldn\'t generate — try again';
-      setTimeout(() => { input.placeholder = 'write your own question…'; }, 3000);
+    // Pick next question from pool, cycling and skipping already-in-garden ones
+    const inGarden = new Set(garden.map(g => g.text.toLowerCase()));
+    let attempts = 0;
+    let question = dummyQuestions[dummyIndex % dummyQuestions.length];
+    while (inGarden.has(question.toLowerCase()) && attempts < dummyQuestions.length) {
+      dummyIndex++;
+      attempts++;
+      question = dummyQuestions[dummyIndex % dummyQuestions.length];
     }
+    dummyIndex++;
+
+    if (genIcon) genIcon.style.display = '';
+    if (genSpinner) genSpinner.style.display = 'none';
+    btn.disabled = false;
+
+    input.value = question;
+    input.focus();
+    input.style.transition = 'background 0.4s';
+    input.style.background = 'rgba(203,232,210,0.5)';
+    setTimeout(() => { input.style.background = ''; }, 700);
   }
 
   function plantFromSuggestion(text, pill) {
@@ -2280,27 +2792,27 @@ Return ONLY the question string, no quotes, no punctuation other than the questi
     {
       q: "what song has been on repeat and what does that say about you?",
       answers: [
-        { name: "alex",  initials: "AL", bg: "#D8EED4", fg: "#2A5C26", text: "Mitski's 'Bug Like an Angel' on loop. apparently i am unwell and yearning for something i can't name. classic." },
-        { name: "jamie", initials: "JM", bg: "#D0E8E0", fg: "#1A5A48", text: "a 2009 electro-pop playlist i made in high school. it says i am thriving and also in denial about being almost 30." },
-        { name: "robin", initials: "RP", bg: "#EDE0D4", fg: "#5C3820", text: "the encanto soundtrack. my niece visited for a week and now it's just... part of me." },
-        { name: "sam",   initials: "SK", bg: "#EDE8D0", fg: "#5C4A18", text: "lo-fi beats to study to. it says i am avoiding something. unclear what." },
+        { name: "alex",  initials: "AL", bg: "#CFE8D5", fg: "#2F5D50", text: "Mitski's 'Bug Like an Angel' on loop. apparently i am unwell and yearning for something i can't name. classic." },
+        { name: "jamie", initials: "JM", bg: "#BFA0B8", fg: "#5A2E50", text: "a 2009 electro-pop playlist i made in high school. it says i am thriving and also in denial about being almost 30." },
+        { name: "robin", initials: "RP", bg: "#E3B8C2", fg: "#7A2E42", text: "the encanto soundtrack. my niece visited for a week and now it's just... part of me." },
+        { name: "sam",   initials: "SK", bg: "#C9C3D9", fg: "#3C3560", text: "lo-fi beats to study to. it says i am avoiding something. unclear what." },
       ]
     },
     {
       q: "something you changed your mind about recently",
       answers: [
-        { name: "alex",  initials: "AL", bg: "#D8EED4", fg: "#2A5C26", text: "that i hate running. turns out i hate running alone. with a podcast it is actually fine?? who am i." },
-        { name: "sam",   initials: "SK", bg: "#EDE8D0", fg: "#5C4A18", text: "that remote work would make me more productive. comfortable, yes. equally distracted, absolutely." },
-        { name: "robin", initials: "RP", bg: "#EDE0D4", fg: "#5C3820", text: "anchovies on pizza. don't ask me to explain. just trust the process." },
+        { name: "alex",  initials: "AL", bg: "#CFE8D5", fg: "#2F5D50", text: "that i hate running. turns out i hate running alone. with a podcast it is actually fine?? who am i." },
+        { name: "sam",   initials: "SK", bg: "#C9C3D9", fg: "#3C3560", text: "that remote work would make me more productive. comfortable, yes. equally distracted, absolutely." },
+        { name: "robin", initials: "RP", bg: "#E3B8C2", fg: "#7A2E42", text: "anchovies on pizza. don't ask me to explain. just trust the process." },
       ]
     },
     {
       q: "best $20 you've spent in the last month",
       answers: [
-        { name: "jamie", initials: "JM", bg: "#D0E8E0", fg: "#1A5A48", text: "a tiny cactus named gerald. he asks for nothing. he is my ideal roommate." },
-        { name: "alex",  initials: "AL", bg: "#D8EED4", fg: "#2A5C26", text: "a second phone charger. no longer forced to choose between my bedroom and my couch." },
-        { name: "sam",   initials: "SK", bg: "#EDE8D0", fg: "#5C4A18", text: "a parking meter fine i paid immediately and felt zero guilt about. closure is worth $20." },
-        { name: "robin", initials: "RP", bg: "#EDE0D4", fg: "#5C3820", text: "library card renewal. free books. i am a genius and also very broke." },
+        { name: "jamie", initials: "JM", bg: "#BFA0B8", fg: "#5A2E50", text: "a tiny cactus named gerald. he asks for nothing. he is my ideal roommate." },
+        { name: "alex",  initials: "AL", bg: "#CFE8D5", fg: "#2F5D50", text: "a second phone charger. no longer forced to choose between my bedroom and my couch." },
+        { name: "sam",   initials: "SK", bg: "#C9C3D9", fg: "#3C3560", text: "a parking meter fine i paid immediately and felt zero guilt about. closure is worth $20." },
+        { name: "robin", initials: "RP", bg: "#E3B8C2", fg: "#7A2E42", text: "library card renewal. free books. i am a genius and also very broke." },
       ]
     }
   ];
@@ -2321,7 +2833,7 @@ Return ONLY the question string, no quotes, no punctuation other than the questi
       background: #FFF9C4; border-bottom: 1px solid #e8d800;
       padding: 8px 1.5rem; display: flex; align-items: center;
       justify-content: space-between; font-size: 13px;
-      color: #5a4e00; font-family: 'Jost', sans-serif;`;
+      color: #5a4e00; font-family: 'Montserrat', sans-serif;`;
     banner.innerHTML = `
       <span>
         <strong style="font-weight:500;">demo mode</strong>
@@ -2351,6 +2863,167 @@ Return ONLY the question string, no quotes, no punctuation other than the questi
     renderSlots(); renderFilters(); renderGarden(); renderAnswers();
     renderShelf(); renderZine([]);
   }
+
+
+  // ── HOME SCREEN ────────────────────────────────────────────
+
+  function showHomeScreen(memberships) {
+    allMemberships = memberships || [];
+    document.getElementById('auth-screen').classList.add('hidden');
+    document.getElementById('group-screen').classList.add('hidden');
+    document.getElementById('home-screen').classList.remove('hidden');
+
+    // Greet by name
+    const name = currentUser?.user_metadata?.display_name || currentUser?.email?.split('@')[0] || 'there';
+    const hour = new Date().getHours();
+    const greeting = hour < 12 ? 'good morning' : hour < 17 ? 'good afternoon' : 'good evening';
+    document.getElementById('home-greeting').textContent = `${greeting}, ${name} 🌿`;
+
+    // Profile card
+    const initials = name.slice(0,2).toUpperCase();
+    const avatarEl = document.getElementById('home-profile-avatar');
+    avatarEl.textContent = initials;
+    avatarEl.style.background = '#CFE8D5';
+    avatarEl.style.color = '#2F5D50';
+    document.getElementById('home-profile-name').textContent = name;
+    document.getElementById('home-profile-email').textContent = currentUser?.email || '';
+
+    // Header avatar
+    const headerAvatar = document.getElementById('user-menu-btn');
+    if (headerAvatar) { headerAvatar.textContent = initials; }
+
+    // Home menu name
+    const menuName = document.getElementById('home-menu-name');
+    if (menuName) menuName.textContent = name + ' · ' + currentUser?.email;
+
+    // Render groups
+    renderHomeGroups(memberships);
+  }
+
+  function renderHomeGroups(memberships) {
+    const container = document.getElementById('home-groups-list');
+    const sub = document.getElementById('home-sub');
+
+    if (!memberships || memberships.length === 0) {
+      sub.textContent = "you're not in any groups yet";
+      container.innerHTML = `
+        <div class="home-empty">
+          <div style="font-size:40px;margin-bottom:0.75rem;">🌱</div>
+          <div class="home-empty-title">start your first dump dates</div>
+          <div class="home-empty-sub">create a group and invite your friends — everyone picks questions, writes answers, and gets a little zine at the end of the month.</div>
+        </div>`;
+      return;
+    }
+
+    sub.textContent = memberships.length === 1
+      ? 'tap your group to jump in'
+      : 'tap a group to jump in';
+
+    const colors = ['#CFE8D5','#F1D4DC','#C9C3D9','#FBF0C0','#E3B8C2','#FAD9BC'];
+    const textColors = ['#2F5D50','#7A2E42','#3C3560','#5C4A18','#6A2A3A','#7A4020'];
+
+    document.getElementById('home-section-label') // might not exist yet
+    container.innerHTML = `
+      <div class="home-section-label">your groups</div>
+      ${memberships.map((m, i) => {
+        const name = m.groups?.name || 'unnamed group';
+        const initial = name[0].toUpperCase();
+        const bg = colors[i % colors.length];
+        const fg = textColors[i % textColors.length];
+        return `<div class="group-card-home" onclick="enterGroup('${m.group_id}')">
+          <div class="group-card-icon" style="background:${bg};color:${fg};">${initial}</div>
+          <div class="group-card-info">
+            <div class="group-card-name">${name}</div>
+            <div class="group-card-meta">tap to open</div>
+          </div>
+          <div class="group-card-arrow">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>`;
+      }).join('')}`;
+  }
+
+  async function enterGroup(groupId) {
+    document.getElementById('home-screen').classList.add('hidden');
+    await loadGroup(groupId);
+  }
+
+  function showHomeForm(type) {
+    document.getElementById('home-create-form').style.display = type === 'create' ? 'block' : 'none';
+    document.getElementById('home-join-form').style.display = type === 'join' ? 'block' : 'none';
+    setTimeout(() => {
+      const el = document.getElementById(type === 'create' ? 'home-group-name' : 'home-group-code');
+      if (el) el.focus();
+    }, 50);
+  }
+
+  function hideHomeForms() {
+    document.getElementById('home-create-form').style.display = 'none';
+    document.getElementById('home-join-form').style.display = 'none';
+  }
+
+  async function createGroupFromHome() {
+    const name = document.getElementById('home-group-name').value.trim();
+    const err = document.getElementById('home-create-error');
+    err.textContent = '';
+    if (!name) { err.textContent = 'please enter a group name'; return; }
+    try {
+      const { data: group, error: ge } = await sb.from('groups').insert({
+        name, created_by: currentUser.id
+      }).select().single();
+      if (ge) throw ge;
+      const displayName = currentUser.user_metadata?.display_name || currentUser.email.split('@')[0];
+      const { error: me } = await sb.from('group_members').insert({
+        group_id: group.id, user_id: currentUser.id,
+        display_name: displayName, avatar_color: '#CFE8D5'
+      });
+      if (me) throw me;
+      hideHomeForms();
+      await enterGroup(group.id);
+    } catch (e) {
+      document.getElementById('home-create-error').textContent = e.message;
+    }
+  }
+
+  async function joinGroupFromHome() {
+    const code = document.getElementById('home-group-code').value.trim().toUpperCase().replace(/-/g,'');
+    const err = document.getElementById('home-join-error');
+    err.textContent = '';
+    if (!code) { err.textContent = 'please enter an invite code'; return; }
+    try {
+      const { data: groups } = await sb.from('groups').select('*');
+      const group = groups.find(g => g.id.replace(/-/g,'').slice(0,8).toUpperCase() === code);
+      if (!group) { err.textContent = 'invite code not found — check with your friend'; return; }
+      const displayName = currentUser.user_metadata?.display_name || currentUser.email.split('@')[0];
+      const { data: members } = await sb.from('group_members').select('*').eq('group_id', group.id);
+      const colors = ['#CFE8D5','#F1D4DC','#C9C3D9','#FBF0C0','#E3B8C2'];
+      const color = colors[members.length % colors.length];
+      const { error: me } = await sb.from('group_members').insert({
+        group_id: group.id, user_id: currentUser.id,
+        display_name: displayName, avatar_color: color
+      });
+      if (me) throw me;
+      hideHomeForms();
+      await enterGroup(group.id);
+    } catch (e) {
+      document.getElementById('home-join-error').textContent = e.message;
+    }
+  }
+
+  function toggleHomeMenu() {
+    document.getElementById('home-avatar-menu').classList.toggle('open');
+  }
+
+  // Close home menu on outside click
+  document.addEventListener('click', e => {
+    const btn = document.getElementById('home-avatar-btn');
+    const menu = document.getElementById('home-avatar-menu');
+    if (menu && btn && !btn.contains(e.target) && !menu.contains(e.target)) {
+      menu.classList.remove('open');
+    }
+  });
 
   // ── SUPABASE ──────────────────────────────────────────────
 
@@ -2383,9 +3056,27 @@ Return ONLY the question string, no quotes, no punctuation other than the questi
     authMode = mode;
     document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
     event.target.classList.add('active');
-    document.getElementById('auth-submit-btn').textContent = mode === 'login' ? 'log in' : 'sign up';
-    document.getElementById('auth-name-field').style.display = mode === 'signup' ? 'block' : 'none';
     document.getElementById('auth-error').textContent = '';
+
+    const nameField = document.getElementById('auth-name-field');
+    const btn = document.getElementById('auth-submit-btn');
+
+    if (mode === 'signup') {
+      nameField.classList.remove('collapsing');
+      nameField.classList.add('expanding');
+      setTimeout(() => { nameField.style.display = ''; }, 10);
+    } else {
+      nameField.classList.remove('expanding');
+      nameField.classList.add('collapsing');
+    }
+
+    // Animate button text with a tiny fade
+    btn.style.opacity = '0';
+    btn.style.transition = 'opacity 0.15s';
+    setTimeout(() => {
+      btn.textContent = mode === 'login' ? 'log in' : 'sign up';
+      btn.style.opacity = '1';
+    }, 150);
   }
 
   async function handleAuth() {
@@ -2706,7 +3397,7 @@ Return ONLY the question string, no quotes, no punctuation other than the questi
   async function saveAnswer(i) {
     savedFlags[i] = true;
     const el = document.getElementById('saved-' + i);
-    if (el) el.classList.add('show');
+    if (el) { el.textContent = 'saved'; setTimeout(() => { if (el) el.textContent = ''; }, 2000); }
 
     if (!currentIssue || !currentUser) return;
 
@@ -2734,11 +3425,24 @@ Return ONLY the question string, no quotes, no punctuation other than the questi
   async function plantQuestion() {
     const input = document.getElementById('garden-input');
     const text = input.value.trim();
-    if (!text) return;
+    if (!text || text === input.placeholder) return;
 
     const localId = nextId++;
-    garden.unshift({ id: localId, text, tag: 'mine', mine: true, type: 'text' });
-    input.value = '';
+
+    if (isPollMode) {
+      const options = Array.from(document.querySelectorAll('.poll-inline-input'))
+        .map(i => i.value.trim()).filter(Boolean);
+      garden.unshift({ id: localId, text, tag: 'poll', mine: true, type: 'text', poll: true, options });
+      // reset poll state
+      input.value = '';
+      document.getElementById('poll-options-list').innerHTML =
+        '<div class="poll-inline-row"><span class="poll-inline-dot"></span><input class="poll-inline-input" placeholder="option 1" /></div>' +
+        '<div class="poll-inline-row"><span class="poll-inline-dot"></span><input class="poll-inline-input" placeholder="option 2" /></div>';
+      togglePollMode();
+    } else {
+      garden.unshift({ id: localId, text, tag: 'mine', mine: true, type: 'text' });
+      input.value = '';
+    }
     renderFilters();
     renderGarden();
 
@@ -2807,21 +3511,9 @@ Return ONLY the question string, no quotes, no punctuation other than the questi
 
       console.log('memberships:', memberships, 'error:', me);
 
-      if (memberships && memberships.length === 1) {
-        // Only one group — load it directly
-        await loadGroup(memberships[0].group_id);
-      } else if (memberships && memberships.length > 1) {
-        // Multiple groups — show picker
-        document.getElementById('auth-screen').classList.add('hidden');
-        showGroupPicker(memberships);
-      } else {
-        // No groups — show setup screen
-        console.log('no group found, showing group screen');
-        const authScreen = document.getElementById('auth-screen');
-        const groupScreen = document.getElementById('group-screen');
-        if (authScreen) authScreen.classList.add('hidden');
-        if (groupScreen) groupScreen.classList.remove('hidden');
-      }
+      // Always show home screen — user picks their group there
+      document.getElementById('auth-screen').classList.add('hidden');
+      showHomeScreen(memberships || []);
     }
   });
 
@@ -2829,6 +3521,93 @@ Return ONLY the question string, no quotes, no punctuation other than the questi
   renderSlots();
   renderFilters();
   renderGarden();
+
+  // ── ISSUE DATE COPY ──────────────────────────────────────────
+  (function() {
+    const now = new Date();
+    const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+    const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0); // last day of current month
+    const monthNames = ['january','february','march','april','may','june','july','august','september','october','november','december'];
+    const nextMonthName = monthNames[nextMonth.getMonth()];
+    const lastDayNum = lastDay.getDate();
+    const currentMonthName = monthNames[now.getMonth()];
+    const sub = document.getElementById('issue-section-sub');
+    if (sub) sub.textContent = `for ${nextMonthName} · submit by ${currentMonthName} ${lastDayNum}`;
+    // Also update answer section sub
+    const answerSub = document.querySelector('#answer .section-sub');
+    if (answerSub) answerSub.textContent = `for ${nextMonthName} · submit by ${currentMonthName} ${lastDayNum}`;
+  })();
+
 </script>
+
+<!-- Page bottom botanical strip -->
+<div class="page-flowers">
+  <svg width="100%" height="90" viewBox="0 0 1440 90" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- ground line -->
+    <path d="M0 75 Q360 70 720 72 Q1080 74 1440 70" stroke="#2F5D50" stroke-width="0.8" opacity="0.5"/>
+    <!-- daisy 1 -->
+    <path d="M80 75 C80 75 80 58 80 50 C80 45 83 42 80 40 C77 42 80 45 80 50" stroke="#2F5D50" stroke-width="1.1" stroke-linecap="round"/>
+    <path d="M80 60 C75 55 70 54 66 52 C63 51 62 48 64 46 C66 48 68 51 73 53" stroke="#2F5D50" stroke-width="1.1" stroke-linecap="round"/>
+    <path d="M80 60 C85 55 90 54 94 52 C97 51 98 48 96 46 C94 48 92 51 87 53" stroke="#2F5D50" stroke-width="1.1" stroke-linecap="round"/>
+    <path d="M80 60 C75 57 73 52 71 48 C70 45 68 44 69 42 C71 43 73 46 75 51" stroke="#2F5D50" stroke-width="1.1" stroke-linecap="round"/>
+    <path d="M80 60 C85 57 87 52 89 48 C90 45 92 44 91 42 C89 43 87 46 85 51" stroke="#2F5D50" stroke-width="1.1" stroke-linecap="round"/>
+    <circle cx="80" cy="60" r="4" stroke="#2F5D50" stroke-width="1.1" fill="none"/>
+    <circle cx="80" cy="60" r="2" fill="#FBF0C0" opacity="0.8"/>
+    <!-- leaves cluster 1 -->
+    <path d="M160 75 C160 75 172 62 182 55 C190 49 200 46 206 42" stroke="#2F5D50" stroke-width="1.1" stroke-linecap="round"/>
+    <path d="M174 64 C174 64 171 56 168 51 C165 47 161 46 160 48 C162 50 165 51 168 55" stroke="#2F5D50" stroke-width="1" stroke-linecap="round"/>
+    <path d="M188 56 C188 56 186 49 183 45 C181 42 177 41 176 43 C178 45 181 46 184 50" stroke="#2F5D50" stroke-width="1" stroke-linecap="round"/>
+    <!-- small wildflower -->
+    <path d="M280 75 C280 75 280 63 280 57" stroke="#2F5D50" stroke-width="1.1" stroke-linecap="round"/>
+    <path d="M280 62 C276 58 273 57 271 56 C269 55 269 53 271 52 C272 53 274 55 277 57" stroke="#2F5D50" stroke-width="1" stroke-linecap="round"/>
+    <path d="M280 62 C284 58 287 57 289 56 C291 55 291 53 289 52 C288 53 286 55 283 57" stroke="#2F5D50" stroke-width="1" stroke-linecap="round"/>
+    <path d="M280 62 C276 60 275 56 273 53 C272 51 271 50 272 48 C274 49 275 51 277 55" stroke="#2F5D50" stroke-width="1" stroke-linecap="round"/>
+    <path d="M280 62 C284 60 285 56 287 53 C288 51 289 50 288 48 C286 49 285 51 283 55" stroke="#2F5D50" stroke-width="1" stroke-linecap="round"/>
+    <circle cx="280" cy="62" r="3" stroke="#2F5D50" stroke-width="1" fill="none"/>
+    <circle cx="280" cy="62" r="1.5" fill="#E3B8C2" opacity="0.8"/>
+    <!-- daisy 2 center-ish -->
+    <path d="M520 75 C520 75 520 55 520 45 C520 39 524 35 520 33 C516 35 520 39 520 45" stroke="#2F5D50" stroke-width="1.2" stroke-linecap="round"/>
+    <path d="M520 56 C513 50 507 48 502 46 C498 44 497 40 500 38 C502 40 505 44 511 47" stroke="#2F5D50" stroke-width="1.2" stroke-linecap="round"/>
+    <path d="M520 56 C527 50 533 48 538 46 C542 44 543 40 540 38 C538 40 535 44 529 47" stroke="#2F5D50" stroke-width="1.2" stroke-linecap="round"/>
+    <path d="M520 56 C513 52 511 45 508 40 C506 36 504 34 506 31 C508 33 510 36 513 42" stroke="#2F5D50" stroke-width="1.2" stroke-linecap="round"/>
+    <path d="M520 56 C527 52 529 45 532 40 C534 36 536 34 534 31 C532 33 530 36 527 42" stroke="#2F5D50" stroke-width="1.2" stroke-linecap="round"/>
+    <circle cx="520" cy="56" r="5" stroke="#2F5D50" stroke-width="1.2" fill="none"/>
+    <circle cx="520" cy="56" r="2.5" fill="#FBF0C0" opacity="0.8"/>
+    <!-- leaf sprig right of center -->
+    <path d="M620 75 C620 75 634 60 646 52 C656 45 668 42 675 37" stroke="#2F5D50" stroke-width="1.1" stroke-linecap="round"/>
+    <path d="M636 62 C636 62 633 54 630 49 C627 45 622 44 621 46 C623 48 627 49 630 53" stroke="#2F5D50" stroke-width="1" stroke-linecap="round"/>
+    <path d="M650 54 C650 54 648 47 645 43 C643 40 639 39 638 41 C640 43 643 44 646 48" stroke="#2F5D50" stroke-width="1" stroke-linecap="round"/>
+    <!-- small flower -->
+    <path d="M760 75 C760 75 760 64 760 58" stroke="#2F5D50" stroke-width="1.1" stroke-linecap="round"/>
+    <path d="M760 63 C756 59 753 58 750 57 C748 56 748 54 750 53 C751 54 753 56 757 58" stroke="#2F5D50" stroke-width="1" stroke-linecap="round"/>
+    <path d="M760 63 C764 59 767 58 770 57 C772 56 772 54 770 53 C769 54 767 56 763 58" stroke="#2F5D50" stroke-width="1" stroke-linecap="round"/>
+    <path d="M760 63 C756 61 755 57 753 54 C752 52 751 51 752 49 C754 50 755 52 757 56" stroke="#2F5D50" stroke-width="1" stroke-linecap="round"/>
+    <path d="M760 63 C764 61 765 57 767 54 C768 52 769 51 768 49 C766 50 765 52 763 56" stroke="#2F5D50" stroke-width="1" stroke-linecap="round"/>
+    <circle cx="760" cy="63" r="3.5" stroke="#2F5D50" stroke-width="1" fill="none"/>
+    <circle cx="760" cy="63" r="1.8" fill="#C9C3D9" opacity="0.8"/>
+    <!-- daisy 3 right side -->
+    <path d="M1000 75 C1000 75 1000 58 1000 50 C1000 44 1004 40 1000 38 C996 40 1000 44 1000 50" stroke="#2F5D50" stroke-width="1.2" stroke-linecap="round"/>
+    <path d="M1000 59 C993 53 987 51 982 49 C978 47 977 43 980 41 C982 43 985 47 991 50" stroke="#2F5D50" stroke-width="1.2" stroke-linecap="round"/>
+    <path d="M1000 59 C1007 53 1013 51 1018 49 C1022 47 1023 43 1020 41 C1018 43 1015 47 1009 50" stroke="#2F5D50" stroke-width="1.2" stroke-linecap="round"/>
+    <path d="M1000 59 C993 55 991 48 988 43 C986 39 984 37 986 34 C988 36 990 39 993 45" stroke="#2F5D50" stroke-width="1.2" stroke-linecap="round"/>
+    <path d="M1000 59 C1007 55 1009 48 1012 43 C1014 39 1016 37 1014 34 C1012 36 1010 39 1007 45" stroke="#2F5D50" stroke-width="1.2" stroke-linecap="round"/>
+    <circle cx="1000" cy="59" r="4.5" stroke="#2F5D50" stroke-width="1.2" fill="none"/>
+    <circle cx="1000" cy="59" r="2.2" fill="#F1D4DC" opacity="0.8"/>
+    <!-- leaf cluster right -->
+    <path d="M1120 75 C1120 75 1132 63 1142 56 C1151 50 1162 47 1168 43" stroke="#2F5D50" stroke-width="1.1" stroke-linecap="round"/>
+    <path d="M1134 65 C1134 65 1131 57 1128 52 C1125 48 1121 47 1120 49 C1122 51 1125 52 1128 56" stroke="#2F5D50" stroke-width="1" stroke-linecap="round"/>
+    <!-- small right daisy -->
+    <path d="M1300 75 C1300 75 1300 63 1300 56 C1300 51 1303 48 1300 46 C1297 48 1300 51 1300 56" stroke="#2F5D50" stroke-width="1.1" stroke-linecap="round"/>
+    <path d="M1300 61 C1295 56 1291 55 1288 54 C1285 53 1285 50 1287 49 C1289 50 1291 53 1295 55" stroke="#2F5D50" stroke-width="1" stroke-linecap="round"/>
+    <path d="M1300 61 C1305 56 1309 55 1312 54 C1315 53 1315 50 1313 49 C1311 50 1309 53 1305 55" stroke="#2F5D50" stroke-width="1" stroke-linecap="round"/>
+    <path d="M1300 61 C1296 58 1294 54 1292 51 C1291 49 1289 48 1290 46 C1292 47 1293 49 1296 54" stroke="#2F5D50" stroke-width="1" stroke-linecap="round"/>
+    <path d="M1300 61 C1304 58 1306 54 1308 51 C1309 49 1311 48 1310 46 C1308 47 1307 49 1304 54" stroke="#2F5D50" stroke-width="1" stroke-linecap="round"/>
+    <circle cx="1300" cy="61" r="4" stroke="#2F5D50" stroke-width="1.1" fill="none"/>
+    <circle cx="1300" cy="61" r="2" fill="#FBF0C0" opacity="0.8"/>
+    <!-- far right leaves -->
+    <path d="M1390 75 C1390 75 1400 63 1410 56 C1418 50 1430 47 1436 43" stroke="#2F5D50" stroke-width="1" stroke-linecap="round"/>
+    <path d="M1404 65 C1404 65 1401 58 1398 53 C1396 50 1391 49 1390 51 C1392 53 1396 54 1399 57" stroke="#2F5D50" stroke-width="0.9" stroke-linecap="round"/>
+  </svg>
+</div>
 </body>
 </html>
