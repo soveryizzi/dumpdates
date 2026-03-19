@@ -236,11 +236,8 @@
     .section { transition: none; } /* handled by animation */
 
     /* Sticky max-width so single sticky doesn't fill screen */
-    .sticky {
-      max-width: 380px;
-    }
     .garden-sticky {
-      max-width: 220px;
+      max-width: none;
     }
 
     /* ── GARDEN PAPER SHEET ── */
@@ -665,8 +662,8 @@
     /* Grid for sticky notes — same pattern as garden but bigger */
     .answers-sticky-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 14px;
       align-items: start;
     }
 
@@ -681,8 +678,8 @@
     }
 
     @media (max-width: 600px) {
-      .answers-sticky-grid { grid-template-columns: 1fr; gap: 14px; }
-      .sticky { aspect-ratio: unset; min-height: 160px; padding-bottom: 32px; }
+      .answers-sticky-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .sticky { aspect-ratio: 1/1; min-height: unset; padding-bottom: 36px; }
       .zine-sticky { aspect-ratio: unset; min-height: 160px; }
       .garden-sticky { aspect-ratio: unset; min-height: 110px; }
     }
@@ -690,13 +687,14 @@
     /* ── STICKY NOTES ── */
     .sticky {
       position: relative;
-      padding: 14px 14px 40px;
+      padding: 12px 12px 36px;
       border-radius: 2px;
       display: flex;
       flex-direction: column;
       aspect-ratio: 1 / 1;
       transition: transform 0.18s, box-shadow 0.18s;
       box-shadow: 2px 3px 8px rgba(30,42,26,0.13), 0 1px 0 rgba(255,255,255,0.5) inset;
+      max-width: none;
     }
 
     /* No glue strip, no corner triangle */
@@ -966,7 +964,7 @@
       main { padding: 1rem 0.75rem 5rem; }
       .section-title { font-size: 20px; }
       .section-sub { font-size: 12px; }
-      .garden-paper-content { padding: 0.875rem 0.75rem 1.25rem 0.875rem; }
+      .garden-paper-content { padding: 0.875rem 0.875rem 1.25rem; }
       .sheet-content { padding: 1rem 0.875rem 1.25rem; }
       .home-body { padding: 1.25rem 0.875rem 5rem; }
       .home-greeting { font-size: 22px; }
@@ -1015,7 +1013,7 @@
 
       /* Garden paper */
       .garden-paper { border-radius: 8px; }
-      .garden-paper-content { padding: 1.25rem 1rem 1.5rem 1rem; }
+      .garden-paper-content { padding: 1.25rem 1rem 1.5rem; }
       .garden-paper-title { font-size: 18px; }
       .sheet-margin { display: none; }
       .garden-paper .sheet-ruled { background-position: 0 56px; }
@@ -1046,10 +1044,9 @@
       .answer-section-header { padding: 0; }
       .progress-wrap { max-width: 100%; }
       .paper-sheet { border-radius: 8px; margin-bottom: 2rem; }
-      .sheet-content { padding: 1.25rem 1rem 1.5rem 1rem; }
+      .sheet-content { padding: 1.25rem 1rem 1.5rem; }
       .sheet-q-text { font-size: 17px; }
       .sheet-q-label { font-size: 10px; }
-      .sheet-content { padding: 1.25rem 1rem 1.5rem 1.25rem; }
       .sheet-margin { display: none; }
       .paper-sheet::before { display: none; }
       .answers-sticky-grid { grid-template-columns: 1fr; gap: 12px; }
@@ -1139,11 +1136,11 @@
     }
     .zine-shelf-item:hover .zine-mini-cover { box-shadow: 3px 8px 20px rgba(30,42,26,0.3), inset -1px 0 0 rgba(255,255,255,0.6); }
     .zine-shelf-item.active-issue .zine-mini-cover { border-left-color: var(--green); box-shadow: 0 0 0 2px var(--green), 2px 4px 12px rgba(30,42,26,0.22); }
-    .zine-mini-title { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: var(--ink); letter-spacing: -0.3px; line-height: 1.15; margin-bottom: 3px; }
-    .zine-mini-vol   { font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 8px; }
+    .zine-mini-title { font-family: 'Playfair Display', serif; font-size: 19px; font-weight: 700; color: var(--ink); letter-spacing: -0.3px; line-height: 1.1; margin-bottom: 2px; }
+    .zine-mini-vol   { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 6px; }
     .zine-mini-dots  { display: flex; gap: 3px; }
     .zine-mini-dot   { width: 7px; height: 7px; border-radius: 50%; }
-    .zine-shelf-month { font-size: 11px; color: var(--ink-ghost); text-align: center; margin-top: 6px; font-family: 'Montserrat', sans-serif; }
+    .zine-shelf-month { display: none; }
     /* ── ZINE JOURNAL ── */
     #letter { max-width: 860px; margin: 0 auto; padding: 0 1rem 4rem; }
 
@@ -1176,33 +1173,20 @@
       height: 580px;
     }
 
-    /* Fold shadow down the center */
-    .journal-book::after {
-      content: '';
-      position: absolute;
-      left: 50%; top: 0; bottom: 0; width: 16px;
-      transform: translateX(-50%);
-      background: linear-gradient(to right,
-        rgba(28,43,32,0.13) 0%,
-        rgba(28,43,32,0.05) 30%,
-        rgba(255,255,255,0.14) 50%,
-        rgba(28,43,32,0.05) 70%,
-        rgba(28,43,32,0.13) 100%
-      );
-      pointer-events: none; z-index: 30;
-    }
-
     /* Ruled lines texture on book background */
     .journal-book::before {
       content: '';
       position: absolute; inset: 0;
       background: repeating-linear-gradient(
         transparent 0px, transparent 27px,
-        rgba(180,195,210,0.22) 27px, rgba(180,195,210,0.22) 28px
+        rgba(180,195,210,0.18) 27px, rgba(180,195,210,0.18) 28px
       );
       background-position: 0 40px;
       pointer-events: none; z-index: 0;
+      border-radius: 8px;
     }
+
+
 
     /* Individual pages */
     .journal-page-left,
@@ -1221,19 +1205,35 @@
     }
     .journal-page-left { border-right: 1px solid rgba(28,43,32,0.06); }
 
-    /* Page curl shadow on right edge of left page */
+
+
+
+
+
+
+    /* ── CREASE SHADOW ── */
+    /* Shadow on right edge of left page — page dips into binding */
     .journal-page-left::after {
       content: '';
-      position: absolute; right: 0; top: 0; bottom: 0; width: 18px;
-      background: linear-gradient(to right,
-        rgba(28,43,32,0.04) 0%,
-        transparent 100%
-      );
+      position: absolute; right: 0; top: 0; bottom: 0; width: 20px;
+      background: linear-gradient(to left, rgba(28,43,32,0.11) 0%, rgba(28,43,32,0.03) 60%, transparent 100%);
       pointer-events: none; z-index: 5;
     }
-
-
-
+    /* Shadow on left edge of right page — matching dip */
+    .journal-page-right::before {
+      content: '';
+      position: absolute; left: 0; top: 0; bottom: 0; width: 20px;
+      background: linear-gradient(to right, rgba(28,43,32,0.11) 0%, rgba(28,43,32,0.03) 60%, transparent 100%);
+      pointer-events: none; z-index: 5;
+    }
+    /* Thin highlight line at center crease — light catches the paper ridge */
+    .journal-book::after {
+      content: '';
+      position: absolute; left: 50%; top: 0; bottom: 0;
+      width: 2px; transform: translateX(-50%);
+      background: rgba(255,255,255,0.55);
+      pointer-events: none; z-index: 31;
+    }
 
     /* Page number */
     .journal-page-num {
@@ -1379,7 +1379,7 @@
 
     .zine-q-text {
       font-family: 'Playfair Display', serif;
-      font-size: 24px; font-weight: 700; line-height: 1.45; color: var(--ink); flex: 1;
+      font-size: 18px; font-weight: 700; line-height: 1.45; color: var(--ink); flex: 1;
     }
 
     .zine-page-num {
@@ -1420,15 +1420,17 @@
     }
 
     .zine-sticky-inner {
-      padding: 10px 12px 12px;
+      padding: 8px 10px 10px;
+      overflow-y: auto;
+      height: calc(100% - 5px);
       background-image: repeating-linear-gradient(transparent 0px, transparent 23px, rgba(28,43,32,0.07) 23px, rgba(28,43,32,0.07) 24px);
       background-position: 0 30px;
     }
 
     .zine-sticky-from {
-      display: flex; align-items: center; gap: 5px;
-      font-size: 12px; font-weight: 500; letter-spacing: 0.08em;
-      text-transform: uppercase; margin-bottom: 6px; opacity: 0.5;
+      display: flex; align-items: center; gap: 4px;
+      font-size: 10px; font-weight: 600; letter-spacing: 0.07em;
+      text-transform: uppercase; margin-bottom: 4px; opacity: 0.5;
     }
     .zine-sticky-av {
       width: 16px; height: 16px; border-radius: 50%;
@@ -1437,7 +1439,7 @@
     }
     .zine-sticky-text {
       font-family: 'Montserrat', sans-serif;
-      font-size: 17px; line-height: 28px; color: rgba(28,43,32,0.85);
+      font-size: 12px; line-height: 1.55; color: rgba(28,43,32,0.85);
     }
 
     /* BACK COVER */
@@ -1781,7 +1783,6 @@
 
   .home-empty {
     text-align: center; padding: 3rem 1rem;
-    border: 1.5px dashed var(--border); border-radius: 14px;
     margin-bottom: 1rem;
   }
   .home-empty-title {
@@ -1799,9 +1800,33 @@
   }
 
   .home-profile-card {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 14px; padding: 1.25rem 1.5rem;
-    margin-top: 2rem; display: flex; align-items: center; gap: 1rem;
+    background: transparent;
+    margin-top: 1.5rem; display: flex; align-items: flex-start; gap: 1.5rem;
+    padding: 0;
+  }
+  /* Polaroid */
+  .home-polaroid {
+    flex-shrink: 0;
+    background: #fff;
+    padding: 8px 8px 28px;
+    box-shadow: 0 2px 8px rgba(28,43,32,0.15), 0 6px 20px rgba(28,43,32,0.10);
+    border-radius: 2px;
+    transform: rotate(-2deg);
+    transition: transform 0.2s ease;
+    cursor: default;
+  }
+  .home-polaroid:hover { transform: rotate(0deg) scale(1.03); }
+  .home-polaroid-photo {
+    width: 80px; height: 80px;
+    background: var(--green-light);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px; font-weight: 700; color: var(--green);
+    border-radius: 1px;
+  }
+  .home-polaroid-label {
+    text-align: center; margin-top: 2px;
+    font-size: 11px; color: rgba(28,43,32,0.4);
+    font-family: 'Montserrat', sans-serif;
   }
   .home-profile-avatar {
     width: 52px; height: 52px; border-radius: 50%;
@@ -1901,53 +1926,56 @@
   </div>
 
   <div class="home-body">
-    <div class="home-greeting" id="home-greeting">hey there 👋</div>
-    <div class="home-sub" id="home-sub">your groups are below</div>
+
+    <!-- Profile card — polaroid + info -->
+    <div class="home-profile-card" style="margin-bottom:2rem;">
+      <div class="home-polaroid" id="home-polaroid">
+        <div class="home-polaroid-photo" id="home-profile-avatar">?</div>
+        <div class="home-polaroid-label" id="home-polaroid-label">you</div>
+      </div>
+      <div style="flex:1;padding-top:4px;">
+        <div class="home-profile-name" id="home-profile-name">—</div>
+        <div class="home-profile-email" id="home-profile-email">—</div>
+      </div>
+      <div style="position:relative;">
+        <button onclick="toggleProfileMenu()" id="profile-menu-btn" style="width:32px;height:32px;border-radius:50%;border:1.5px solid var(--border);background:var(--surface);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ink-mid);font-size:18px;line-height:1;transition:background 0.15s,border-color 0.15s;" onmouseover="this.style.background='var(--green-light)';this.style.borderColor='var(--border-mid)'" onmouseout="this.style.background='var(--surface)';this.style.borderColor='var(--border)'">···</button>
+        <div id="profile-menu" style="display:none;position:absolute;right:0;top:38px;background:var(--surface);border:1px solid var(--border);border-radius:10px;box-shadow:0 4px 20px rgba(28,43,32,0.12);min-width:170px;z-index:100;overflow:hidden;">
+          <button onclick="promptChangeUsername();toggleProfileMenu();" style="display:block;width:100%;text-align:left;padding:11px 16px;background:none;border:none;border-bottom:1px solid var(--border);font-family:'Montserrat',sans-serif;font-size:13px;color:var(--ink);cursor:pointer;" onmouseover="this.style.background='var(--bg)'" onmouseout="this.style.background='none'">change name</button>
+          <button onclick="promptChangePassword();toggleProfileMenu();" style="display:block;width:100%;text-align:left;padding:11px 16px;background:none;border:none;border-bottom:1px solid var(--border);font-family:'Montserrat',sans-serif;font-size:13px;color:var(--ink);cursor:pointer;" onmouseover="this.style.background='var(--bg)'" onmouseout="this.style.background='none'">change password</button>
+          <button onclick="confirmDeleteAccount();toggleProfileMenu();" style="display:block;width:100%;text-align:left;padding:11px 16px;background:none;border:none;font-family:'Montserrat',sans-serif;font-size:13px;color:var(--bloom);cursor:pointer;" onmouseover="this.style.background='var(--bg)'" onmouseout="this.style.background='none'">delete account</button>
+        </div>
+      </div>
+    </div>
+
 
     <!-- Groups list -->
     <div id="home-groups-list"></div>
 
-    <!-- Create / join actions -->
-    <div class="home-actions" id="home-actions">
-      <button class="auth-btn" style="width:auto;padding:10px 22px;font-size:15px;" onclick="showHomeForm('create')">+ create a group</button>
-      <button class="btn-ghost" style="font-size:15px;" onclick="showHomeForm('join')">join with code</button>
+    <!-- + button drawer — hidden behind plus icon -->
+    <!-- + dropdown menu -->
+    <div id="home-group-drawer" style="display:none;position:absolute;right:0;top:36px;background:var(--surface);border:1px solid var(--border);border-radius:12px;box-shadow:0 4px 20px rgba(28,43,32,0.12);min-width:200px;z-index:100;overflow:hidden;">
+      <button onclick="showGroupAction('create')" style="display:block;width:100%;text-align:left;padding:12px 16px;background:none;border:none;border-bottom:1px solid var(--border);font-family:'Montserrat',sans-serif;font-size:13px;color:var(--ink);cursor:pointer;transition:background 0.12s;" onmouseover="this.style.background='var(--bg)'" onmouseout="this.style.background='none'">+ create a group</button>
+      <button onclick="showGroupAction('join')" style="display:block;width:100%;text-align:left;padding:12px 16px;background:none;border:none;font-family:'Montserrat',sans-serif;font-size:13px;color:var(--ink);cursor:pointer;transition:background 0.12s;" onmouseover="this.style.background='var(--bg)'" onmouseout="this.style.background='none'">join with a code</button>
     </div>
-
-    <!-- Create form -->
-    <div class="home-form-card" id="home-create-form" style="display:none;">
-      <div class="home-form-title">create a group</div>
-      <div class="home-form-sub">what do you want to call your group?</div>
-      <input type="text" id="home-group-name" placeholder="e.g. the usual suspects"
-        style="width:100%;padding:11px 14px;border:1px solid var(--border);border-radius:999px;font-size:16px;background:var(--bg);color:var(--ink);font-family:'Montserrat',sans-serif;outline:none;margin-bottom:10px;" />
-      <div style="display:flex;gap:8px;align-items:center;">
-        <button class="auth-btn" style="width:auto;padding:10px 22px;" onclick="createGroupFromHome()">create group</button>
-        <button class="btn-ghost" onclick="hideHomeForms()">cancel</button>
+    <!-- action forms that appear below -->
+    <div id="home-create-form" style="display:none;margin-top:12px;">
+      <input type="text" id="home-group-name" placeholder="what's your group called?"
+        style="width:100%;padding:11px 14px;border:1px solid var(--border);border-radius:999px;font-size:14px;background:var(--surface);color:var(--ink);font-family:'Montserrat',sans-serif;outline:none;margin-bottom:8px;box-sizing:border-box;transition:border-color 0.15s;" onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='var(--border)'" />
+      <div style="display:flex;gap:8px;">
+        <button class="auth-btn" style="width:auto;padding:9px 20px;" onclick="createGroupFromHome()">create</button>
+        <button class="btn-ghost" onclick="hideGroupDrawer()">cancel</button>
       </div>
       <div class="auth-error" id="home-create-error"></div>
     </div>
-
-    <!-- Join form -->
-    <div class="home-form-card" id="home-join-form" style="display:none;">
-      <div class="home-form-title">join a group</div>
-      <div class="home-form-sub">enter the invite code a friend sent you</div>
-      <input type="text" id="home-group-code" placeholder="INVITE CODE"
-        style="width:100%;padding:11px 14px;border:1px solid var(--border);border-radius:999px;font-size:16px;background:var(--bg);color:var(--ink);font-family:'Montserrat',sans-serif;outline:none;margin-bottom:10px;text-transform:uppercase;letter-spacing:0.1em;" />
+    <div id="home-join-form" style="display:none;margin-top:12px;">
       <div style="display:flex;gap:8px;align-items:center;">
-        <button class="auth-btn" style="width:auto;padding:10px 22px;" onclick="joinGroupFromHome()">join group</button>
-        <button class="btn-ghost" onclick="hideHomeForms()">cancel</button>
+        <input type="text" id="home-group-code" placeholder="INVITE CODE"
+          style="flex:1;padding:10px 14px;border:1.5px solid var(--border);border-radius:999px;font-size:14px;background:var(--surface);color:var(--ink);font-family:'Montserrat',sans-serif;outline:none;text-transform:uppercase;letter-spacing:0.08em;transition:border-color 0.15s;" onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='var(--border)'" onkeydown="if(event.key==='Enter')joinGroupFromHome()" />
+        <button class="auth-btn" style="width:auto;padding:10px 18px;flex-shrink:0;" onclick="joinGroupFromHome()">join</button>
       </div>
       <div class="auth-error" id="home-join-error"></div>
     </div>
 
-    <!-- Profile card -->
-    <div class="home-section-label" style="margin-top:2.5rem;">your profile</div>
-    <div class="home-profile-card">
-      <div class="home-profile-avatar" id="home-profile-avatar">?</div>
-      <div>
-        <div class="home-profile-name" id="home-profile-name">—</div>
-        <div class="home-profile-email" id="home-profile-email">—</div>
-      </div>
-    </div>
   </div>
 </div>
 
@@ -2007,7 +2035,12 @@
   </div>
   <!-- header-right goes to col 3 -->
   <div class="header-right" style="position:relative;justify-self:end;">
-    <button class="home-avatar" id="user-menu-btn" onclick="toggleUserMenu()" style="display:none;border:none;cursor:pointer;background:var(--green-light);color:var(--green);">?</button>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <button id="group-settings-btn" onclick="toggleGroupSettings()" title="group settings" style="display:none;width:36px;height:36px;border-radius:50%;border:1.5px solid var(--border);background:var(--surface);cursor:pointer;display:none;align-items:center;justify-content:center;color:var(--ink-mid);transition:all 0.15s;" onmouseover="this.style.background='var(--green-light)';this.style.borderColor='var(--border-mid)'" onmouseout="this.style.background='var(--surface)';this.style.borderColor='var(--border)'">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </button>
+      <button class="home-avatar" id="user-menu-btn" onclick="toggleUserMenu()" style="display:none;border:none;cursor:pointer;background:var(--green-light);color:var(--green);">?</button>
+    </div>
   </div>
 </header>
 
@@ -2017,7 +2050,7 @@
   <div id="questions" class="section active">
 
     <!-- THIS ISSUE -->
-    <div style="display:flex;align-items:baseline;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:0.25rem;">
+    <div style="display:flex;align-items:baseline;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:1.25rem;">
       <div class="section-title" style="margin-bottom:0;" id="issue-section-title">this issue's questions</div>
       <div class="section-sub" style="margin-bottom:0;white-space:nowrap;" id="issue-section-sub"></div>
     </div>
@@ -2112,9 +2145,10 @@
     <div class="answer-section-header">
       <div style="display:flex;align-items:baseline;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:0.25rem;">
         <div class="section-title" style="margin-bottom:0;">your answers</div>
-        <button class="btn-ghost" style="font-size:13px;padding:6px 14px;flex-shrink:0;" onclick="switchTab('questions', document.querySelector('.tab-btn'))">
-          + add more questions
-        </button>
+        <div style="display:flex;gap:8px;align-items:center;flex-shrink:0;">
+          <button class="btn-ghost" style="font-size:13px;padding:6px 14px;" onclick="switchTab('questions', document.querySelector('.tab-btn'))">+ add more questions</button>
+          <button class="btn-ghost" style="font-size:13px;padding:6px 14px;" onclick="previewMyAnswersInZine()">preview in issue →</button>
+        </div>
       </div>
       <div class="section-sub" id="answer-section-sub" style="margin-bottom:1.75rem;"></div>
       <span id="progress-pct" style="display:none"></span>
@@ -2138,8 +2172,86 @@
       </div>
     </div>
 
-<div class="journal-nav"><span class="journal-nav-counter" id="zine-counter">cover</span></div>
+<div class="journal-nav" style="gap:1rem;">
+      <button id="zine-prev" onclick="turnPage(-1)" style="width:36px;height:36px;border-radius:50%;border:1.5px solid var(--border);background:var(--surface);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ink-mid);transition:all 0.15s;box-shadow:0 2px 6px rgba(28,43,32,0.08);flex-shrink:0;" onmouseover="this.style.background='var(--green-light)';this.style.borderColor='var(--green)'" onmouseout="this.style.background='var(--surface)';this.style.borderColor='var(--border)'">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7L9 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div id="zine-spread-dots" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:center;"></div>
+      <button id="zine-next" onclick="turnPage(1)" style="width:36px;height:36px;border-radius:50%;border:1.5px solid var(--border);background:var(--surface);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ink-mid);transition:all 0.15s;box-shadow:0 2px 6px rgba(28,43,32,0.08);flex-shrink:0;" onmouseover="this.style.background='var(--green-light)';this.style.borderColor='var(--green)'" onmouseout="this.style.background='var(--surface)';this.style.borderColor='var(--border)'">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 2L10 7L5 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
   </div>
+
+
+<!-- GROUP SETTINGS PANEL -->
+<div id="group-settings-panel" style="display:none;position:fixed;top:0;right:0;bottom:0;width:min(380px,100vw);background:var(--surface);border-left:1px solid var(--border);z-index:200;box-shadow:-8px 0 32px rgba(28,43,32,0.12);overflow-y:auto;padding:2rem 1.5rem 4rem;transition:transform 0.3s ease;" role="dialog" aria-label="group settings">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;">
+    <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--ink);">group settings</div>
+    <button onclick="closeGroupSettings()" style="width:32px;height:32px;border-radius:50%;border:1.5px solid var(--border);background:var(--surface);cursor:pointer;font-size:18px;color:var(--ink-mid);display:flex;align-items:center;justify-content:center;">×</button>
+  </div>
+
+  <!-- Group name -->
+  <div style="margin-bottom:2rem;">
+    <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-ghost);margin-bottom:0.75rem;">group name</div>
+    <div style="display:flex;gap:8px;">
+      <input id="gs-group-name" type="text" style="flex:1;padding:9px 14px;border:1.5px solid var(--border);border-radius:999px;font-size:14px;font-family:'Montserrat',sans-serif;background:var(--bg);color:var(--ink);outline:none;" onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='var(--border)'"/>
+      <button class="auth-btn" style="width:auto;padding:9px 16px;font-size:13px;" onclick="saveGroupName()">save</button>
+    </div>
+  </div>
+
+  <!-- Invite code -->
+  <div style="margin-bottom:2rem;">
+    <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-ghost);margin-bottom:0.75rem;">invite code</div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <div id="gs-invite-code" style="flex:1;padding:9px 14px;border:1.5px solid var(--border);border-radius:999px;font-size:14px;font-family:'Montserrat',sans-serif;background:var(--bg);color:var(--ink);letter-spacing:0.1em;"></div>
+      <button class="btn-ghost" onclick="copyInviteCode()" style="font-size:13px;padding:9px 16px;flex-shrink:0;">copy</button>
+    </div>
+  </div>
+
+  <!-- Theme -->
+  <div style="margin-bottom:2rem;">
+    <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-ghost);margin-bottom:0.75rem;">theme</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      ${['#2F5D50','#5B4A8A','#7A2E42','#1A3A5C','#3D5A2A'].map((c,i) => `
+        <button onclick="setGroupTheme('${c}')" style="width:36px;height:36px;border-radius:50%;background:${c};border:3px solid transparent;cursor:pointer;transition:transform 0.15s,border-color 0.15s;" onmouseover="this.style.transform='scale(1.15)'" onmouseout="this.style.transform=''"></button>
+      `).join('')}
+    </div>
+    <div style="font-size:12px;color:var(--ink-ghost);margin-top:8px;">changes the accent colour for everyone in the group</div>
+  </div>
+
+  <!-- Issue frequency -->
+  <div style="margin-bottom:2rem;">
+    <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-ghost);margin-bottom:0.75rem;">issue frequency</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      ${['monthly','bi-weekly','weekly'].map(f => `<button onclick="setFrequency('${f}')" class="btn-ghost" style="font-size:13px;padding:7px 14px;">${f}</button>`).join('')}
+    </div>
+  </div>
+
+  <!-- Notifications -->
+  <div style="margin-bottom:2rem;">
+    <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-ghost);margin-bottom:0.75rem;">notifications</div>
+    ${[['deadline-reminder','remind me 3 days before close'],['new-issue','when a new issue is published'],['new-member','when someone joins the group']].map(([id,label]) => `
+      <label style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer;">
+        <span style="font-size:13px;color:var(--ink-faint);">${label}</span>
+        <input type="checkbox" id="notif-${id}" checked style="width:16px;height:16px;accent-color:var(--green);cursor:pointer;" />
+      </label>`).join('')}
+  </div>
+
+  <!-- Members -->
+  <div style="margin-bottom:2rem;">
+    <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-ghost);margin-bottom:0.75rem;">members</div>
+    <div id="gs-members-list"></div>
+  </div>
+
+  <!-- Danger zone -->
+  <div style="margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid var(--border);">
+    <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--bloom);margin-bottom:0.75rem;">danger zone</div>
+    <button class="btn-ghost" onclick="leaveGroup()" style="color:var(--bloom);border-color:rgba(155,91,114,0.3);font-size:13px;width:100%;margin-bottom:8px;">leave group</button>
+    <button class="btn-ghost" onclick="deleteGroup()" style="color:var(--bloom);border-color:rgba(155,91,114,0.3);font-size:13px;width:100%;">delete group (admin only)</button>
+  </div>
+</div>
+<div id="group-settings-overlay" onclick="closeGroupSettings()" style="display:none;position:fixed;inset:0;background:rgba(28,43,32,0.25);z-index:199;backdrop-filter:blur(2px);"></div>
 
 </main>
 
@@ -2377,9 +2489,9 @@
             <span class="gs-in-badge">${inIssue ? '✓ in issue' : ''}</span>
             <div style="display:flex;gap:4px;">
               <button
-                class="gs-btn add ${inIssue ? 'added' : ''}"
-                onclick="addToIssue(${item.id})"
-                title="${inIssue ? 'already in issue' : 'add to this issue'}"
+                class="gs-btn add"
+                onclick="${inIssue ? `focusAnswer(${item.id})` : `addToIssue(${item.id})`}"
+                title="${inIssue ? 'go to my answer' : 'add to this issue'}"
 >
                 ${inIssue
                   ? `<svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L3.5 7L10 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`
@@ -2710,18 +2822,46 @@
 
   let activeZineKey = 'instructions';
   const pastZines   = [];
+  let myPreviewData = null; // set when user previews their answers
 
-  function makeShelfItem(key, innerHtml, label) {
+  function makeShelfItem(key, innerHtml, label, showDate=false) {
     const el = document.createElement('div');
-    el.className = `zine-shelf-item${activeZineKey === key ? ' active-issue' : ''}`;
-    el.onclick = () => loadZine(key);
-    el.innerHTML = innerHtml + `<div class="zine-shelf-month">${label}</div>`;
+    const isOpen = activeZineKey === key;
+    el.className = `zine-shelf-item${isOpen ? ' active-issue' : ''}`;
+    el.onclick = () => {
+      if (activeZineKey === key) return;
+      loadZine(key);
+    };
+    const labelHtml = showDate
+      ? `<div class="zine-shelf-month" style="font-weight:${isOpen?'600':'400'};color:${isOpen?'var(--green)':''};">${label}</div>`
+      : `<div class="zine-shelf-month" style="font-weight:${isOpen?'600':'400'};color:${isOpen?'var(--green)':''};">${label}</div>`;
+    el.innerHTML = innerHtml + labelHtml;
     return el;
   }
 
-  function miniCover(title, vol, dots, style='') {
+  function miniCover(title, vol, dots, style='', date='') {
     const dotHtml = dots.map(c => `<div class="zine-mini-dot" style="background:${c};"></div>`).join('');
-    return `<div class="zine-mini-cover" ${style}><div class="zine-mini-title"${style.includes('green') ? ' style="color:rgba(255,255,255,0.75);"' : ''}>${title}</div><div class="zine-mini-vol"${style.includes('green') ? ' style="color:rgba(255,255,255,0.5);"' : ''}>${vol}</div><div class="zine-mini-dots">${dotHtml}</div></div>`;
+    const isGreen = style.includes('green');
+    const tc = isGreen ? '#fff' : 'var(--ink)';
+    const sc = isGreen ? 'rgba(255,255,255,0.55)' : 'var(--ink-faint)';
+
+    if (date) {
+      // Dated cover: "dumpdates" big + date underneath, dots at bottom
+      return `<div class="zine-mini-cover" style="justify-content:space-between;flex-direction:column;padding:10px 10px 10px;" ${style}>
+        <div>
+          <div style="font-size:14px;font-weight:700;letter-spacing:-0.3px;color:${tc};font-family:'Playfair Display',serif;line-height:1.1;margin-bottom:3px;">${title}</div>
+          <div style="font-size:11px;color:${sc};font-family:'Montserrat',sans-serif;font-weight:500;line-height:1.3;">${date}</div>
+        </div>
+        <div class="zine-mini-dots">${dotHtml}</div>
+      </div>`;
+    }
+
+    // No date (guide, draft): keep original bottom-aligned style
+    return `<div class="zine-mini-cover" ${style}>
+      <div class="zine-mini-title"${isGreen ? ' style="color:rgba(255,255,255,0.85);"' : ''}>${title}</div>
+      <div class="zine-mini-vol"${isGreen ? ' style="color:rgba(255,255,255,0.5);"' : ''}>${vol}</div>
+      <div class="zine-mini-dots">${dotHtml}</div>
+    </div>`;
   }
 
   function renderShelf() {
@@ -2733,27 +2873,39 @@
 
     // Current issue — only show if there are published past issues
     if (pastZines.length > 0) {
-      const mo = (currentIssue?.month || 'current').split(' ')[0].slice(0,3);
+      const issueLabel = currentIssue?.month || 'current';
       shelf.appendChild(makeShelfItem('current',
-        miniCover('dumpdates', issueList.length ? issueList.length + ' q' : 'open', ['#CFE8D5','#F1D4DC','#C9C3D9']),
-        mo));
+        miniCover('dumpdates', issueList.length ? issueList.length + ' q' : 'open', ['#CFE8D5','#F1D4DC','#C9C3D9'], '', issueLabel),
+        '', true));
       pastZines.slice(0, 3).forEach(pz =>
         shelf.appendChild(makeShelfItem(pz.key,
-          miniCover('dumpdates', pz.vol, pz.dotColors, 'style="border-left-color:var(--ink-faint);background:#f5f0ea;"'),
-          pz.month)));
+          miniCover('dumpdates', pz.vol, pz.dotColors, 'style="border-left-color:var(--ink-faint);background:#f5f0ea;"', pz.month),
+          '', true)));
+    }
+
+    // My preview — shown when user has previewed their answers
+    if (myPreviewData) {
+      shelf.appendChild(makeShelfItem('preview',
+        miniCover('my draft', 'preview', ['#CFE8D5','#CFE8D5'], 'style="border-left-color:#4a8f78;background:#f0f8f2;"'),
+        'draft', false));
     }
 
     // Guide — always present
     shelf.appendChild(makeShelfItem('instructions',
       miniCover('how to', 'guide', ['rgba(255,255,255,0.3)','rgba(255,255,255,0.2)'], 'style="background:var(--green);border-left-color:#1a3d2e;"'),
-      'guide'));
+      'guide', false));
   }
 
   function loadZine(key) {
     activeZineKey = key;
     zinePage = 0;
     renderShelf();
-    renderZine(key === 'current' ? zineData : key === 'instructions' ? [] : (pastZines.find(p=>p.key===key)||{data:[]}).data);
+    renderZine(key === 'preview' ? (myPreviewData || []) : key === 'current' ? zineData : key === 'instructions' ? [] : (pastZines.find(p=>p.key===key)||{data:[]}).data);
+    // Scroll journal into view
+    setTimeout(() => {
+      const journal = document.querySelector('.zine-journal');
+      if (journal) journal.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 50);
   }
 
   // ── Helpers ───────────────────────────────────────────────
@@ -2810,8 +2962,8 @@
     const s3 = step('#C9C3D9','#2A2448','rgba(60,53,96,0.12)',3,'read the zine','on the 1st, everyones answers appear here as a flippable zine');
     const inviteRight = `${label('get started')}<div style="font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:var(--ink);line-height:1.3;margin-bottom:1rem;">invite your people</div><div style="font-size:14px;color:var(--ink-faint);line-height:1.7;margin-bottom:2rem;">share your invite code so friends can join — dumpdates works best with 3–8 people.</div><button onclick="copyInviteCode()" style="background:var(--green);color:#fff;border:none;border-radius:999px;padding:12px 22px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Montserrat',sans-serif;display:inline-flex;align-items:center;gap:8px;transition:opacity 0.15s;" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><rect x="1" y="4" width="9" height="9" rx="1.5" stroke="white" stroke-width="1.2"/><path d="M4 4V2.5C4 1.67 4.67 1 5.5 1H11.5C12.33 1 13 1.67 13 2.5V8.5C13 9.33 12.33 10 11.5 10H10" stroke="white" stroke-width="1.2"/></svg>copy invite code</button><div style="margin-top:1.5rem;font-size:13px;color:var(--ink-ghost);">or <span style="color:var(--green);font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:2px;" onclick="switchTab('questions',document.querySelector('.tab-btn'))">go to the question garden →</span></div>${flowerSm('top:24px;right:24px',0.3,[7,-2,36])}${flowerSm('bottom:40px;left:24px',0.25,[9,-4,28])}`;
     return {
-      left:  page(`${label('how it works')}<div style="display:flex;flex-direction:column;gap:14px;">${s1}${s2}${s3}</div>`, 'iii'),
-      right: page(inviteRight, 'iv')
+      left:  page(`${label('how it works')}<div style="display:flex;flex-direction:column;gap:14px;">${s1}${s2}${s3}</div>`),
+      right: page(inviteRight)
     };
   }
 
@@ -2830,22 +2982,84 @@
   function buildAnswerSpread(section, idx) {
     const colors = ['#F1D4DC','#D8B7C9','#C9C3D9','#E3B8C2','#BFA0B8','#FBF0C0','#FAD9BC'];
     const rots   = [-1.5, 1.2, -0.8, 1.8, -1.1, 0.9, -1.6, 1.3];
-    const stickies = section.answers.map((a, si) => {
+    const isPoll = section.isPoll || (section.options && section.options.length > 0);
+
+    const stickyHtml = (a, si) => {
       const col = colors[(si+idx)%colors.length];
       const rot = rots[(si+idx*2)%rots.length];
-      return `<div class="zine-sticky" style="background:${col};--r:${rot}deg;animation-delay:${.08+si*.07}s;"><div class="zine-sticky-inner"><div class="zine-sticky-from"><span class="zine-sticky-av" style="background:${a.bg};color:${a.fg};">${a.initials}</span>${a.name}</div><div class="zine-sticky-text">${a.text}</div></div></div>`;
-    }).join('');
+      return `<div class="zine-sticky" style="background:${col};--r:${rot}deg;animation-delay:${.05+si*.05}s;">
+        <div class="zine-sticky-inner">
+          <div class="zine-sticky-from"><span class="zine-sticky-av" style="background:${a.bg};color:${a.fg};">${a.initials}</span>${a.name}</div>
+          <div class="zine-sticky-text">${a.text}</div>
+        </div>
+      </div>`;
+    };
+
+    if (isPoll && section.options) {
+      const tally = {};
+      section.options.forEach(o => { tally[o] = 0; });
+      section.answers.forEach(a => { if (tally[a.text] !== undefined) tally[a.text]++; });
+      const total = section.answers.length || 1;
+      const winner = Object.entries(tally).sort((a,b) => b[1]-a[1])[0]?.[0];
+      const barColors = ['#CFE8D5','#F1D4DC','#C9C3D9','#FBF0C0','#E3B8C2'];
+      const bars = section.options.map((opt, oi) => {
+        const votes = tally[opt] || 0;
+        const pct = Math.round(votes / total * 100);
+        const isWinner = opt === winner && votes > 0;
+        const col = isWinner ? 'var(--green)' : barColors[oi % barColors.length];
+        return `<div style="margin-bottom:12px;">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;">
+            <span style="font-size:13px;font-weight:${isWinner?'700':'400'};color:${isWinner?'var(--green)':'var(--ink-faint)'};font-family:Montserrat,sans-serif;">${opt}${isWinner?' ✓':''}</span>
+            <span style="font-size:11px;color:var(--ink-ghost);font-family:Montserrat,sans-serif;">${votes}</span>
+          </div>
+          <div style="height:8px;border-radius:999px;background:rgba(28,43,32,0.08);overflow:hidden;">
+            <div style="height:100%;width:${pct}%;background:${col};border-radius:999px;min-width:${votes>0?'8px':'0'};"></div>
+          </div>
+        </div>`;
+      }).join('');
+      return {
+        left: `<div class="zine-spread-left"><div class="zine-q-num">q.${String(idx+1).padStart(2,'0')}</div><div class="zine-q-text">${section.q}</div></div>`,
+        right: `<div class="zine-spread-right" style="display:flex;flex-direction:column;justify-content:center;">
+          <div style="font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-ghost);margin-bottom:1rem;font-family:Montserrat,sans-serif;">${total} vote${total!==1?'s':''}</div>
+          ${bars}
+        </div>`
+      };
+    }
+
+    // Text answers — split across both pages
+    const answers = section.answers;
+    const half = Math.ceil(answers.length / 2);
+    const leftStickies  = answers.slice(0, half).map((a, si) => stickyHtml(a, si)).join('');
+    const rightStickies = answers.slice(half).map((a, si)  => stickyHtml(a, si + half)).join('');
+
     return {
-      left:  `<div class="zine-spread-left"><div class="zine-q-num">q.${String(idx+1).padStart(2,'0')}</div><div class="zine-q-text">${section.q}</div></div>`,
-      right: `<div class="zine-spread-right"><div class="zine-stickies-area">${stickies}</div></div>`
+      left: `<div class="zine-spread-left" style="display:flex;flex-direction:column;">
+        <div class="zine-q-num">q.${String(idx+1).padStart(2,'0')}</div>
+        <div class="zine-q-text" style="margin-bottom:1rem;">${section.q}</div>
+        <div class="zine-stickies-area" style="grid-template-columns:1fr 1fr;gap:8px;">${leftStickies}</div>
+      </div>`,
+      right: `<div class="zine-spread-right">
+        <div class="zine-stickies-area" style="grid-template-columns:1fr 1fr;gap:8px;">${rightStickies || ''}</div>
+      </div>`
     };
   }
 
   function buildBackCover() {
     const mo = currentIssue?.month || 'this month';
     return {
-      left: `<div class="zine-back-left"><div class="zine-back-inner"><div class="zine-back-title">dumpdates</div><div class="zine-back-sub">until next month ♡</div><div class="zine-back-deco">${flowerSvg(60,'#5A8070','rgba(207,232,213,0.3)',1.2)}</div><div class="zine-back-issue">${mo}</div></div></div>`,
-      right: `<div class="zine-back-right"></div>`
+      left: `<div style="height:580px;position:relative;overflow:hidden;background:#F7F5F0;">${RULED}<div style="${PAD}">
+        ${label('until next month')}
+        <div style="font-family:'Playfair Display',serif;font-size:30px;font-weight:700;color:var(--ink);line-height:1.2;margin-bottom:1rem;">made with love&nbsp;:)</div>
+        <div style="font-size:14px;color:var(--ink-faint);line-height:1.7;margin-bottom:2rem;">${mo} · dumpdates</div>
+        <div style="margin-top:2rem;">${flowerSvg(56,'#5A8070','rgba(207,232,213,0.5)',1.2)}</div>
+      </div></div>`,
+      right: `<div style="height:580px;background:var(--green);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
+        <div style="position:absolute;inset:0;background:repeating-linear-gradient(transparent 0,transparent 27px,rgba(255,255,255,0.05) 27px,rgba(255,255,255,0.05) 28px);pointer-events:none;"></div>
+        <div style="text-align:center;padding:2rem;">
+          <div style="font-family:'Playfair Display',serif;font-size:42px;font-weight:700;color:#fff;letter-spacing:-1px;line-height:1.1;margin-bottom:0.5rem;">dump<br>dates</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.4);letter-spacing:0.14em;text-transform:uppercase;">${mo}</div>
+        </div>
+      </div>`
     };
   }
 
@@ -2884,7 +3098,7 @@
       </div>`;
 
     return {
-      left:  page(leftContent, 'v'),
+      left:  page(leftContent),
       right: `<div style="height:580px;position:relative;overflow:hidden;background:#F7F5F0;">${RULED}${rightContent}</div>`
     };
   }
@@ -2984,14 +3198,113 @@
   }
 
   function updateNav() {
-    const counter = document.getElementById('zine-counter');
-    if (counter) {
-      if (zinePage === 0)                         counter.textContent = 'cover';
-      else if (zinePage === zinePages.length - 1) counter.textContent = 'back';
-      else counter.textContent = `${zinePage} of ${zinePages.length - 2}`;
+    const dotsEl  = document.getElementById('zine-spread-dots');
+    const total   = zinePages.length;
+
+    // Prev/next arrows
+    const prevBtn = document.getElementById('zine-prev');
+    const nextBtn = document.getElementById('zine-next');
+    if (prevBtn) prevBtn.style.opacity = zinePage === 0 ? '0.3' : '1';
+    if (nextBtn) nextBtn.style.opacity = zinePage === total - 1 ? '0.3' : '1';
+
+    // Dot spread picker
+    if (dotsEl) {
+      dotsEl.innerHTML = Array.from({length: total}, (_, i) => {
+        const active = i === zinePage;
+        return `<button onclick="jumpToPage(${i})" title="spread ${i+1}" style="
+          width:${active ? 20 : 7}px;height:7px;border-radius:999px;border:none;cursor:pointer;
+          background:${active ? 'var(--green)' : 'rgba(28,43,32,0.18)'};
+          padding:0;transition:all 0.2s ease;"></button>`;
+      }).join('');
     }
   }
 
+  function jumpToPage(idx) {
+    if (idx === zinePage || isFlipping) return;
+    zinePage = idx;
+    renderBookPage(idx);
+  }
+
+
+
+  function toggleGroupSettings() {
+    const panel = document.getElementById('group-settings-panel');
+    const overlay = document.getElementById('group-settings-overlay');
+    if (!panel) return;
+    const open = panel.style.display !== 'none';
+    if (open) { closeGroupSettings(); return; }
+
+    // Populate panel
+    const nameInput = document.getElementById('gs-group-name');
+    if (nameInput) nameInput.value = currentGroup?.name || '';
+    const codeEl = document.getElementById('gs-invite-code');
+    if (codeEl && currentGroup) codeEl.textContent = currentGroup.id.replace(/-/g,'').slice(0,8).toUpperCase();
+
+    // Members list
+    const mList = document.getElementById('gs-members-list');
+    if (mList) {
+      const mems = members || [];
+      mList.innerHTML = mems.length ? mems.map(m => `
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);">
+          <div style="width:32px;height:32px;border-radius:50%;background:var(--green-light);color:var(--green);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">${(m.display_name||m.initials||'?').slice(0,2).toUpperCase()}</div>
+          <div style="flex:1;font-size:13px;color:var(--ink);">${m.display_name || 'member'}</div>
+          ${m.user_id !== currentUser?.id ? `<button onclick="removeMember('${m.user_id}')" style="font-size:11px;color:var(--bloom);background:none;border:none;cursor:pointer;padding:2px 6px;">remove</button>` : '<span style="font-size:11px;color:var(--ink-ghost);">you</span>'}
+        </div>`).join('') : '<div style="font-size:13px;color:var(--ink-ghost);">no members yet</div>';
+    }
+
+    panel.style.display = '';
+    overlay.style.display = '';
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeGroupSettings() {
+    const panel = document.getElementById('group-settings-panel');
+    const overlay = document.getElementById('group-settings-overlay');
+    if (panel) panel.style.display = 'none';
+    if (overlay) overlay.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+
+  async function saveGroupName() {
+    const val = document.getElementById('gs-group-name')?.value.trim();
+    if (!val || !currentGroup) return;
+    currentGroup.name = val;
+    if (currentGroup.id !== 'preview-group-1') {
+      await sb.from('groups').update({ name: val }).eq('id', currentGroup.id);
+    }
+    closeGroupSettings();
+  }
+
+  function setGroupTheme(color) {
+    document.documentElement.style.setProperty('--green', color);
+    const darken = color + 'cc';
+    // Visual feedback
+    document.querySelectorAll('.gs-theme-btn').forEach(b => b.style.borderColor = 'transparent');
+  }
+
+  function setFrequency(freq) {
+    // Store preference — would persist to DB in production
+    console.log('frequency set to', freq);
+  }
+
+  function removeMember(userId) {
+    if (!confirm('remove this member from the group?')) return;
+    members = (members||[]).filter(m => m.user_id !== userId);
+    toggleGroupSettings(); toggleGroupSettings(); // refresh panel
+  }
+
+  function leaveGroup() {
+    if (!confirm('leave this group? you can rejoin later with the invite code.')) return;
+    closeGroupSettings();
+    document.getElementById('home-screen').classList.remove('hidden');
+    document.querySelector('main')?.classList.add('hidden');
+    document.getElementById('main-header')?.classList.add('hidden');
+  }
+
+  function deleteGroup() {
+    if (!confirm('delete this group permanently? all issues and answers will be lost.')) return;
+    closeGroupSettings();
+  }
 
   // ── POLL QUESTION ─────────────────────────────────────────
 
@@ -3210,11 +3523,109 @@
   function enterPreview() {
     document.getElementById('auth-screen').classList.add('hidden');
     document.body.classList.remove('auth-open');
-    issueList = [1, 2, 3];
+
+    // Fake current user
+    currentUser = {
+      id: 'preview-user',
+      email: 'you@example.com',
+      user_metadata: { display_name: 'you' }
+    };
+
+    const dummyMemberships = [
+      { group_id: 'preview-group-1', groups: { name: 'the usual suspects' } },
+    ];
+    allMemberships = dummyMemberships;
+
+    showHomeScreen(dummyMemberships);
+  }
+
+  // Called when preview user taps their dummy group
+  function enterPreviewGroup() {
+    document.getElementById('home-screen').classList.add('hidden');
+    document.body.classList.remove('auth-open');
+
+    // Set up group state
+    currentGroup = { id: 'preview-group-1', name: 'the usual suspects', invite_code: 'PREVW001' };
+    currentIssue = { id: 'preview-issue-1', month: 'april 2026' };
+    members = [
+      { user_id: 'preview-user',  display_name: 'you',   initials: 'YO', color: '#CFE8D5' },
+      { user_id: 'preview-user2', display_name: 'alex',  initials: 'AL', color: '#F1D4DC' },
+      { user_id: 'preview-user3', display_name: 'jamie', initials: 'JM', color: '#C9C3D9' },
+      { user_id: 'preview-user4', display_name: 'river', initials: 'RI', color: '#FBF0C0' },
+    ];
+
+    issueList = [1, 2, 6, 19];
     const badge = document.getElementById('current-month-badge');
     if (badge) badge.textContent = 'april 2026';
+
+    // Show the main app
+    document.getElementById('main-header')?.classList.remove('hidden');
+    const settingsBtn = document.getElementById('group-settings-btn');
+    if (settingsBtn) { settingsBtn.style.display = 'flex'; }
+    document.querySelector('main')?.classList.remove('hidden');
+    document.getElementById('mobile-bottom-nav')?.classList.remove('hidden');
+
+    // Add a dummy past issue
+    pastZines.length = 0;
+    pastZines.push({
+      key: 'march-2026',
+      month: 'mar',
+      vol: 'vol. 01',
+      dotColors: ['#F1D4DC', '#C9C3D9', '#FBF0C0'],
+      data: [
+        {
+          q: "what song has been on repeat and what does that say about you?",
+          answers: [
+            { name: "alex",  initials: "AL", bg: "#CFE8D5", fg: "#2F5D50", text: "Mitski's 'Bug Like an Angel' on loop. apparently i am unwell and yearning for something i can't name. classic." },
+            { name: "jamie", initials: "JM", bg: "#BFA0B8", fg: "#5A2E50", text: "a 2009 electro-pop playlist i made in high school. it says i am thriving and also in denial about being almost 30." },
+            { name: "river", initials: "RI", bg: "#FBF0C0", fg: "#5C4A18", text: "the encanto soundtrack. my niece visited and now it's just... part of me." },
+            { name: "you",   initials: "YO", bg: "#E3B8C2", fg: "#7A2E42", text: "lo-fi beats to study to. it says i am avoiding something. unclear what." },
+          ]
+        },
+        {
+          q: "something you changed your mind about recently",
+          answers: [
+            { name: "alex",  initials: "AL", bg: "#CFE8D5", fg: "#2F5D50", text: "that i hate running. turns out i hate running alone. with a podcast it is actually fine?? who am i." },
+            { name: "you",   initials: "YO", bg: "#E3B8C2", fg: "#7A2E42", text: "anchovies on pizza. don't ask me to explain. just trust the process." },
+            { name: "river", initials: "RI", bg: "#FBF0C0", fg: "#5C4A18", text: "remote work would make me more productive. comfortable, yes. equally distracted, absolutely." },
+          ]
+        },
+        {
+          q: "best $20 you've spent in the last month",
+          answers: [
+            { name: "jamie", initials: "JM", bg: "#BFA0B8", fg: "#5A2E50", text: "a tiny cactus named gerald. he asks for nothing. he is my ideal roommate." },
+            { name: "alex",  initials: "AL", bg: "#CFE8D5", fg: "#2F5D50", text: "a second phone charger. no longer forced to choose between my bedroom and my couch." },
+            { name: "you",   initials: "YO", bg: "#E3B8C2", fg: "#7A2E42", text: "library card renewal. free books. i am a genius and also very broke." },
+            { name: "river", initials: "RI", bg: "#FBF0C0", fg: "#5C4A18", text: "a parking meter fine i paid immediately and felt zero guilt about. closure is worth $20." },
+          ]
+        },
+        {
+          q: "a hill you are willing to die on right now",
+          answers: [
+            { name: "alex",  initials: "AL", bg: "#CFE8D5", fg: "#2F5D50", text: "overhead lighting is a crime against humanity. lamps only. fight me." },
+            { name: "jamie", initials: "JM", bg: "#BFA0B8", fg: "#5A2E50", text: "cereal goes in before milk. it's not even a debate. the cereal needs to anticipate the milk." },
+            { name: "river", initials: "RI", bg: "#FBF0C0", fg: "#5C4A18", text: "reply-all emails should be a punishable offense." },
+            { name: "you",   initials: "YO", bg: "#E3B8C2", fg: "#7A2E42", text: "the best time to leave a party is exactly when you start thinking about it." },
+          ]
+        },
+        {
+          q: "how are we all doing honestly?",
+          isPoll: true,
+          options: ["thriving", "surviving", "somewhere in between", "send help"],
+          answers: [
+            { name: "alex",  initials: "AL", bg: "#CFE8D5", fg: "#2F5D50", text: "somewhere in between" },
+            { name: "jamie", initials: "JM", bg: "#BFA0B8", fg: "#5A2E50", text: "thriving" },
+            { name: "river", initials: "RI", bg: "#FBF0C0", fg: "#5C4A18", text: "surviving" },
+            { name: "you",   initials: "YO", bg: "#E3B8C2", fg: "#7A2E42", text: "somewhere in between" },
+          ]
+        },
+      ]
+    });
+
     renderSlots(); renderFilters(); renderGarden(); renderAnswers();
-    showHomeScreen([]);
+    renderShelf(); renderZine(zineData);
+    switchTab('questions', document.querySelector('.tab-btn'));
+    updateGroupSwitcher();
   }
 
   // ── PREVIEW MODE (URL shortcut still works too) ────────────
@@ -3231,10 +3642,7 @@
     document.getElementById('home-screen').classList.remove('hidden');
 
     // Greet by name
-    const name = currentUser?.user_metadata?.display_name || currentUser?.email?.split('@')[0] || 'there';
-    const hour = new Date().getHours();
-    const greeting = hour < 12 ? 'good morning' : hour < 17 ? 'good afternoon' : 'good evening';
-    document.getElementById('home-greeting').textContent = `${greeting}, ${name} 🌿`;
+    const name = currentUser?.user_metadata?.display_name || currentUser?.email?.split('@')[0] || 'bestie';
 
     // Profile card
     const initials = name.slice(0,2).toUpperCase();
@@ -3243,6 +3651,10 @@
     avatarEl.style.background = '#CFE8D5';
     avatarEl.style.color = '#2F5D50';
     document.getElementById('home-profile-name').textContent = name;
+    const lbl = document.getElementById('home-polaroid-label');
+    if (lbl) lbl.textContent = name;
+    // hide greeting/sub since removed from DOM
+    ['home-greeting','home-sub'].forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
     document.getElementById('home-profile-email').textContent = currentUser?.email || '';
 
     // Header avatar
@@ -3261,33 +3673,37 @@
     const container = document.getElementById('home-groups-list');
     const sub = document.getElementById('home-sub');
 
+    const actions = document.getElementById('home-actions');
     if (!memberships || memberships.length === 0) {
-      sub.textContent = "you're not in any groups yet";
       container.innerHTML = `
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;">
+          <div class="home-section-label" style="margin-bottom:0;">your groups</div>
+          <button onclick="toggleGroupDrawer()" id="home-add-group-btn" style="width:30px;height:30px;border-radius:50%;border:1.5px solid var(--border);background:var(--surface);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ink-mid);font-size:16px;letter-spacing:1px;line-height:1;transition:background 0.15s,border-color 0.15s;" onmouseover="this.style.background='var(--green-light)';this.style.borderColor='var(--border-mid)'" onmouseout="this.style.background='var(--surface)';this.style.borderColor='var(--border)'">···</button>
+        </div>
         <div class="home-empty">
-          <div style="font-size:40px;margin-bottom:0.75rem;">🌱</div>
           <div class="home-empty-title">start your first dumpdates</div>
-          <div class="home-empty-sub">create a group and invite your friends — everyone picks questions, writes answers, and gets a little zine at the end of the month.</div>
         </div>`;
+      if (actions) { actions.style.display = 'none'; }
       return;
     }
+    if (actions) actions.style.display = 'flex';
 
-    sub.textContent = memberships.length === 1
-      ? 'tap your group to jump in'
-      : 'tap a group to jump in';
 
     const colors = ['#CFE8D5','#F1D4DC','#C9C3D9','#FBF0C0','#E3B8C2','#FAD9BC'];
     const textColors = ['#2F5D50','#7A2E42','#3C3560','#5C4A18','#6A2A3A','#7A4020'];
 
     document.getElementById('home-section-label') // might not exist yet
     container.innerHTML = `
-      <div class="home-section-label">your groups</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;">
+        <div class="home-section-label" style="margin-bottom:0;">your groups</div>
+        <button onclick="toggleGroupDrawer()" id="home-add-group-btn" style="width:30px;height:30px;border-radius:50%;border:1.5px solid var(--border);background:var(--surface);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ink-mid);font-size:16px;letter-spacing:1px;line-height:1;transition:background 0.15s,border-color 0.15s;" onmouseover="this.style.background='var(--green-light)';this.style.borderColor='var(--border-mid)'" onmouseout="this.style.background='var(--surface)';this.style.borderColor='var(--border)'">···</button>
+      </div>
       ${memberships.map((m, i) => {
         const name = m.groups?.name || 'unnamed group';
         const initial = name[0].toUpperCase();
         const bg = colors[i % colors.length];
         const fg = textColors[i % textColors.length];
-        return `<div class="group-card-home" onclick="enterGroup('${m.group_id}')">
+        return `<div class="group-card-home" onclick="${m.group_id === 'preview-group-1' ? 'enterPreviewGroup()' : `enterGroup('${m.group_id}')`}">
           <div class="group-card-icon" style="background:${bg};color:${fg};">${initial}</div>
           <div class="group-card-info">
             <div class="group-card-name">${name}</div>
@@ -3302,10 +3718,80 @@
       }).join('')}`;
   }
 
+
+  function toggleProfileMenu() {
+    const m = document.getElementById('profile-menu');
+    if (!m) return;
+    const open = m.style.display !== 'none';
+    m.style.display = open ? 'none' : 'block';
+    if (!open) {
+      const close = e => { if (!document.getElementById('profile-menu-btn')?.contains(e.target)) { m.style.display='none'; document.removeEventListener('click',close); } };
+      setTimeout(() => document.addEventListener('click', close), 10);
+    }
+  }
+
+  function promptChangeUsername() {
+    const name = prompt('enter a new display name:', currentUser?.user_metadata?.display_name || '');
+    if (!name || !name.trim()) return;
+    sb.auth.updateUser({ data: { display_name: name.trim() } }).then(({ error }) => {
+      if (error) { alert('could not update name: ' + error.message); return; }
+      document.getElementById('home-profile-name').textContent = name.trim();
+      document.getElementById('home-greeting').textContent = `${document.getElementById('home-greeting').textContent.split(',')[0]}, ${name.trim()}`;
+      const menuName = document.getElementById('home-menu-name');
+      if (menuName) menuName.textContent = name.trim() + ' · ' + currentUser?.email;
+    });
+  }
+
+  function promptChangePassword() {
+    const pw = prompt('enter a new password (min 6 characters):');
+    if (!pw || pw.length < 6) { if (pw !== null) alert('password must be at least 6 characters'); return; }
+    sb.auth.updateUser({ password: pw }).then(({ error }) => {
+      if (error) alert('could not update password: ' + error.message);
+      else alert('password updated!');
+    });
+  }
+
+  function confirmDeleteAccount() {
+    if (!confirm('are you sure you want to delete your account? this cannot be undone.')) return;
+    // Supabase doesn't expose deleteUser from the client — direct user to contact support
+    alert("to delete your account, please email support@dumpdates.app and we will take care of it.");
+  }
+
   async function enterGroup(groupId) {
     document.getElementById('home-screen').classList.add('hidden');
     document.body.classList.remove('auth-open');
     await loadGroup(groupId);
+  }
+
+  function toggleGroupDrawer() {
+    const drawer = document.getElementById('home-group-drawer');
+    const btn    = document.getElementById('home-add-group-btn');
+    if (!drawer) return;
+    const open = drawer.style.display === 'block';
+    drawer.style.display = open ? 'none' : 'block';
+    if (!open) {
+      // close when clicking outside
+      const close = e => {
+        if (!btn?.contains(e.target) && !drawer?.contains(e.target)) {
+          drawer.style.display = 'none';
+                document.removeEventListener('click', close);
+        }
+      };
+      setTimeout(() => document.addEventListener('click', close), 10);
+    } else {
+      hideGroupDrawer();
+    }
+  }
+
+  function showGroupAction(type) {
+    document.getElementById('home-group-drawer').style.display = 'none';
+    const btn = document.getElementById('home-add-group-btn');
+    document.getElementById('home-create-form').style.display = type === 'create' ? '' : 'none';
+    document.getElementById('home-join-form').style.display   = type === 'join'   ? '' : 'none';
+    setTimeout(() => {
+      const inp = document.getElementById(type === 'create' ? 'home-group-name' : 'home-group-code');
+      if (inp) inp.focus();
+    }, 50);
   }
 
   function showHomeForm(type) {
@@ -3772,6 +4258,58 @@
     }, { onConflict: 'issue_question_id,user_id' });
   }
 
+
+  function previewMyAnswersInZine() {
+    const name = currentUser?.user_metadata?.display_name || 'you';
+    const preview = issueList.map((id, idx) => {
+      const q = garden.find(g => g.id === id);
+      const text = answers[idx] || '';
+      return text ? { q: q?.text || '', answers: [{ name, initials: name.slice(0,2).toUpperCase(), text, bg: '#CFE8D5', fg: '#2F5D50' }] } : null;
+    }).filter(Boolean);
+    myPreviewData = preview.length ? preview : null;
+    activeZineKey = preview.length ? 'preview' : 'instructions';
+    switchTab('letter', document.querySelector('.tab-btn[onclick*="letter"]'));
+    renderShelf();
+    renderZine(myPreviewData || []);
+  }
+
+  let myAnswersPublished = false;
+
+  async function publishMyAnswers() {
+    const btn = document.getElementById('publish-btn');
+    if (btn) { btn.textContent = 'publishing…'; btn.disabled = true; }
+
+    // Mark all current answers as published in DB
+    if (currentIssue && currentUser) {
+      for (let i = 0; i < issueList.length; i++) {
+        if (answers[i]) await saveAnswer(i);
+      }
+      // Set published flag on the user-issue record
+      await sb.from('answers')
+        .update({ published: true })
+        .eq('user_id', currentUser.id)
+        .in('issue_question_id',
+          (await sb.from('issue_questions').select('id').eq('issue_id', currentIssue.id)).data?.map(r => r.id) || []);
+    }
+
+    myAnswersPublished = true;
+    if (btn) { btn.textContent = 'published ✓'; btn.style.background = '#4a8f78'; }
+
+    // Show a preview of their own answers in the zine
+    renderZine(buildMyPreviewZine());
+  }
+
+  function buildMyPreviewZine() {
+    // Build a preview zine showing only the current user's answers
+    const name = currentUser?.user_metadata?.display_name || 'you';
+    return issueList.map(id => {
+      const q = garden.find(g => g.id === id);
+      const idx = issueList.indexOf(id);
+      const text = answers[idx] || '';
+      return text ? { q: q?.text || '', answers: [{ name, initials: name.slice(0,2).toUpperCase(), text, bg: '#CFE8D5', fg: '#2F5D50' }] } : null;
+    }).filter(Boolean);
+  }
+
   // ── SAVE QUESTION TO DB ───────────────────────────────────
 
   async function plantQuestion() {
@@ -3816,6 +4354,20 @@
   }
 
   // ── SAVE ISSUE QUESTION TO DB ─────────────────────────────
+
+  function focusAnswer(gardenId) {
+    const idx = issueList.indexOf(gardenId);
+    if (idx === -1) return;
+    switchTab('answer', document.querySelector('.tab-btn[onclick*="answer"]'));
+    setTimeout(() => {
+      const stickies = document.querySelectorAll('#answer-questions .sticky');
+      if (stickies[idx]) {
+        stickies[idx].scrollIntoView({ behavior: 'smooth', block: 'center' });
+        const ta = stickies[idx].querySelector('textarea');
+        if (ta) ta.focus();
+      }
+    }, 200);
+  }
 
   async function addToIssue(gardenId) {
     if (issueList.includes(gardenId)) return;
