@@ -7,7 +7,7 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   <title>dumpdates</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'><path d='M13.00,13.00 C16.12,8.55 14.25,4.90 13.00,3.12 C11.75,4.90 9.88,8.55 13.00,13.00Z' fill='%23CFE8D5' stroke='%232F5D50' stroke-width='1.1'/><path d='M13.00,13.00 C18.19,14.59 21.09,11.68 22.40,9.95 C20.32,9.31 16.26,8.66 13.00,13.00Z' fill='%23CFE8D5' stroke='%232F5D50' stroke-width='1.1'/><path d='M13.00,13.00 C13.09,18.43 16.75,20.29 18.81,20.99 C18.77,18.82 18.14,14.76 13.00,13.00Z' fill='%23CFE8D5' stroke='%232F5D50' stroke-width='1.1'/><path d='M13.00,13.00 C7.86,14.76 7.23,18.82 7.19,20.99 C9.25,20.29 12.91,18.43 13.00,13.00Z' fill='%23CFE8D5' stroke='%232F5D50' stroke-width='1.1'/><path d='M13.00,13.00 C9.74,8.66 5.68,9.31 3.60,9.95 C4.91,11.68 7.81,14.59 13.00,13.00Z' fill='%23CFE8D5' stroke='%232F5D50' stroke-width='1.1'/><circle cx='13.00' cy='13.00' r='2.60' fill='%23CFE8D5' stroke='%232F5D50' stroke-width='1.1'/></svg>" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -432,6 +432,36 @@
       transition: background 0.15s, opacity 0.15s;
     }
     .garden-ai-btn:hover { background: var(--border); }
+
+    .poll-toggle-label {
+      display: inline-flex; align-items: center; gap: 6px;
+      cursor: pointer; user-select: none;
+    }
+    .poll-toggle-track {
+      width: 32px; height: 18px; border-radius: 999px;
+      background: var(--border); border: 1.5px solid var(--border-mid);
+      position: relative; display: inline-block;
+      transition: background 0.2s, border-color 0.2s; flex-shrink: 0;
+    }
+    .poll-toggle-thumb {
+      position: absolute; top: 2px; left: 2px;
+      width: 12px; height: 12px; border-radius: 50%;
+      background: var(--surface); box-shadow: 0 1px 3px rgba(28,43,32,0.2);
+      transition: transform 0.2s;
+    }
+    #poll-toggle-checkbox:checked ~ .poll-toggle-track,
+    .poll-toggle-track.on {
+      background: var(--green); border-color: var(--green);
+    }
+    #poll-toggle-checkbox:checked ~ .poll-toggle-track .poll-toggle-thumb,
+    .poll-toggle-track.on .poll-toggle-thumb {
+      transform: translateX(14px);
+    }
+    .poll-toggle-text {
+      font-size: 12px; font-weight: 500; color: var(--ink-faint);
+      font-family: 'Montserrat', sans-serif;
+    }
+
     .poll-toggle-btn {
       display: flex; align-items: center; gap: 5px;
       font-size: 11px; font-weight: 600; letter-spacing: 0.04em;
@@ -1859,17 +1889,7 @@
 
         <!-- Write-your-own sticky note -->
         <div class="garden-write-sticky gs-sage">
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px 0;">
-            <div class="gs-tag" style="margin-bottom:0;">yours</div>
-            <button class="poll-toggle-btn" id="poll-toggle" onclick="togglePollMode()" title="make this a poll">
-              <svg width="11" height="11" viewBox="0 0 16 16" fill="none">
-                <rect x="1" y="9" width="3" height="6" rx="1" fill="currentColor" opacity="0.5"/>
-                <rect x="6" y="5" width="3" height="10" rx="1" fill="currentColor" opacity="0.7"/>
-                <rect x="11" y="1" width="3" height="14" rx="1" fill="currentColor"/>
-              </svg>
-              make this a poll
-            </button>
-          </div>
+          <div class="gs-tag">yours</div>
           <textarea
             id="garden-input"
             class="garden-write-textarea"
@@ -1877,8 +1897,8 @@
             rows="2"
           ></textarea>
           <!-- Poll options — hidden by default -->
-          <div id="poll-options-inline" style="display:none;padding:0 12px 6px;display:none;">
-            <div style="font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:rgba(28,43,32,0.35);margin-bottom:6px;">options</div>
+          <div id="poll-options-inline" style="display:none;padding:0 0 6px;">
+            <div style="font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:rgba(28,43,32,0.4);margin-bottom:6px;">poll options</div>
             <div id="poll-options-list">
               <div class="poll-inline-row"><span class="poll-inline-dot"></span><input class="poll-inline-input" placeholder="option 1" /></div>
               <div class="poll-inline-row"><span class="poll-inline-dot"></span><input class="poll-inline-input" placeholder="option 2" /></div>
@@ -1886,31 +1906,36 @@
             <button class="poll-add-option-inline" onclick="addInlinePollOption()">+ add option</button>
           </div>
           <div class="garden-write-actions">
+            <!-- AI generate -->
             <button class="garden-ai-btn" id="gen-btn-garden" onclick="generateQuestions()">
               <div class="gen-spinner" id="gen-spinner" style="display:none;width:13px;height:13px;border-radius:50%;border:2px solid rgba(47,93,80,0.25);border-top-color:#2F5D50;animation:spin 0.7s linear infinite;flex-shrink:0;"></div>
               <span id="gen-icon" style="display:inline-flex;align-items:center;gap:5px;">
-                <!-- sparkle -->
-                <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
-                  <path d="M6 1L6.8 4.8L11 6L6.8 7.2L6 11L5.2 7.2L1 6L5.2 4.8Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
-                </svg>
-                <!-- flower -->
-                <svg width="12" height="12" viewBox="0 0 40 40" fill="none">
-                  <ellipse cx="20" cy="7" rx="6" ry="9" stroke="currentColor" stroke-width="2"/>
-                  <ellipse cx="20" cy="7" rx="6" ry="9" stroke="currentColor" stroke-width="2" transform="rotate(60 20 20)"/>
-                  <ellipse cx="20" cy="7" rx="6" ry="9" stroke="currentColor" stroke-width="2" transform="rotate(120 20 20)"/>
-                  <ellipse cx="20" cy="7" rx="6" ry="9" stroke="currentColor" stroke-width="2" transform="rotate(180 20 20)"/>
-                  <ellipse cx="20" cy="7" rx="6" ry="9" stroke="currentColor" stroke-width="2" transform="rotate(240 20 20)"/>
-                  <ellipse cx="20" cy="7" rx="6" ry="9" stroke="currentColor" stroke-width="2" transform="rotate(300 20 20)"/>
-                  <circle cx="20" cy="20" r="5" stroke="currentColor" stroke-width="2"/>
-                </svg>
-                <!-- sparkle small -->
-                <svg width="8" height="8" viewBox="0 0 12 12" fill="none">
-                  <path d="M6 1L6.8 4.8L11 6L6.8 7.2L6 11L5.2 7.2L1 6L5.2 4.8Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
+                <svg width="13" height="13" viewBox="0 0 40 40" fill="none">
+                  <path fill="none" d="M20,20 C17,17 16,7 20,2 C24,7 23,17 20,20Z" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(0 20 20)"/>
+                  <path fill="none" d="M20,20 C17,17 16,7 20,2 C24,7 23,17 20,20Z" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(72 20 20)"/>
+                  <path fill="none" d="M20,20 C17,17 16,7 20,2 C24,7 23,17 20,20Z" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(144 20 20)"/>
+                  <path fill="none" d="M20,20 C17,17 16,7 20,2 C24,7 23,17 20,20Z" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(216 20 20)"/>
+                  <path fill="none" d="M20,20 C17,17 16,7 20,2 C24,7 23,17 20,20Z" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(288 20 20)"/>
+                  <circle fill="none" cx="20" cy="20" r="4" stroke="currentColor" stroke-width="2.2"/>
                 </svg>
                 generate with AI
               </span>
             </button>
-            <button class="garden-add-btn" onclick="plantQuestion()">add to issue →</button>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <!-- Poll toggle -->
+              <label class="poll-toggle-label" title="make this a poll">
+                <input type="checkbox" id="poll-toggle-checkbox" onchange="togglePollMode()" style="display:none;">
+                <span class="poll-toggle-track" id="poll-toggle">
+                  <span class="poll-toggle-thumb"></span>
+                </span>
+                <span class="poll-toggle-text">poll</span>
+              </label>
+              <!-- Add to issue -->
+              <button class="garden-add-btn" onclick="plantQuestion()">
+                <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M5.5 1v9M1 5.5h9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                add to issue
+              </button>
+            </div>
           </div>
         </div>
 
@@ -2119,7 +2144,11 @@
     document.querySelectorAll('.mobile-nav-btn').forEach(b => {
       b.classList.toggle('active', b.getAttribute('onclick')?.includes(id));
     });
-    if (id === 'letter') { renderShelf(); renderZine(activeZineKey === 'current' ? zineData : (pastZines.find(p=>p.key===activeZineKey)||{data:[]}).data); }
+    if (id === 'letter') {
+      renderShelf();
+      const data = activeZineKey === 'current' ? zineData : (pastZines.find(p=>p.key===activeZineKey)||{data:[]}).data;
+      renderZine(data);
+    }
     if (id === 'answer')  { renderAnswers(); }
   }
 
@@ -2726,7 +2755,12 @@
 
   function renderBookPage(pageIdx) {
     const book = document.getElementById('book-open');
-    if (!book || !zinePages[pageIdx]) return;
+    if (!book) return;
+    if (!zinePages[pageIdx]) {
+      book.innerHTML = '';
+      updateNav();
+      return;
+    }
     const pg = zinePages[pageIdx];
     book.innerHTML = `
       ${pg.left ? `<div class="book-page-static left">
