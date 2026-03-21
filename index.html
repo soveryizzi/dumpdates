@@ -752,11 +752,6 @@
 
       /* Zine */
       .zine-sticky { aspect-ratio: unset; min-height: 160px; }
-      .journal-book { grid-template-columns: 1fr; height: auto; min-height: 500px; }
-      .journal-book::after { display: none; }
-      .journal-page-right { display: none; }
-      .journal-page-left { height: auto; min-height: 0; }
-      .journal-flipper { display: none !important; }
 
       /* Auth + group cards */
       .auth-card { padding: 1.5rem 1rem; border-radius: 14px; }
@@ -1860,6 +1855,50 @@ main { padding: 0.875rem 0.625rem 5rem; }
   .home-form-sub { font-size: 14px; color: var(--ink-faint); margin-bottom: 1.25rem; }
 
   
+
+    /* ── MOBILE JOURNAL — single scrollable page ── */
+    @media (max-width: 678px) {
+      /* Single column, fixed height maintained */
+      .journal-book {
+        grid-template-columns: 1fr;
+        height: 580px;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      .journal-book::after { display: none; }
+      .journal-page-right { display: none !important; }
+      .journal-page-left {
+        height: 580px;
+        overflow-y: auto;
+        border-radius: 8px;
+      }
+      .journal-flipper { display: none !important; }
+      .page-edge-zone { display: none !important; }
+
+      /* Spread pages take full height and scroll */
+      .zine-spread-left,
+      .zine-spread-right {
+        min-height: 580px;
+        height: auto;
+      }
+
+      /* Stickies: 2 col */
+      .zine-stickies-area { grid-template-columns: 1fr 1fr; gap: 8px; }
+
+      /* Sticky nav arrows at bottom of screen */
+      .journal-nav {
+        position: fixed;
+        bottom: 1.5rem;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 200;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 6px 8px;
+        box-shadow: 0 4px 20px rgba(28,43,32,0.16);
+      }
+    }
   </style>
 </head>
 <body>
@@ -1961,36 +2000,68 @@ main { padding: 0.875rem 0.625rem 5rem; }
 </div>
 
 <!-- GROUP SETUP SCREEN (legacy, kept for join flow) -->
-<div id="group-screen" class="hidden">
-  <div class="group-card">
+<div id="group-screen" class="hidden" style="position:fixed;inset:0;background:var(--bg);z-index:490;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;">
+  <div style="width:100%;max-width:400px;">
+
+    <!-- Logo -->
+    <div style="text-align:center;margin-bottom:2.5rem;">
+      <div style="font-family:'Playfair Display',serif;font-size:32px;font-weight:700;color:var(--ink);letter-spacing:-1px;">dumpdates</div>
+      <div style="font-size:14px;color:var(--ink-faint);margin-top:6px;">a monthly catch-up for friends</div>
+    </div>
+
+    <!-- Choose view -->
     <div id="group-choose">
-      <div class="group-title">welcome to dumpdates</div>
-      <div class="group-sub">you're not in a group yet — create one or join with an invite code</div>
-      <div class="group-option" onclick="showGroupForm('create')">
-        <div class="group-option-title">create a new group</div>
-        <div class="group-option-sub">start fresh and invite your friends</div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <button onclick="showGroupForm('create')"
+          style="width:100%;padding:18px 20px;background:var(--green);color:#fff;border:none;border-radius:14px;cursor:pointer;text-align:left;transition:opacity .15s;"
+          onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+          <div style="font-size:16px;font-weight:700;font-family:'Playfair Display',serif;margin-bottom:3px;">create a group</div>
+          <div style="font-size:13px;opacity:.75;">start fresh and invite your friends</div>
+        </button>
+        <button onclick="showGroupForm('join')"
+          style="width:100%;padding:18px 20px;background:var(--surface);color:var(--ink);border:1.5px solid var(--border);border-radius:14px;cursor:pointer;text-align:left;transition:background .15s,border-color .15s;"
+          onmouseover="this.style.background='var(--green-light)';this.style.borderColor='var(--green)'"
+          onmouseout="this.style.background='var(--surface)';this.style.borderColor='var(--border)'">
+          <div style="font-size:16px;font-weight:700;font-family:'Playfair Display',serif;margin-bottom:3px;">join a group</div>
+          <div style="font-size:13px;color:var(--ink-faint);">enter an invite code from a friend</div>
+        </button>
       </div>
-      <div class="group-option" onclick="showGroupForm('join')">
-        <div class="group-option-title">join with an invite code</div>
-        <div class="group-option-sub">someone sent you a code to join their group</div>
-      </div>
     </div>
-    <div class="group-form" id="group-create-form">
-      <div class="group-title" style="font-size:18px;margin-bottom:6px;">create a group</div>
-      <div class="group-sub">what do you want to call your group?</div>
-      <input type="text" id="group-name-input" placeholder="e.g. the usual suspects" />
-      <button class="auth-btn" onclick="createGroup()">create group</button>
-      <div class="auth-error" id="group-error"></div>
-      <span class="group-back" onclick="showGroupForm(null)">← back</span>
+
+    <!-- Create form -->
+    <div id="group-create-form" style="display:none;">
+      <button onclick="showGroupForm(null)" style="background:none;border:none;cursor:pointer;font-size:13px;color:var(--ink-ghost);margin-bottom:1.5rem;display:flex;align-items:center;gap:6px;padding:0;">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7L9 12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> back
+      </button>
+      <div style="font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--ink);margin-bottom:6px;">create a group</div>
+      <div style="font-size:14px;color:var(--ink-faint);margin-bottom:1.5rem;">pick a name that feels like your crew</div>
+      <input type="text" id="group-name-input" placeholder="e.g. the usual suspects"
+        style="width:100%;padding:13px 16px;border:1.5px solid var(--border);border-radius:12px;font-size:15px;font-family:'Montserrat',sans-serif;background:var(--surface);color:var(--ink);outline:none;box-sizing:border-box;margin-bottom:8px;"
+        onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='var(--border)'"
+        onkeydown="if(event.key==='Enter')createGroup()"/>
+      <input type="text" id="group-desc-input" placeholder="add a description (optional)"
+        style="width:100%;padding:13px 16px;border:1.5px solid var(--border);border-radius:12px;font-size:14px;font-family:'Montserrat',sans-serif;background:var(--surface);color:var(--ink);outline:none;box-sizing:border-box;margin-bottom:16px;"
+        onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='var(--border)'"
+        onkeydown="if(event.key==='Enter')createGroup()"/>
+      <button class="auth-btn" onclick="createGroup()" style="width:100%;padding:14px;font-size:15px;">create group</button>
+      <div class="auth-error" id="group-error" style="margin-top:8px;"></div>
     </div>
-    <div class="group-form" id="group-join-form">
-      <div class="group-title" style="font-size:18px;margin-bottom:6px;">join a group</div>
-      <div class="group-sub">enter the invite code you were sent</div>
-      <input type="text" id="group-code-input" placeholder="INVITE CODE" style="text-transform:uppercase;letter-spacing:0.1em;" />
-      <button class="auth-btn" onclick="joinGroup()">join group</button>
-      <div class="auth-error" id="join-error"></div>
-      <span class="group-back" onclick="showGroupForm(null)">← back</span>
+
+    <!-- Join form -->
+    <div id="group-join-form" style="display:none;">
+      <button onclick="showGroupForm(null)" style="background:none;border:none;cursor:pointer;font-size:13px;color:var(--ink-ghost);margin-bottom:1.5rem;display:flex;align-items:center;gap:6px;padding:0;">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7L9 12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> back
+      </button>
+      <div style="font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--ink);margin-bottom:6px;">join a group</div>
+      <div style="font-size:14px;color:var(--ink-faint);margin-bottom:1.5rem;">paste the invite code your friend shared</div>
+      <input type="text" id="group-code-input" placeholder="ABCD1234"
+        style="width:100%;padding:13px 16px;border:1.5px solid var(--border);border-radius:12px;font-size:18px;font-family:'Montserrat',sans-serif;background:var(--surface);color:var(--ink);outline:none;box-sizing:border-box;text-transform:uppercase;letter-spacing:0.15em;text-align:center;margin-bottom:16px;"
+        onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='var(--border)'"
+        onkeydown="if(event.key==='Enter')joinGroup()"/>
+      <button class="auth-btn" onclick="joinGroup()" style="width:100%;padding:14px;font-size:15px;">join group</button>
+      <div class="auth-error" id="join-error" style="margin-top:8px;"></div>
     </div>
+
   </div>
 </div>
 
@@ -2299,6 +2370,7 @@ main { padding: 0.875rem 0.625rem 5rem; }
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   let currentUser = null;
+  let sb = null;
   let currentGroup = null;
   let currentMember = null;
   let currentIssue = null;
@@ -3061,7 +3133,7 @@ main { padding: 0.875rem 0.625rem 5rem; }
 
     // Text answers — on narrow screens all stickies on left, on wide split across both pages
     const answers = section.answers;
-    const isMobile = typeof window !== 'undefined' && window.innerWidth <= 600;
+    const isMobile = typeof window !== 'undefined' && window.innerWidth <= 678;
     const half = isMobile ? answers.length : Math.ceil(answers.length / 2);
     const leftStickies  = answers.slice(0, half).map((a, si) => stickyHtml(a, si)).join('');
     const rightStickies = answers.slice(half).map((a, si)  => stickyHtml(a, si + half)).join('');
@@ -3997,12 +4069,284 @@ main { padding: 0.875rem 0.625rem 5rem; }
     }
   });
 
+
+
+
+  // ── AUTH UI ───────────────────────────────────────────────
+
+  function togglePasswordVis() {
+    const input = document.getElementById('auth-password');
+    const icon = document.getElementById('pw-eye-icon');
+    const isHidden = input.type === 'password';
+    input.type = isHidden ? 'text' : 'password';
+    // swap to closed-eye when visible
+    icon.innerHTML = isHidden
+      ? `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
+         <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
+         <line x1="1" y1="1" x2="23" y2="23"/>`
+      : `<path d="M2 12C2 12 5 6 12 6C19 6 22 12 22 12C22 12 19 18 12 18C5 18 2 12 2 12Z"/>
+         <circle cx="12" cy="12" r="3"/>`;
+  }
+
+  function setAuthTab(mode) {
+    authMode = mode;
+    document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+    event.target.classList.add('active');
+    document.getElementById('auth-error').textContent = '';
+
+    const nameField = document.getElementById('auth-name-field');
+    const btn = document.getElementById('auth-submit-btn');
+
+    if (mode === 'signup') {
+      nameField.classList.remove('collapsing');
+      nameField.classList.add('expanding');
+      setTimeout(() => { nameField.style.display = ''; }, 10);
+    } else {
+      nameField.classList.remove('expanding');
+      nameField.classList.add('collapsing');
+    }
+
+    // Animate button text with a tiny fade
+    btn.style.opacity = '0';
+    btn.style.transition = 'opacity 0.15s';
+    setTimeout(() => {
+      btn.textContent = mode === 'login' ? 'log in' : 'sign up';
+      btn.style.opacity = '1';
+    }, 150);
+  }
+
+  async function handleAuth() {
+    const email = document.getElementById('auth-email').value.trim();
+    const password = document.getElementById('auth-password').value;
+    const btn = document.getElementById('auth-submit-btn');
+    const err = document.getElementById('auth-error');
+    err.textContent = '';
+    btn.disabled = true;
+
+    if (authMode === 'signup') {
+      btn.innerHTML = `<span style="display:inline-flex;align-items:center;gap:8px;justify-content:center;">
+        <svg style="animation:spin 0.8s linear infinite;" width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <circle cx="7" cy="7" r="5.5" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+          <path d="M7 1.5A5.5 5.5 0 0 1 12.5 7" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        creating account…
+      </span>`;
+    } else {
+      btn.innerHTML = `<span style="display:inline-flex;align-items:center;gap:8px;justify-content:center;">
+        <svg style="animation:spin 0.8s linear infinite;" width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <circle cx="7" cy="7" r="5.5" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+          <path d="M7 1.5A5.5 5.5 0 0 1 12.5 7" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        logging you in…
+      </span>`;
+    }
+
+    try {
+      if (authMode === 'signup') {
+        const displayName = document.getElementById('auth-displayname').value.trim();
+        if (!displayName) {
+          err.textContent = 'please enter a display name';
+          btn.disabled = false; btn.textContent = 'sign up'; return;
+        }
+        const { data, error } = await sb.auth.signUp({ email, password, options: { data: { display_name: displayName } } });
+        if (error) throw error;
+        btn.innerHTML = `<span style="display:inline-flex;align-items:center;gap:8px;justify-content:center;">
+          <svg width="14" height="12" viewBox="0 0 14 12" fill="none">
+            <path d="M1 6L5 10L13 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          account created!
+        </span>`;
+        if (data?.user) await onSignedIn(data.user);
+      } else {
+        const { data, error } = await sb.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+        btn.innerHTML = `<span style="display:inline-flex;align-items:center;gap:8px;justify-content:center;">
+          <svg style="animation:spin 0.8s linear infinite;" width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <circle cx="7" cy="7" r="5.5" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+            <path d="M7 1.5A5.5 5.5 0 0 1 12.5 7" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          loading your garden…
+        </span>`;
+        if (data?.user) await onSignedIn(data.user);
+      }
+    } catch (e) {
+      err.textContent = e.message;
+      btn.disabled = false;
+      btn.textContent = authMode === 'login' ? 'log in' : 'sign up';
+    }
+  }
+
+  // Enter key on auth fields
+  ['auth-email','auth-password','auth-displayname'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('keydown', e => { if (e.key === 'Enter') handleAuth(); });
+  });
+
+  async function signOut() {
+    await sb.auth.signOut();
+    location.reload();
+  }
+
+  document.addEventListener('click', e => {
+  });
+
+  // ── GROUP UI ──────────────────────────────────────────────
+
+  function showGroupForm(type) {
+    document.getElementById('group-choose').style.display = type ? 'none' : '';
+    document.getElementById('group-create-form').style.display = type === 'create' ? '' : 'none';
+    document.getElementById('group-join-form').style.display = type === 'join' ? '' : 'none';
+    if (type === 'create') document.getElementById('group-name-input')?.focus();
+    if (type === 'join') document.getElementById('group-code-input')?.focus();
+  }
+
+  async function createGroup() {
+    const nameEl = document.getElementById('group-name-input');
+    const name = nameEl?.value.trim();
+    const desc = document.getElementById('group-desc-input')?.value.trim() || '';
+    const btn = document.querySelector('#group-create-form .auth-btn');
+    const err = document.getElementById('group-error');
+    err.textContent = '';
+    if (!name) { err.textContent = 'please enter a group name'; return; }
+    if (btn) { btn.textContent = 'creating…'; btn.disabled = true; }
+
+    try {
+      const { data: group, error: ge } = await sb.from('groups').insert({
+        name, description: desc, created_by: currentUser.id
+      }).select().single();
+      if (ge) throw ge;
+
+      const displayName = currentUser.user_metadata?.display_name || currentUser.email.split('@')[0];
+      const { error: me } = await sb.from('group_members').insert({
+        group_id: group.id, user_id: currentUser.id,
+        display_name: displayName, avatar_color: '#CFE8D5'
+      });
+      if (me) throw me;
+
+      await loadGroup(group.id);
+
+      // Show the invite code right after creation
+      const code = group.id.replace(/-/g,'').slice(0,8).toUpperCase();
+      setTimeout(() => showGroupInvitePrompt(code), 500);
+    } catch (e) {
+      err.textContent = e.message || 'something went wrong';
+      if (btn) { btn.textContent = 'create group'; btn.disabled = false; }
+    }
+  }
+
+  function showGroupInvitePrompt(code) {
+    const modal = document.createElement('div');
+    modal.style.cssText = 'position:fixed;inset:0;background:rgba(28,43,32,.4);z-index:9999;display:flex;align-items:center;justify-content:center;padding:1.5rem;backdrop-filter:blur(4px);';
+
+    const card = document.createElement('div');
+    card.style.cssText = 'background:var(--surface);border-radius:18px;padding:2rem;max-width:360px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(28,43,32,0.24);';
+
+    const emoji = document.createElement('div');
+    emoji.style.cssText = 'font-size:40px;margin-bottom:.75rem;'; emoji.textContent = '🎉';
+
+    const title = document.createElement('div');
+    title.style.cssText = 'font-family:Playfair Display,serif;font-size:22px;font-weight:700;color:var(--ink);margin-bottom:6px;';
+    title.textContent = 'your group is ready!';
+
+    const sub = document.createElement('div');
+    sub.style.cssText = 'font-size:14px;color:var(--ink-faint);margin-bottom:1.5rem;';
+    sub.textContent = 'share this code so friends can join';
+
+    const codeBg = document.createElement('div');
+    codeBg.style.cssText = 'background:var(--green-light);border-radius:12px;padding:14px;margin-bottom:1.25rem;';
+    const codeDisp = document.createElement('div');
+    codeDisp.style.cssText = 'font-size:28px;font-weight:700;letter-spacing:.2em;color:var(--green);font-family:Montserrat,sans-serif;';
+    codeDisp.textContent = code;
+    codeBg.appendChild(codeDisp);
+
+    const copyBtn = document.createElement('button');
+    copyBtn.style.cssText = 'width:100%;padding:12px;background:var(--green);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;margin-bottom:10px;';
+    copyBtn.textContent = 'copy invite code';
+    copyBtn.onclick = function() {
+      navigator.clipboard.writeText(code).catch(() => {
+        const ta = document.createElement('textarea'); ta.value = code;
+        document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove();
+      });
+      showToast('invite code copied!');
+    };
+
+    const doneBtn = document.createElement('button');
+    doneBtn.style.cssText = 'background:none;border:none;font-size:13px;color:var(--ink-ghost);cursor:pointer;';
+    doneBtn.textContent = 'go to my group →';
+    doneBtn.onclick = function() { modal.remove(); };
+
+    [emoji, title, sub, codeBg, copyBtn, doneBtn].forEach(el => card.appendChild(el));
+    modal.appendChild(card);
+    modal.onclick = function(e) { if (e.target === modal) modal.remove(); };
+    document.body.appendChild(modal);
+  }
+
+  async function createGroupFromHome() {
+    const name = document.getElementById('home-group-name').value.trim();
+    const err = document.getElementById('home-create-error');
+    err.textContent = '';
+    if (!name) { err.textContent = 'please enter a group name'; return; }
+    try {
+      const { data: group, error: ge } = await sb.from('groups').insert({
+        name, created_by: currentUser.id
+      }).select().single();
+      if (ge) throw ge;
+      const displayName = currentUser.user_metadata?.display_name || currentUser.email.split('@')[0];
+      const { error: me } = await sb.from('group_members').insert({
+        group_id: group.id, user_id: currentUser.id,
+        display_name: displayName, avatar_color: '#CFE8D5'
+      });
+      if (me) throw me;
+      hideHomeForms();
+      await enterGroup(group.id);
+    } catch (e) {
+      document.getElementById('home-create-error').textContent = e.message;
+    }
+  }
+
+  async function joinGroupFromHome() {
+    const code = document.getElementById('home-group-code').value.trim().toUpperCase().replace(/-/g,'');
+    const err = document.getElementById('home-join-error');
+    err.textContent = '';
+    if (!code) { err.textContent = 'please enter an invite code'; return; }
+    try {
+      const { data: groups } = await sb.from('groups').select('*');
+      const group = groups.find(g => g.id.replace(/-/g,'').slice(0,8).toUpperCase() === code);
+      if (!group) { err.textContent = 'invite code not found — check with your friend'; return; }
+      const displayName = currentUser.user_metadata?.display_name || currentUser.email.split('@')[0];
+      const { data: members } = await sb.from('group_members').select('*').eq('group_id', group.id);
+      const colors = ['#CFE8D5','#F1D4DC','#C9C3D9','#FBF0C0','#E3B8C2'];
+      const color = colors[members.length % colors.length];
+      const { error: me } = await sb.from('group_members').insert({
+        group_id: group.id, user_id: currentUser.id,
+        display_name: displayName, avatar_color: color
+      });
+      if (me) throw me;
+      hideHomeForms();
+      await enterGroup(group.id);
+    } catch (e) {
+      document.getElementById('home-join-error').textContent = e.message;
+    }
+  }
+
+  function toggleHomeMenu() {
+    document.getElementById('home-avatar-menu').classList.toggle('open');
+  }
+
+  // Close home menu on outside click
+  document.addEventListener('click', e => {
+    const btn = document.getElementById('home-avatar-btn');
+    const menu = document.getElementById('home-avatar-menu');
+    if (menu && btn && !btn.contains(e.target) && !menu.contains(e.target)) {
+      menu.classList.remove('open');
+    }
+  });
+
   // ── SUPABASE ──────────────────────────────────────────────
 
   const SUPABASE_URL = 'https://gbzptapkiwpdtngurobz.supabase.co';
   const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdienB0YXBraXdwZHRuZ3Vyb2J6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4NDg5MjQsImV4cCI6MjA4OTQyNDkyNH0.j-aJZ7iRogw3NYLt1NAYn4LcoKEaaa-1IyhIBj1a-hA';
 
-  let sb = null;
   try {
     sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
   } catch(e) {
@@ -4136,756 +4480,49 @@ main { padding: 0.875rem 0.625rem 5rem; }
   // ── GROUP UI ──────────────────────────────────────────────
 
   function showGroupForm(type) {
-    document.getElementById('group-choose').style.display = type ? 'none' : 'block';
-    document.getElementById('group-create-form').classList.toggle('visible', type === 'create');
-    document.getElementById('group-join-form').classList.toggle('visible', type === 'join');
+    document.getElementById('group-choose').style.display = type ? 'none' : '';
+    document.getElementById('group-create-form').style.display = type === 'create' ? '' : 'none';
+    document.getElementById('group-join-form').style.display = type === 'join' ? '' : 'none';
+    if (type === 'create') document.getElementById('group-name-input')?.focus();
+    if (type === 'join') document.getElementById('group-code-input')?.focus();
   }
 
   async function createGroup() {
-    const name = document.getElementById('group-name-input').value.trim();
+    const nameEl = document.getElementById('group-name-input');
+    const name = nameEl?.value.trim();
+    const desc = document.getElementById('group-desc-input')?.value.trim() || '';
+    const btn = document.querySelector('#group-create-form .auth-btn');
     const err = document.getElementById('group-error');
     err.textContent = '';
     if (!name) { err.textContent = 'please enter a group name'; return; }
+    if (btn) { btn.textContent = 'creating…'; btn.disabled = true; }
 
     try {
-      // Create group
-      const { data: group, error: ge } = await sb.from('groups').insert({ name, created_by: currentUser.id }).select().single();
+      const { data: group, error: ge } = await sb.from('groups').insert({
+        name, description: desc, created_by: currentUser.id
+      }).select().single();
       if (ge) throw ge;
 
-      // Add creator as member
       const displayName = currentUser.user_metadata?.display_name || currentUser.email.split('@')[0];
       const { error: me } = await sb.from('group_members').insert({
         group_id: group.id, user_id: currentUser.id,
-        display_name: displayName, avatar_color: '#D8EED4'
+        display_name: displayName, avatar_color: '#CFE8D5'
       });
       if (me) throw me;
 
       await loadGroup(group.id);
+
+      // Show the invite code right after creation
+      const code = group.id.replace(/-/g,'').slice(0,8).toUpperCase();
+      setTimeout(() => showGroupInvitePrompt(code), 500);
     } catch (e) {
-      document.getElementById('group-error').textContent = e.message;
+      err.textContent = e.message || 'something went wrong';
+      if (btn) { btn.textContent = 'create group'; btn.disabled = false; }
     }
   }
 
-  async function joinGroup() {
-    const code = document.getElementById('group-code-input').value.trim().toUpperCase();
-    const err = document.getElementById('join-error');
-    err.textContent = '';
-    if (!code) { err.textContent = 'please enter an invite code'; return; }
 
-    // Invite code is first 8 chars of group UUID (uppercase)
-    try {
-      const { data: groups, error: ge } = await sb.from('groups').select('*');
-      if (ge) throw ge;
-      const group = groups.find(g => g.id.replace(/-/g,'').slice(0,8).toUpperCase() === code);
-      if (!group) { err.textContent = 'invite code not found — check with your friend'; return; }
-
-      const displayName = currentUser.user_metadata?.display_name || currentUser.email.split('@')[0];
-      const colors = ['#D8EED4','#D0E8E0','#EDE0D4','#EDE8D0','#C8E6FA','#FADADD'];
-      const { data: members } = await sb.from('group_members').select('*').eq('group_id', group.id);
-      const color = colors[members.length % colors.length];
-
-      const { error: me } = await sb.from('group_members').insert({
-        group_id: group.id, user_id: currentUser.id,
-        display_name: displayName, avatar_color: color
-      });
-      if (me) throw me;
-
-      await loadGroup(group.id);
-    } catch (e) {
-      document.getElementById('join-error').textContent = e.message;
-    }
-  }
-
-  let allMemberships = [];
-
-  function showGroupPicker(memberships) {
-    allMemberships = memberships;
-    const groupScreen = document.getElementById('group-screen');
-    const choose = document.getElementById('group-choose');
-    groupScreen.classList.remove('hidden');
-    choose.innerHTML = `
-      <div class="group-title">pick a group</div>
-      <div class="group-sub">which group are you dropping into?</div>
-      ${memberships.map(m => `
-        <div class="group-option" onclick="pickGroup('${m.group_id}')">
-          <div class="group-option-title">${m.groups?.name || 'unnamed group'}</div>
-        </div>`).join('')}
-      <div class="group-option" onclick="showGroupForm('create')">
-        <div class="group-option-title">+ create a new group</div>
-        <div class="group-option-sub">start a fresh group</div>
-      </div>
-      <div class="group-option" onclick="showGroupForm('join')">
-        <div class="group-option-title">+ join with invite code</div>
-        <div class="group-option-sub">someone sent you a code</div>
-      </div>`;
-  }
-
-  async function pickGroup(groupId) {
-    document.getElementById('group-screen').classList.add('hidden');
-    await loadGroup(groupId);
-  }
-
-  function showAddGroup() {
-    document.getElementById('group-screen').classList.remove('hidden');
-    document.getElementById('group-choose').innerHTML = `
-      <div class="group-title">add a group</div>
-      <div class="group-sub">create a new one or join with a code</div>
-      <div class="group-option" onclick="showGroupForm('create')">
-        <div class="group-option-title">+ create a new group</div>
-        <div class="group-option-sub">start fresh and invite friends</div>
-      </div>
-      <div class="group-option" onclick="showGroupForm('join')">
-        <div class="group-option-title">+ join with invite code</div>
-        <div class="group-option-sub">someone sent you a code</div>
-      </div>
-      <span class="group-back" onclick="document.getElementById('group-screen').classList.add('hidden')">← back to app</span>`;
-  }
-
-  function updateGroupSwitcher() {
-    if (!container || !allMemberships.length) return;
-    if (allMemberships.length <= 1) { container.innerHTML = ''; return; }
-    container.innerHTML = `
-      <div style="font-size:11px;color:var(--ink-ghost);padding:4px 10px;letter-spacing:0.06em;text-transform:uppercase;">switch group</div>
-      ${allMemberships.map(m => `
-        <button class="user-dropdown-item ${m.group_id === currentGroup?.id ? 'active-group' : ''}"
-          onclick="pickGroup('${m.group_id}')" style="${m.group_id === currentGroup?.id ? 'font-weight:500;color:var(--green);' : ''}">
-          ${m.groups?.name || 'unnamed group'}
-        </button>`).join('')}
-      <div style="height:1px;background:var(--border);margin:4px 0;"></div>`;
-  }
-
-  async function copyInviteCode() {
-    if (!currentGroup) return;
-    const code = currentGroup.id.replace(/-/g,'').slice(0,8).toUpperCase();
-    await navigator.clipboard.writeText(code);
-    // old user-dropdown-item ref removed
-    btn.textContent = 'copied!';
-    setTimeout(() => btn.textContent = 'copy invite code', 2000);
-  }
-
-  // ── APP BOOTSTRAP ─────────────────────────────────────────
-
-  async function loadGroup(groupId) {
-    try {
-    // Run group + member fetch in parallel
-    const [
-      { data: group },
-      { data: member }
-    ] = await Promise.all([
-      sb.from('groups').select('*').eq('id', groupId).single(),
-      sb.from('group_members').select('*').eq('group_id', groupId).eq('user_id', currentUser.id).single()
-    ]);
-
-    currentGroup = group;
-    currentMember = member;
-
-    // Hide screens, show app immediately
-    document.getElementById('auth-screen').classList.add('hidden');
-    document.getElementById('group-screen').classList.add('hidden');
-    document.getElementById('home-screen').classList.add('hidden');
-
-    // Update user menu
-    btn.textContent = (member?.display_name || '?').slice(0,2).toUpperCase();
-
-    // Run remaining fetches in parallel
-    const now = new Date();
-    const monthStr = now.toLocaleString('en-US', { month: 'long', year: 'numeric' }).toLowerCase();
-
-    const [issueResult, questionsResult, membershipsResult] = await Promise.all([
-      sb.from('issues').select('*').eq('group_id', groupId).eq('status', 'open')
-        .order('created_at', { ascending: false }).limit(1).maybeSingle(),
-      sb.from('questions').select('*').eq('group_id', groupId).order('created_at'),
-      sb.from('group_members').select('group_id, groups(id, name)').eq('user_id', currentUser.id)
-    ]);
-
-    // Handle issue
-    let issue = issueResult.data;
-    if (!issue) {
-      const { count } = await sb.from('issues').select('*', { count: 'exact', head: true }).eq('group_id', groupId);
-      const { data: newIssue } = await sb.from('issues').insert({
-        group_id: groupId, month: monthStr, vol: (count || 0) + 1, status: 'open'
-      }).select().single();
-      issue = newIssue;
-    }
-    currentIssue = issue;
-
-    const badge = document.getElementById('current-month-badge');
-    if (badge && issue) badge.textContent = issue.month;
-
-    // Handle questions
-    const dbQs = questionsResult.data;
-    if (dbQs && dbQs.length > 0) {
-      const seededTexts = new Set(garden.map(g => g.text.toLowerCase()));
-      dbQs.forEach(q => {
-        if (!seededTexts.has(q.text.toLowerCase())) {
-          garden.push({ id: q.id, text: q.text, tag: q.tag || 'misc', mine: q.added_by === currentUser.id, type: q.type || 'text', dbId: q.id });
-        }
-      });
-    }
-
-    // Handle memberships
-    if (membershipsResult.data) allMemberships = membershipsResult.data;
-    updateGroupSwitcher();
-
-    // Load issue questions then render everything
-    if (issue) {
-      const { data: iqs } = await sb.from('issue_questions')
-        .select('*, questions(*)').eq('issue_id', issue.id).order('position');
-      if (iqs) issueList = iqs.map(iq => iq.question_id);
-    }
-
-    renderSlots();
-    renderFilters();
-    renderGarden();
-    renderAnswers();
-    renderShelf();
-    renderZine(zineData);
-    } catch(e) { console.error('loadGroup error:', e); }
-  }
-
-  async function saveAnswer(i) {
-    savedFlags[i] = true;
-    const el = document.getElementById('saved-' + i);
-    if (el) { el.textContent = 'saved'; setTimeout(() => { if (el) el.textContent = ''; }, 2000); }
-
-    if (!currentIssue || !currentUser) return;
-
-    const questionId = issueList[i];
-    if (!questionId) return;
-
-    // Get issue_question id
-    const { data: iq } = await sb.from('issue_questions')
-      .select('id')
-      .eq('issue_id', currentIssue.id)
-      .eq('question_id', questionId)
-      .maybeSingle();
-
-    if (!iq) return;
-
-    await sb.from('answers').upsert({
-      issue_question_id: iq.id,
-      user_id: currentUser.id,
-      text: answers[i] || null
-    }, { onConflict: 'issue_question_id,user_id' });
-  }
-
-
-  function previewMyAnswersInZine() {
-    const name = currentUser?.user_metadata?.display_name || 'you';
-    const preview = issueList.map((id, idx) => {
-      const q = garden.find(g => g.id === id);
-      const text = answers[idx] || '';
-      return text ? { q: q?.text || '', answers: [{ name, initials: name.slice(0,2).toUpperCase(), text, bg: '#CFE8D5', fg: '#2F5D50' }] } : null;
-    }).filter(Boolean);
-    myPreviewData = preview.length ? preview : null;
-    activeZineKey = preview.length ? 'preview' : 'instructions';
-    switchTab('letter', document.querySelector('.tab-btn[onclick*="letter"]'));
-    renderShelf();
-    renderZine(myPreviewData || []);
-  }
-
-  function buildMyPreviewZine() {
-    // Build a preview zine showing only the current user's answers
-    const name = currentUser?.user_metadata?.display_name || 'you';
-    return issueList.map(id => {
-      const q = garden.find(g => g.id === id);
-      const idx = issueList.indexOf(id);
-      const text = answers[idx] || '';
-      return text ? { q: q?.text || '', answers: [{ name, initials: name.slice(0,2).toUpperCase(), text, bg: '#CFE8D5', fg: '#2F5D50' }] } : null;
-    }).filter(Boolean);
-  }
-
-  // ── SAVE QUESTION TO DB ───────────────────────────────────
-
-  async function plantQuestion() {
-    const input = document.getElementById('garden-input');
-    const text = input.value.trim();
-    if (!text || text === input.placeholder) return;
-
-    const localId = nextId++;
-
-    if (isPollMode) {
-      const options = Array.from(document.querySelectorAll('.poll-inline-input'))
-        .map(i => i.value.trim()).filter(Boolean);
-      garden.unshift({ id: localId, text, tag: 'poll', mine: true, type: 'text', poll: true, options });
-      // reset poll state
-      input.value = '';
-      document.getElementById('poll-options-list').innerHTML =
-        '<div class="poll-inline-row"><span class="poll-inline-dot"></span><input class="poll-inline-input" placeholder="option 1" /></div>' +
-        '<div class="poll-inline-row"><span class="poll-inline-dot"></span><input class="poll-inline-input" placeholder="option 2" /></div>';
-      togglePollMode();
-    } else {
-      garden.unshift({ id: localId, text, tag: 'mine', mine: true, type: 'text' });
-      input.value = '';
-    }
-    // Auto-add to issue too
-    addToIssue(localId);
-    renderFilters();
-    renderGarden();
-
-    // Save to DB if logged in
-    if (currentGroup && currentUser) {
-      const { data: q } = await sb.from('questions').insert({
-        group_id: currentGroup.id,
-        text, tag: isPollMode ? 'poll' : 'mine', type: 'text',
-        added_by: currentUser.id
-      }).select().single();
-      if (q) {
-        // Update local id to DB id
-        const item = garden.find(g => g.id === localId);
-        if (item) { item.id = q.id; item.dbId = q.id; }
-      }
-    }
-  }
-
-  // ── SAVE ISSUE QUESTION TO DB ─────────────────────────────
-
-  function focusAnswer(gardenId) {
-    const idx = issueList.indexOf(gardenId);
-    if (idx === -1) return;
-    switchTab('answer', document.querySelector('.tab-btn[onclick*="answer"]'));
-    setTimeout(() => {
-      const stickies = document.querySelectorAll('#answer-questions .sticky');
-      if (stickies[idx]) {
-        stickies[idx].scrollIntoView({ behavior: 'smooth', block: 'center' });
-        const ta = stickies[idx].querySelector('textarea');
-        if (ta) ta.focus();
-      }
-    }, 200);
-  }
-
-  async function addToIssue(gardenId) {
-    if (issueList.includes(gardenId)) return;
-    issueList.push(gardenId);
-    renderSlots();
-    renderGarden();
-
-    if (currentIssue) {
-      await sb.from('issue_questions').insert({
-        issue_id: currentIssue.id,
-        question_id: gardenId,
-        position: issueList.length - 1
-      });
-    }
-  }
-
-  async function removeFromIssue(gardenId) {
-    issueList = issueList.filter(id => id !== gardenId);
-    renderSlots();
-    renderGarden();
-
-    if (currentIssue) {
-      await sb.from('issue_questions')
-        .delete()
-        .eq('issue_id', currentIssue.id)
-        .eq('question_id', gardenId);
-    }
-  }
-
-  // ── INIT ──────────────────────────────────────────────────
-
-  document.body.classList.add("auth-open");
-
-  renderSlots();
-  renderFilters();
-  renderGarden();
-  setIssueDateCopy();
-
-
-
-
-
-
-
-
-  // Profile panel (lightweight inline modal)
-
-
-
-
-  let _mobileNavOpen = false;
-
-  function toggleMobileNav() {
-    _mobileNavOpen ? closeMobileNav() : openMobileNav();
-  }
-
-  function openMobileNav() {
-    _mobileNavOpen = true;
-    const drawer = document.getElementById('mobile-nav-drawer');
-    const chevron = document.getElementById('mobile-nav-chevron');
-    if (drawer) drawer.style.display = 'block';
-    if (chevron) chevron.style.transform = 'rotate(180deg)';
-    setTimeout(() => document.addEventListener('click', _mobileNavOutside, { once: true }), 0);
-  }
-
-  function closeMobileNav() {
-    _mobileNavOpen = false;
-    const drawer = document.getElementById('mobile-nav-drawer');
-    const chevron = document.getElementById('mobile-nav-chevron');
-    if (drawer) drawer.style.display = 'none';
-    if (chevron) chevron.style.transform = '';
-  }
-
-  function _mobileNavOutside(e) {
-    if (!document.getElementById('main-header')?.contains(e.target)) closeMobileNav();
-  }
-
-  // Keep active state in sync
-  function updateMobileNavActive(id) {
-    document.querySelectorAll('.mobile-nav-item').forEach(btn => {
-      btn.classList.toggle('active', btn.getAttribute('onclick')?.includes("'" + id + "'"));
-    });
-  }
-
-
-  // ── NAV MENU ──────────────────────────────────────────────────────────────
-  let _nmOpen = false;
-
-  function navMenuToggle(e) {
-    e.stopPropagation();
-    _nmOpen ? navMenuClose() : navMenuOpen();
-  }
-
-  function navMenuOpen() {
-    const menu = document.getElementById('nav-menu');
-    if (!menu) return;
-
-    // Identity
-    const name = currentUser?.user_metadata?.display_name
-      || currentUser?.email?.split('@')[0] || '';
-    const el = document.getElementById('nm-name');
-    if (el) el.textContent = name;
-    const av = document.getElementById('nm-avatar');
-    if (av) {
-      const photo = profilePhotos['me'];
-      if (photo) {
-        av.innerHTML = '';
-        var img = document.createElement('img');
-        img.src = photo; img.style.cssText = 'width:100%;height:100%;object-fit:cover;';
-        av.appendChild(img);
-      } else {
-        av.textContent = name.slice(0,2).toUpperCase();
-      }
-    }
-
-    // Group-specific items
-    const hasGroup = !!currentGroup;
-    const cl = document.getElementById('nm-copy-link');
-    if (cl) cl.style.display = hasGroup ? '' : 'none';
-
-    // Groups switcher — show only if 2+ groups
-    const gmEl = document.getElementById('nm-groups');
-    if (gmEl) {
-      const bgs = ['#CFE8D5','#F1D4DC','#C9C3D9','#FBF0C0','#E3B8C2','#FAD9BC'];
-      const fgs = ['#2F5D50','#7A2E42','#3C3560','#5C4A18','#6A2A3A','#7A4020'];
-      gmEl.innerHTML = '';
-      if (allMemberships && allMemberships.length > 1) {
-        const hdr = document.createElement('div');
-        hdr.style.cssText = 'padding:8px 16px 4px;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-ghost);';
-        hdr.textContent = 'switch group';
-        gmEl.appendChild(hdr);
-        allMemberships.forEach(function(m, i) {
-          const gName = (m.groups && m.groups.name) || 'group';
-          const isCurrent = !!(currentGroup && m.group_id === currentGroup.id);
-          const row = document.createElement('button');
-          row.className = 'nm-group-row';
-          if (isCurrent) { row.style.background='var(--green-light)'; row.style.color='var(--green)'; row.style.fontWeight='600'; }
-          const av = '<div style="width:22px;height:22px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;background:' + bgs[i%bgs.length] + ';color:' + fgs[i%fgs.length] + ';">' + gName[0].toUpperCase() + '</div>';
-          const ck = isCurrent ? '<svg width="11" height="9" viewBox="0 0 11 9" fill="none" style="margin-left:auto;margin-right:4px;flex-shrink:0;opacity:.6;"><path d="M1 4.5L3.5 7L10 1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>' : '';
-          // Settings cog — always shown, opens group settings for that group
-          const cogBtn = document.createElement('button');
-          cogBtn.style.cssText = 'flex-shrink:0;background:none;border:none;padding:4px;cursor:pointer;color:var(--ink-ghost);border-radius:50%;display:flex;align-items:center;justify-content:center;transition:background 0.1s,color 0.1s;margin-left:auto;';
-          cogBtn.title = 'group settings';
-          cogBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>';
-          cogBtn.onmouseover = function(){ this.style.background='var(--bg)'; this.style.color='var(--green)'; };
-          cogBtn.onmouseout = function(){ this.style.background='none'; this.style.color='var(--ink-ghost)'; };
-          cogBtn.onclick = function(e) {
-            e.stopPropagation();
-            navMenuClose();
-            // If this isn't the current group, switch first then open settings
-            if (!isCurrent) {
-              if (m.group_id === 'preview-group-1') { enterPreviewGroup(); setTimeout(toggleGroupSettings, 200); }
-              else if (m.group_id === 'preview-group-2') { enterPreviewGroup2(); setTimeout(toggleGroupSettings, 200); }
-              else { enterGroup(m.group_id).then ? enterGroup(m.group_id).then(() => toggleGroupSettings()) : setTimeout(toggleGroupSettings, 300); }
-            } else {
-              toggleGroupSettings();
-            }
-          };
-          row.innerHTML = av + '<span style="flex:1;">' + gName + '</span>' + (isCurrent ? ck : '');
-          row.appendChild(cogBtn);
-          row.onclick = function(e) {
-            if (e.target.closest('button') && e.target.closest('button') !== row) return;
-            navMenuClose();
-            if (m.group_id === 'preview-group-1') enterPreviewGroup();
-            else if (m.group_id === 'preview-group-2') enterPreviewGroup2();
-            else enterGroup(m.group_id);
-          };
-          gmEl.appendChild(row);
-        });
-        gmEl.style.borderBottom = '1px solid var(--border)';
-      }
-    }
-
-    menu.style.display = 'block';
-    _nmOpen = true;
-    setTimeout(function() {
-      document.addEventListener('click', navMenuClose, { once: true });
-    }, 0);
-  }
-
-  function navMenuClose() {
-    _nmOpen = false;
-    const menu = document.getElementById('nav-menu');
-    if (menu) menu.style.display = 'none';
-  }
-
-  function navMenuAction(type) {
-    navMenuClose();
-    if (type === 'copy-link')     { copyInviteCode(); return; }
-    if (type === 'profile')       { navMenuOpenProfile(); return; }
-    // create / join — go home then show form
-    goHome({ preventDefault: () => {} });
-    setTimeout(function() {
-      const cf = document.getElementById('home-create-form');
-      const jf = document.getElementById('home-join-form');
-      if (type === 'create') {
-        if (cf) { cf.style.display = ''; if (jf) jf.style.display = 'none'; }
-        const inp = document.getElementById('home-group-name'); if (inp) inp.focus();
-      } else {
-        if (jf) { jf.style.display = ''; if (cf) cf.style.display = 'none'; }
-        const inp = document.getElementById('home-group-code'); if (inp) inp.focus();
-      }
-    }, 80);
-  }
-
-  function navMenuOpenProfile() {
-    const existing = document.getElementById('profile-flyout');
-    if (existing) { existing.remove(); document.getElementById('profile-flyout-overlay')?.remove(); return; }
-    const name = currentUser?.user_metadata?.display_name || currentUser?.email?.split('@')[0] || 'you';
-    const initials = name.slice(0,2).toUpperCase();
-
-    const overlay = document.createElement('div');
-    overlay.id = 'profile-flyout-overlay';
-    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(28,43,32,.2);z-index:9100;backdrop-filter:blur(2px);';
-
-    const panel = document.createElement('div');
-    panel.id = 'profile-flyout';
-    panel.style.cssText = 'position:fixed;top:0;right:0;bottom:0;width:min(400px,90vw);background:var(--surface);border-left:1px solid var(--border);z-index:9101;box-shadow:-8px 0 32px rgba(28,43,32,0.14);overflow-y:auto;display:flex;flex-direction:column;';
-
-    function close() { panel.remove(); overlay.remove(); }
-    overlay.onclick = close;
-
-    // Header
-    var hdr = document.createElement('div');
-    hdr.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:1.5rem 1.5rem 1.25rem;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--surface);z-index:1;';
-    var htitle = document.createElement('div');
-    htitle.style.cssText = 'font-family:Playfair Display,serif;font-size:20px;font-weight:700;color:var(--ink);';
-    htitle.textContent = 'your profile';
-    var hclose = document.createElement('button');
-    hclose.style.cssText = 'width:30px;height:30px;border-radius:50%;border:1.5px solid var(--border);background:transparent;cursor:pointer;font-size:18px;line-height:1;color:var(--ink-mid);';
-    hclose.textContent = '×'; hclose.onclick = close;
-    hdr.appendChild(htitle); hdr.appendChild(hclose);
-
-    // Body
-    var body = document.createElement('div');
-    body.style.cssText = 'padding:1.5rem;display:flex;flex-direction:column;gap:1.5rem;';
-
-    // Photo + name row
-    var photoRow = document.createElement('div');
-    photoRow.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:1rem;';
-
-    var photoWrap = document.createElement('div');
-    photoWrap.style.cssText = 'position:relative;width:80px;height:80px;cursor:pointer;';
-    var photoEl = document.createElement('div');
-    photoEl.id = 'pf-photo';
-    photoEl.style.cssText = 'width:80px;height:80px;border-radius:50%;background:var(--green-light);color:var(--green);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;overflow:hidden;';
-    var existingPhoto = profilePhotos['me'];
-    if (existingPhoto) {
-      var pi = document.createElement('img'); pi.src = existingPhoto;
-      pi.style.cssText = 'width:100%;height:100%;object-fit:cover;'; photoEl.appendChild(pi);
-    } else { photoEl.textContent = initials; }
-    var photoOverlay = document.createElement('div');
-    photoOverlay.style.cssText = 'position:absolute;inset:0;border-radius:50%;background:rgba(0,0,0,0.35);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;cursor:pointer;';
-    photoOverlay.innerHTML = '<svg width="18" height="18" viewBox="0 0 20 20" fill="white" style="opacity:.9;"><path d="M10 6a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm0-3a4 4 0 1 1 0 8A4 4 0 0 1 10 3zm0 9c-4.41 0-8 1.79-8 4v1h16v-1c0-2.21-3.59-4-8-4z"/></svg>';
-    photoWrap.onmouseover = function(){ photoOverlay.style.opacity = '1'; };
-    photoWrap.onmouseout = function(){ photoOverlay.style.opacity = '0'; };
-    var photoInput = document.createElement('input');
-    photoInput.type = 'file'; photoInput.accept = 'image/*'; photoInput.style.display = 'none';
-    photoInput.onchange = function() {
-      var file = this.files[0]; if (!file) return;
-      var reader = new FileReader();
-      reader.onload = function(e) {
-        profilePhotos['me'] = e.target.result;
-        photoEl.innerHTML = '';
-        var ni = document.createElement('img'); ni.src = e.target.result;
-        ni.style.cssText = 'width:100%;height:100%;object-fit:cover;'; photoEl.appendChild(ni);
-      };
-      reader.readAsDataURL(file);
-    };
-    photoWrap.onclick = function() { photoInput.click(); };
-    photoWrap.appendChild(photoEl); photoWrap.appendChild(photoOverlay); photoWrap.appendChild(photoInput);
-
-    var nameDisp = document.createElement('div');
-    nameDisp.style.cssText = 'font-family:Playfair Display,serif;font-size:20px;font-weight:700;color:var(--ink);';
-    nameDisp.textContent = name;
-    photoRow.appendChild(photoWrap); photoRow.appendChild(nameDisp);
-
-    // Display name input
-    function _section(labelText) {
-      var sec = document.createElement('div');
-      var lbl = document.createElement('div');
-      lbl.style.cssText = 'font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-ghost);margin-bottom:.6rem;';
-      lbl.textContent = labelText;
-      sec.appendChild(lbl);
-      return sec;
-    }
-    function _input(id, val, placeholder, type) {
-      var row = document.createElement('div'); row.style.cssText = 'display:flex;gap:8px;';
-      var inp = document.createElement('input');
-      inp.id = id; inp.value = val || ''; inp.placeholder = placeholder || ''; inp.type = type || 'text';
-      inp.style.cssText = 'flex:1;padding:9px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;background:var(--bg);color:var(--ink);outline:none;';
-      inp.onfocus = function(){ this.style.borderColor = 'var(--green)'; };
-      inp.onblur = function(){ this.style.borderColor = 'var(--border)'; };
-      return { row, inp };
-    }
-
-    var nameSec = _section('display name');
-    var { row: nameRow, inp: nameInp } = _input('pf-name', name, 'your name');
-    var nameBtn = document.createElement('button'); nameBtn.className = 'auth-btn';
-    nameBtn.style.cssText = 'width:auto;padding:9px 16px;font-size:13px;';
-    nameBtn.textContent = 'save';
-    nameBtn.onclick = async function() {
-      var val = document.getElementById('pf-name')?.value.trim(); if (!val) return;
-      if (currentUser) { try { await sb.auth.updateUser({ data: { display_name: val } }); } catch(e) {} }
-      nameDisp.textContent = val;
-      document.getElementById('nm-name') && (document.getElementById('nm-name').textContent = val);
-    };
-    nameRow.appendChild(nameInp); nameRow.appendChild(nameBtn);
-    nameSec.appendChild(nameRow);
-
-    var pwSec = _section('password');
-    var { row: pwRow, inp: pwInp } = _input('pf-pw', '', 'new password (6+ chars)', 'password');
-    var pwBtn = document.createElement('button'); pwBtn.className = 'btn-ghost';
-    pwBtn.style.cssText = 'font-size:13px;padding:9px 16px;';
-    pwBtn.textContent = 'update';
-    pwBtn.onclick = async function() {
-      var pw = document.getElementById('pf-pw')?.value;
-      if (!pw || pw.length < 6) { alert('6+ characters required'); return; }
-      try { await sb.auth.updateUser({ password: pw }); alert('password updated!'); } catch(e) {}
-      document.getElementById('pf-pw').value = '';
-    };
-    pwRow.appendChild(pwInp); pwRow.appendChild(pwBtn);
-    pwSec.appendChild(pwRow);
-
-    var signOutBtn = document.createElement('button');
-    signOutBtn.className = 'btn-ghost'; signOutBtn.textContent = 'sign out';
-    signOutBtn.style.cssText = 'font-size:13px;width:100%;'; signOutBtn.onclick = signOut;
-
-    var danger = document.createElement('div');
-    danger.style.cssText = 'border-top:1px solid var(--border);padding-top:1rem;';
-    var dLbl = document.createElement('div');
-    dLbl.style.cssText = 'font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--bloom);margin-bottom:.6rem;';
-    dLbl.textContent = 'danger zone';
-    var delBtn = document.createElement('button'); delBtn.className = 'btn-ghost';
-    delBtn.style.cssText = 'color:var(--bloom);border-color:rgba(155,91,114,.25);font-size:13px;';
-    delBtn.textContent = 'delete account'; delBtn.onclick = confirmDeleteAccount;
-    danger.appendChild(dLbl); danger.appendChild(delBtn);
-
-    [photoRow, nameSec, pwSec, signOutBtn, danger].forEach(function(el){ body.appendChild(el); });
-    panel.appendChild(hdr); panel.appendChild(body);
-    document.body.appendChild(overlay); document.body.appendChild(panel);
-  }
-
-  async function navMenuSaveName() {
-    const val = document.getElementById('pm-name')?.value.trim();
-    if (!val) return;
-    if (currentUser) { try { await sb.auth.updateUser({ data: { display_name: val } }); } catch(e) {} }
-    document.getElementById('profile-modal')?.remove();
-    document.getElementById('profile-modal-overlay')?.remove();
-  }
-
-  async function navMenuSavePw() {
-    const pw = document.getElementById('pm-pw')?.value;
-    if (!pw || pw.length < 6) { alert('password must be at least 6 characters'); return; }
-    try { await sb.auth.updateUser({ password: pw }); } catch(e) {}
-    const inp = document.getElementById('pm-pw'); if (inp) inp.value = '';
-    alert('password updated!');
-  }
-
-  async function boot() {
-    if (!sb) return;
-    const { data: { session } } = await sb.auth.getSession();
-    if (session?.user) {
-      await onSignedIn(session.user);
-    }
-    // Only listen for future sign-in / sign-out events after initial check
-    sb.auth.onAuthStateChange(async (event, session) => {
-      if (event === 'SIGNED_IN' && session?.user && !currentUser) {
-        await onSignedIn(session.user);
-      }
-      if (event === 'SIGNED_OUT') {
-        currentUser = null;
-        currentGroup = null;
-        location.reload();
-      }
-    });
-  }
-
-  async function onSignedIn(user) {
-    currentUser = user;
-    let memberships = [];
-    try {
-      const { data: mData } = await sb.from('group_members')
-        .select('group_id').eq('user_id', user.id);
-      if (mData?.length) {
-        const { data: gData } = await sb.from('groups')
-          .select('id, name').in('id', mData.map(m => m.group_id));
-        memberships = mData.map(m => ({
-          group_id: m.group_id,
-          groups: gData?.find(g => g.id === m.group_id) || { id: m.group_id, name: 'group' }
-        }));
-      }
-    } catch(e) { console.error(e); }
-    document.getElementById('auth-screen').classList.add('hidden');
-    document.body.classList.remove('auth-open');
-    if (memberships && memberships.length > 0) {
-      allMemberships = memberships;
-      // Go straight into the first group
-      const first = memberships[0];
-      const initials = name.slice(0,2).toUpperCase();
-      document.getElementById('auth-screen')?.classList.add('hidden');
-      document.body.classList.remove('auth-open');
-      await enterGroup(first.group_id);
-    } else {
-      // No groups yet — show group creation screen
-      document.getElementById('auth-screen')?.classList.add('hidden');
-      document.body.classList.remove('auth-open');
-      document.getElementById('group-screen')?.classList.remove('hidden');
-    }
-  }
-
-  boot();
-
-  function setIssueDateCopy() {
-    const now = new Date();
-    const months = ['january','february','march','april','may','june','july','august','september','october','november','december'];
-    const nextMonth = months[(now.getMonth() + 1) % 12];
-    const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
-    const copy = `for ${nextMonth} · submit by ${months[now.getMonth()]} ${lastDay}`;
-    const sub = document.getElementById('issue-section-sub');
-    if (sub) sub.textContent = copy;
-    const answerSub = document.querySelector('#answer .section-sub');
-    if (answerSub) answerSub.textContent = copy;
-  }
 
 </script>
-
-<!-- Page bottom botanical strip -->
-<div class="page-flowers">
-  <svg width="100%" height="90" viewBox="0 0 1440 90" fill="none" preserveAspectRatio="xMidYMid meet">
-    <g transform="translate(60,45) rotate(-10)" opacity="0.25"><path fill="none" d="M0,0 C-4.4,-2.2 -8.8,-14.3 -2.2,-19.8 C4.4,-22.0 9.9,-14.3 7.7,-6.6 C5.5,-3.3 2.8,-1.1 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(0)"/><path fill="none" d="M0,0 C-4.4,-2.2 -8.8,-14.3 -2.2,-19.8 C4.4,-22.0 9.9,-14.3 7.7,-6.6 C5.5,-3.3 2.8,-1.1 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(72)"/><path fill="none" d="M0,0 C-4.4,-2.2 -8.8,-14.3 -2.2,-19.8 C4.4,-22.0 9.9,-14.3 7.7,-6.6 C5.5,-3.3 2.8,-1.1 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(144)"/><path fill="none" d="M0,0 C-4.4,-2.2 -8.8,-14.3 -2.2,-19.8 C4.4,-22.0 9.9,-14.3 7.7,-6.6 C5.5,-3.3 2.8,-1.1 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(216)"/><path fill="none" d="M0,0 C-4.4,-2.2 -8.8,-14.3 -2.2,-19.8 C4.4,-22.0 9.9,-14.3 7.7,-6.6 C5.5,-3.3 2.8,-1.1 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(288)"/><circle fill="none" cx="0" cy="0" r="1.6500000000000001" stroke="%235A8070" stroke-width="1.0"/></g><g transform="translate(160,52) rotate(15)" opacity="0.25"><path fill="none" d="M0,0 C-1.8,-1.8 -2.7,-9.9 0,-16.2 C2.7,-9.9 1.8,-1.8 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(0)"/><path fill="none" d="M0,0 C-1.8,-1.8 -2.7,-9.9 0,-16.2 C2.7,-9.9 1.8,-1.8 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(45)"/><path fill="none" d="M0,0 C-1.8,-1.8 -2.7,-9.9 0,-16.2 C2.7,-9.9 1.8,-1.8 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(90)"/><path fill="none" d="M0,0 C-1.8,-1.8 -2.7,-9.9 0,-16.2 C2.7,-9.9 1.8,-1.8 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(135)"/><path fill="none" d="M0,0 C-1.8,-1.8 -2.7,-9.9 0,-16.2 C2.7,-9.9 1.8,-1.8 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(180)"/><path fill="none" d="M0,0 C-1.8,-1.8 -2.7,-9.9 0,-16.2 C2.7,-9.9 1.8,-1.8 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(225)"/><path fill="none" d="M0,0 C-1.8,-1.8 -2.7,-9.9 0,-16.2 C2.7,-9.9 1.8,-1.8 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(270)"/><path fill="none" d="M0,0 C-1.8,-1.8 -2.7,-9.9 0,-16.2 C2.7,-9.9 1.8,-1.8 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(315)"/><circle fill="none" cx="0" cy="0" r="1.35" stroke="%235A8070" stroke-width="1.0"/></g><g transform="translate(270,40) rotate(-5)" opacity="0.25"><path fill="none" d="M0,0 C-3.0,-2.4 -4.8,-14.4 0,-20.4 C4.8,-14.4 3.0,-2.4 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(0)"/><path fill="none" d="M0,0 C-3.0,-2.4 -4.8,-14.4 0,-20.4 C4.8,-14.4 3.0,-2.4 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(72)"/><path fill="none" d="M0,0 C-3.0,-2.4 -4.8,-14.4 0,-20.4 C4.8,-14.4 3.0,-2.4 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(144)"/><path fill="none" d="M0,0 C-3.0,-2.4 -4.8,-14.4 0,-20.4 C4.8,-14.4 3.0,-2.4 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(216)"/><path fill="none" d="M0,0 C-3.0,-2.4 -4.8,-14.4 0,-20.4 C4.8,-14.4 3.0,-2.4 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(288)"/><circle fill="none" cx="0" cy="0" r="2.4" stroke="%235A8070" stroke-width="1.0"/></g><g transform="translate(390,48) rotate(20)" opacity="0.25"><path fill="none" d="M0,0 C-2.0,-2.0 -3.0,-11.0 0,-18.0 C3.0,-11.0 2.0,-2.0 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(0)"/><path fill="none" d="M0,0 C-2.0,-2.0 -3.0,-11.0 0,-18.0 C3.0,-11.0 2.0,-2.0 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(45)"/><path fill="none" d="M0,0 C-2.0,-2.0 -3.0,-11.0 0,-18.0 C3.0,-11.0 2.0,-2.0 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(90)"/><path fill="none" d="M0,0 C-2.0,-2.0 -3.0,-11.0 0,-18.0 C3.0,-11.0 2.0,-2.0 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(135)"/><path fill="none" d="M0,0 C-2.0,-2.0 -3.0,-11.0 0,-18.0 C3.0,-11.0 2.0,-2.0 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(180)"/><path fill="none" d="M0,0 C-2.0,-2.0 -3.0,-11.0 0,-18.0 C3.0,-11.0 2.0,-2.0 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(225)"/><path fill="none" d="M0,0 C-2.0,-2.0 -3.0,-11.0 0,-18.0 C3.0,-11.0 2.0,-2.0 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(270)"/><path fill="none" d="M0,0 C-2.0,-2.0 -3.0,-11.0 0,-18.0 C3.0,-11.0 2.0,-2.0 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(315)"/><circle fill="none" cx="0" cy="0" r="1.5" stroke="%235A8070" stroke-width="1.0"/></g><g transform="translate(490,42) rotate(-15)" opacity="0.25"><path fill="none" d="M0,0 C-4.2,-2.1 -8.3,-13.5 -2.1,-18.7 C4.2,-20.8 9.4,-13.5 7.3,-6.2 C5.2,-3.1 2.6,-1.0 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(0)"/><path fill="none" d="M0,0 C-4.2,-2.1 -8.3,-13.5 -2.1,-18.7 C4.2,-20.8 9.4,-13.5 7.3,-6.2 C5.2,-3.1 2.6,-1.0 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(72)"/><path fill="none" d="M0,0 C-4.2,-2.1 -8.3,-13.5 -2.1,-18.7 C4.2,-20.8 9.4,-13.5 7.3,-6.2 C5.2,-3.1 2.6,-1.0 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(144)"/><path fill="none" d="M0,0 C-4.2,-2.1 -8.3,-13.5 -2.1,-18.7 C4.2,-20.8 9.4,-13.5 7.3,-6.2 C5.2,-3.1 2.6,-1.0 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(216)"/><path fill="none" d="M0,0 C-4.2,-2.1 -8.3,-13.5 -2.1,-18.7 C4.2,-20.8 9.4,-13.5 7.3,-6.2 C5.2,-3.1 2.6,-1.0 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(288)"/><circle fill="none" cx="0" cy="0" r="1.56" stroke="%235A8070" stroke-width="1.0"/></g><g transform="translate(590,50) rotate(8)" opacity="0.25"><path fill="none" d="M0,0 C-2.4,-1.9 -3.8,-11.5 0,-16.3 C3.8,-11.5 2.4,-1.9 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(0)"/><path fill="none" d="M0,0 C-2.4,-1.9 -3.8,-11.5 0,-16.3 C3.8,-11.5 2.4,-1.9 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(72)"/><path fill="none" d="M0,0 C-2.4,-1.9 -3.8,-11.5 0,-16.3 C3.8,-11.5 2.4,-1.9 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(144)"/><path fill="none" d="M0,0 C-2.4,-1.9 -3.8,-11.5 0,-16.3 C3.8,-11.5 2.4,-1.9 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(216)"/><path fill="none" d="M0,0 C-2.4,-1.9 -3.8,-11.5 0,-16.3 C3.8,-11.5 2.4,-1.9 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(288)"/><circle fill="none" cx="0" cy="0" r="1.92" stroke="%235A8070" stroke-width="1.0"/></g><g transform="translate(700,44) rotate(-12)" opacity="0.25"><path fill="none" d="M0,0 C-2.2,-2.2 -3.3,-12.1 0,-19.8 C3.3,-12.1 2.2,-2.2 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(0)"/><path fill="none" d="M0,0 C-2.2,-2.2 -3.3,-12.1 0,-19.8 C3.3,-12.1 2.2,-2.2 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(45)"/><path fill="none" d="M0,0 C-2.2,-2.2 -3.3,-12.1 0,-19.8 C3.3,-12.1 2.2,-2.2 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(90)"/><path fill="none" d="M0,0 C-2.2,-2.2 -3.3,-12.1 0,-19.8 C3.3,-12.1 2.2,-2.2 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(135)"/><path fill="none" d="M0,0 C-2.2,-2.2 -3.3,-12.1 0,-19.8 C3.3,-12.1 2.2,-2.2 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(180)"/><path fill="none" d="M0,0 C-2.2,-2.2 -3.3,-12.1 0,-19.8 C3.3,-12.1 2.2,-2.2 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(225)"/><path fill="none" d="M0,0 C-2.2,-2.2 -3.3,-12.1 0,-19.8 C3.3,-12.1 2.2,-2.2 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(270)"/><path fill="none" d="M0,0 C-2.2,-2.2 -3.3,-12.1 0,-19.8 C3.3,-12.1 2.2,-2.2 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(315)"/><circle fill="none" cx="0" cy="0" r="1.6500000000000001" stroke="%235A8070" stroke-width="1.0"/></g><g transform="translate(810,52) rotate(18)" opacity="0.25"><path fill="none" d="M0,0 C-3.6,-1.8 -7.2,-11.7 -1.8,-16.2 C3.6,-18.0 8.1,-11.7 6.3,-5.4 C4.5,-2.7 2.2,-0.9 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(0)"/><path fill="none" d="M0,0 C-3.6,-1.8 -7.2,-11.7 -1.8,-16.2 C3.6,-18.0 8.1,-11.7 6.3,-5.4 C4.5,-2.7 2.2,-0.9 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(72)"/><path fill="none" d="M0,0 C-3.6,-1.8 -7.2,-11.7 -1.8,-16.2 C3.6,-18.0 8.1,-11.7 6.3,-5.4 C4.5,-2.7 2.2,-0.9 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(144)"/><path fill="none" d="M0,0 C-3.6,-1.8 -7.2,-11.7 -1.8,-16.2 C3.6,-18.0 8.1,-11.7 6.3,-5.4 C4.5,-2.7 2.2,-0.9 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(216)"/><path fill="none" d="M0,0 C-3.6,-1.8 -7.2,-11.7 -1.8,-16.2 C3.6,-18.0 8.1,-11.7 6.3,-5.4 C4.5,-2.7 2.2,-0.9 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(288)"/><circle fill="none" cx="0" cy="0" r="1.35" stroke="%235A8070" stroke-width="1.0"/></g><g transform="translate(920,40) rotate(-8)" opacity="0.25"><path fill="none" d="M0,0 C-2.9,-2.3 -4.6,-13.9 0,-19.7 C4.6,-13.9 2.9,-2.3 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(0)"/><path fill="none" d="M0,0 C-2.9,-2.3 -4.6,-13.9 0,-19.7 C4.6,-13.9 2.9,-2.3 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(72)"/><path fill="none" d="M0,0 C-2.9,-2.3 -4.6,-13.9 0,-19.7 C4.6,-13.9 2.9,-2.3 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(144)"/><path fill="none" d="M0,0 C-2.9,-2.3 -4.6,-13.9 0,-19.7 C4.6,-13.9 2.9,-2.3 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(216)"/><path fill="none" d="M0,0 C-2.9,-2.3 -4.6,-13.9 0,-19.7 C4.6,-13.9 2.9,-2.3 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(288)"/><circle fill="none" cx="0" cy="0" r="2.32" stroke="%235A8070" stroke-width="1.0"/></g><g transform="translate(1030,48) rotate(14)" opacity="0.25"><path fill="none" d="M0,0 C-2.0,-2.0 -3.0,-11.0 0,-18.0 C3.0,-11.0 2.0,-2.0 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(0)"/><path fill="none" d="M0,0 C-2.0,-2.0 -3.0,-11.0 0,-18.0 C3.0,-11.0 2.0,-2.0 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(45)"/><path fill="none" d="M0,0 C-2.0,-2.0 -3.0,-11.0 0,-18.0 C3.0,-11.0 2.0,-2.0 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(90)"/><path fill="none" d="M0,0 C-2.0,-2.0 -3.0,-11.0 0,-18.0 C3.0,-11.0 2.0,-2.0 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(135)"/><path fill="none" d="M0,0 C-2.0,-2.0 -3.0,-11.0 0,-18.0 C3.0,-11.0 2.0,-2.0 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(180)"/><path fill="none" d="M0,0 C-2.0,-2.0 -3.0,-11.0 0,-18.0 C3.0,-11.0 2.0,-2.0 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(225)"/><path fill="none" d="M0,0 C-2.0,-2.0 -3.0,-11.0 0,-18.0 C3.0,-11.0 2.0,-2.0 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(270)"/><path fill="none" d="M0,0 C-2.0,-2.0 -3.0,-11.0 0,-18.0 C3.0,-11.0 2.0,-2.0 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(315)"/><circle fill="none" cx="0" cy="0" r="1.5" stroke="%235A8070" stroke-width="1.0"/></g><g transform="translate(1140,42) rotate(-6)" opacity="0.25"><path fill="none" d="M0,0 C-4.2,-2.1 -8.3,-13.5 -2.1,-18.7 C4.2,-20.8 9.4,-13.5 7.3,-6.2 C5.2,-3.1 2.6,-1.0 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(0)"/><path fill="none" d="M0,0 C-4.2,-2.1 -8.3,-13.5 -2.1,-18.7 C4.2,-20.8 9.4,-13.5 7.3,-6.2 C5.2,-3.1 2.6,-1.0 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(72)"/><path fill="none" d="M0,0 C-4.2,-2.1 -8.3,-13.5 -2.1,-18.7 C4.2,-20.8 9.4,-13.5 7.3,-6.2 C5.2,-3.1 2.6,-1.0 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(144)"/><path fill="none" d="M0,0 C-4.2,-2.1 -8.3,-13.5 -2.1,-18.7 C4.2,-20.8 9.4,-13.5 7.3,-6.2 C5.2,-3.1 2.6,-1.0 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(216)"/><path fill="none" d="M0,0 C-4.2,-2.1 -8.3,-13.5 -2.1,-18.7 C4.2,-20.8 9.4,-13.5 7.3,-6.2 C5.2,-3.1 2.6,-1.0 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(288)"/><circle fill="none" cx="0" cy="0" r="1.56" stroke="%235A8070" stroke-width="1.0"/></g><g transform="translate(1260,50) rotate(22)" opacity="0.25"><path fill="none" d="M0,0 C-2.2,-1.8 -3.6,-10.8 0,-15.3 C3.6,-10.8 2.2,-1.8 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(0)"/><path fill="none" d="M0,0 C-2.2,-1.8 -3.6,-10.8 0,-15.3 C3.6,-10.8 2.2,-1.8 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(72)"/><path fill="none" d="M0,0 C-2.2,-1.8 -3.6,-10.8 0,-15.3 C3.6,-10.8 2.2,-1.8 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(144)"/><path fill="none" d="M0,0 C-2.2,-1.8 -3.6,-10.8 0,-15.3 C3.6,-10.8 2.2,-1.8 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(216)"/><path fill="none" d="M0,0 C-2.2,-1.8 -3.6,-10.8 0,-15.3 C3.6,-10.8 2.2,-1.8 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(288)"/><circle fill="none" cx="0" cy="0" r="1.8" stroke="%235A8070" stroke-width="1.0"/></g><g transform="translate(1360,44) rotate(-18)" opacity="0.25"><path fill="none" d="M0,0 C-2.2,-2.2 -3.3,-12.1 0,-19.8 C3.3,-12.1 2.2,-2.2 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(0)"/><path fill="none" d="M0,0 C-2.2,-2.2 -3.3,-12.1 0,-19.8 C3.3,-12.1 2.2,-2.2 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(45)"/><path fill="none" d="M0,0 C-2.2,-2.2 -3.3,-12.1 0,-19.8 C3.3,-12.1 2.2,-2.2 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(90)"/><path fill="none" d="M0,0 C-2.2,-2.2 -3.3,-12.1 0,-19.8 C3.3,-12.1 2.2,-2.2 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(135)"/><path fill="none" d="M0,0 C-2.2,-2.2 -3.3,-12.1 0,-19.8 C3.3,-12.1 2.2,-2.2 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(180)"/><path fill="none" d="M0,0 C-2.2,-2.2 -3.3,-12.1 0,-19.8 C3.3,-12.1 2.2,-2.2 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(225)"/><path fill="none" d="M0,0 C-2.2,-2.2 -3.3,-12.1 0,-19.8 C3.3,-12.1 2.2,-2.2 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(270)"/><path fill="none" d="M0,0 C-2.2,-2.2 -3.3,-12.1 0,-19.8 C3.3,-12.1 2.2,-2.2 0,0Z" stroke="%235A8070" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(315)"/><circle fill="none" cx="0" cy="0" r="1.6500000000000001" stroke="%235A8070" stroke-width="1.0"/></g>
-  </svg>
-</div>
-</div>
 </body>
 </html>
