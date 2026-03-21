@@ -55,8 +55,10 @@
     }
 
     /* HEADER */
+
     header {
       background: var(--surface);
+      position: relative;
       border-bottom: 1px solid var(--border);
       padding: 0 2rem;
       position: sticky;
@@ -77,7 +79,7 @@
       gap: 4px;
     }
 
-    .logo { display: flex; align-items: center; gap: 1px; text-decoration: none; }
+    .logo { display: flex; align-items: center; gap: 1px; text-decoration: none; user-select:none; }
     .logo-text {
       font-family: 'Playfair Display', serif;
       
@@ -98,7 +100,7 @@
     }
 
     .header-right { display: flex; align-items: center; gap: 12px; }
-    .avatar-row   { display: flex; }
+  
 
     .avatar {
       width: 30px; height: 30px; border-radius: 50%;
@@ -262,7 +264,7 @@
     }
     .garden-paper .sheet-margin {
       position: absolute; left: 72px; top: 0; bottom: 0;
-      width: 1.5px; background: rgba(210,80,70,0.28); pointer-events: none;
+      width: 1.5px; background: rgba(210,80,70,0.28); pointer-events: none; z-index: 0;
     }
     .garden-paper .sheet-holes {
       position: absolute; left: 0; top: 0; bottom: 0; width: 36px;
@@ -273,16 +275,17 @@
 
     .garden-paper-content {
       position: relative;
-      padding: 2rem 2rem 2.5rem 5.5rem;
+      z-index: 1;
+      padding: 2rem clamp(1rem, 3vw, 2rem) 2.5rem clamp(1.25rem, 7vw, 5.5rem);
     }
 
     .garden-paper-title {
       font-family: 'Playfair Display', serif;
-      font-size: 22px; font-weight: 700; 
+      font-size: clamp(16px, 2.5vw, 22px); font-weight: 700; 
       color: #1C2B20; margin-bottom: 4px;
     }
     .garden-paper-sub {
-      font-size: 13px; color: #8aad88; margin-bottom: 1.5rem;
+      font-size: clamp(12px, 1.5vw, 14px); color: #8aad88; margin-bottom: 1.5rem;
     }
 
     /* Add row sits on the paper */
@@ -388,7 +391,7 @@
     }
     .gs-text {
       font-family: 'Montserrat', sans-serif;
-      font-size: 16px; line-height: 1.55; color: #1C2B20;
+      font-size: clamp(12px, 1.6vw, 16px); line-height: 1.55; color: #1C2B20;
       flex: 1;
     }
 
@@ -399,16 +402,26 @@
     }
 
     .gs-btn {
-      width: 32px; height: 32px; border-radius: 50%;
+      width: 28px; height: 28px; border-radius: 50%;
       border: none; background: transparent;
       cursor: pointer; display: flex; align-items: center; justify-content: center;
       color: rgba(30,42,26,0.3); transition: all 0.15s; flex-shrink: 0;
-      opacity: 0;
     }
-    .garden-sticky:hover .gs-btn { opacity: 1; }
-    .gs-btn.add:hover { color: #2F5D50; background: rgba(58,125,68,0.15); }
+    /* Add button — always visible, prominent */
+    .gs-btn.add {
+      opacity: 1;
+      width: 28px; height: 28px;
+      background: rgba(47,93,80,0.12);
+      color: var(--green);
+      border: 1.5px solid rgba(47,93,80,0.25);
+    }
+    .gs-btn.add:hover { background: var(--green); color: #fff; border-color: var(--green); transform: scale(1.1); }
+    .gs-btn.add:active { transform: scale(0.95); }
+    .gs-btn.added { opacity: 1; color: #2F5D50; background: rgba(58,125,68,0.18); border: 1.5px solid rgba(47,93,80,0.3); cursor: default; }
+    /* Del button — hidden until hover */
+    .gs-btn.del { opacity: 0; }
+    .garden-sticky:hover .gs-btn.del { opacity: 1; }
     .gs-btn.del:hover { color: #B85C38; background: rgba(184,92,56,0.12); }
-    .gs-btn.added { opacity: 1; color: #2F5D50; background: rgba(58,125,68,0.15); cursor: default; }
 
     .gs-in-badge {
       font-size: 10px; font-weight: 500; color: #2F5D50;
@@ -541,14 +554,7 @@
 
 
     /* Link CTA */
-    .btn-link {
-      background: none; border: none; padding: 0; cursor: pointer;
-      color: var(--green); font-weight: 600; font-family: 'Montserrat', sans-serif;
-      font-size: inherit; text-decoration: underline; text-underline-offset: 3px;
-      text-decoration-color: rgba(47,93,80,0.3);
-      transition: text-decoration-color 0.15s, color 0.15s;
-      outline: none; display: inline;
-    }
+  
     .btn-link:hover  { color: #1a3d36; text-decoration-color: rgba(47,93,80,0.8); }
     .btn-link:active { color: #122e28; }
     .btn-link:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; border-radius: 2px; }
@@ -563,27 +569,6 @@
 
 
     /* ── MOBILE BOTTOM NAV ── */
-    .mobile-bottom-nav {
-      display: none;
-      position: fixed;
-      bottom: 0; left: 0; right: 0;
-      background: var(--surface);
-      border-top: 1px solid var(--border);
-      z-index: 90;
-      padding: 0;
-      height: 56px;
-    }
-    .mobile-nav-btn {
-      flex: 1; display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      gap: 3px; border: none; background: none;
-      cursor: pointer; font-family: 'Montserrat', sans-serif;
-      font-size: 10px; font-weight: 500; color: var(--ink-ghost);
-      letter-spacing: 0.03em; transition: color 0.15s;
-      padding: 6px 0;
-    }
-    .mobile-nav-btn.active { color: var(--green); }
-    .mobile-nav-btn svg { transition: stroke 0.15s; }
     /* ── ANSWERS — paper + sticky notes ── */
 
     #answer { max-width: 700px; margin-left: auto; margin-right: auto; }
@@ -633,6 +618,7 @@
 
     /* Red margin line */
     .sheet-margin {
+      z-index: 0;
       position: absolute;
       left: 52px; top: 0; bottom: 0;
       width: 1px;
@@ -677,11 +663,109 @@
       letter-spacing: 0;
     }
 
+    .nm-item {
+      display: block; width: 100%; text-align: left;
+      padding: 11px 16px; background: none; border: none;
+      font-family: 'Montserrat', sans-serif; font-size: 13px;
+      color: var(--ink); cursor: pointer; transition: background 0.1s;
+    }
+    .nm-item:hover { background: var(--bg); }
+    .nm-group-row {
+      display: flex; align-items: center; gap: 10px;
+      width: 100%; padding: 10px 16px;
+      background: none; border: none; border-bottom: 1px solid var(--border);
+      font-family: 'Montserrat', sans-serif; font-size: 13px;
+      color: var(--ink); cursor: pointer; text-align: left;
+      transition: background 0.1s;
+    }
+    .nm-group-row:hover { background: var(--bg); }
+
+    .mobile-nav-item {
+      display: block; width: 100%; text-align: left;
+      padding: 12px 4px; background: none; border: none;
+      border-bottom: 1px solid var(--border);
+      font-family: 'Montserrat', sans-serif; font-size: 15px;
+      color: var(--ink); cursor: pointer; transition: color 0.1s;
+    }
+    .mobile-nav-item:last-child { border-bottom: none; }
+    .mobile-nav-item:hover { color: var(--green); }
+    .mobile-nav-item.active { color: var(--green); font-weight: 600; }
+
     @media (max-width: 600px) {
+      /* Header */
+      header { padding: 0 1rem; height: 54px; grid-template-columns: 1fr auto auto; gap: 0.5rem; }
+      .logo-text { font-size: 20px; }
+      .header-tabs { display: none; }
+      #mobile-nav-toggle { display: flex !important; }
+      main { padding: 1.25rem 0.875rem 5rem; }
+      #questions, #letter { max-width: 100%; }
+
+      /* Section titles */
+      .section-title { font-size: 20px; }
+      .section-sub { font-size: 13px; margin-bottom: 1.25rem; }
+
+      /* Countdown */
+      .countdown-strip { padding: 0.875rem 1rem; gap: 0.75rem; flex-wrap: nowrap; }
+      .countdown-days { font-size: 26px; }
+      .countdown-main { font-size: 13px; }
+      .countdown-detail { font-size: 12px; }
+
+      /* Cards */
+      .card { padding: 1rem 1.125rem; border-radius: 12px; }
+
+      /* Garden paper */
+      .garden-paper { border-radius: 8px; }
+      .garden-paper-content { padding: 1.25rem 1rem 1.5rem 1rem; }
+      .garden-paper-title { font-size: 18px; }
+      .sheet-margin { display: none; }
+      .garden-paper .sheet-ruled { background-position: 0 56px; }
+
+      /* Garden stickies */
+      .garden-stickies { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .garden-sticky { aspect-ratio: unset; min-height: 110px; }
+      .gs-text { font-size: 12px; line-height: 1.35; }
+      .gs-tag { font-size: 10px; }
+
+      /* Garden add row */
+      .garden-add-row { flex-wrap: nowrap; gap: 6px; }
+      .btn-ghost { padding: 10px 14px; font-size: 13px; }
+      .gen-btn { font-size: 12px; padding: 6px 12px; }
+
+      /* Filter pills */
+      .garden-filters { gap: 5px; }
+      .filter-btn { font-size: 11px; padding: 4px 10px; border-radius: 999px; }
+
+      /* Issue list */
+      .issue-slot { padding: 10px 12px; border-radius: 10px; }
+
+      /* Answer section */
+      .answer-section-header { padding: 0; }
+      .paper-sheet { border-radius: 8px; margin-bottom: 2rem; }
+      .sheet-content { padding: 1.25rem 1rem 1.5rem; }
+      .sheet-q-text { font-size: 17px; }
+      .sheet-q-label { font-size: 10px; }
+      .sheet-margin { display: none; }
+      .paper-sheet::before { display: none; }
       .answers-sticky-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
       .sticky { aspect-ratio: 1/1; min-height: unset; padding-bottom: 36px; }
+      .sticky-textarea { min-height: 80px; font-size: 14px; }
+
+      /* Zine */
       .zine-sticky { aspect-ratio: unset; min-height: 160px; }
-      .garden-sticky { aspect-ratio: unset; min-height: 110px; }
+      .journal-book { grid-template-columns: 1fr; height: auto; min-height: 500px; }
+      .journal-book::after { display: none; }
+      .journal-page-right { display: none; }
+      .journal-page-left { height: auto; min-height: 0; }
+      .journal-flipper { display: none !important; }
+
+      /* Auth + group cards */
+      .auth-card { padding: 1.5rem 1rem; border-radius: 14px; }
+      .auth-logo-text { font-size: 22px; }
+      .group-card { padding: 2rem 1.25rem; border-radius: 14px; }
+
+      /* Home */
+      .home-header { padding: 1rem; }
+      .home-body { padding: 2rem 1rem 5rem; }
     }
 
     /* ── STICKY NOTES ── */
@@ -931,18 +1015,9 @@
       font-size: 14px; color: var(--ink-faint); margin-bottom: 1.25rem;
       letter-spacing: 0.08em; text-transform: uppercase;
     }
-    .friend-chips { display: flex; justify-content: center; flex-wrap: wrap; gap: 6px; }
-    .friend-chip {
-      display: inline-flex; align-items: center; gap: 6px;
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 999px; padding: 4px 12px 4px 5px;
-      font-size: 13px; color: var(--ink-mid);
-    }
-    .chip-av {
-      width: 22px; height: 22px; border-radius: 50%;
-      font-size: 9px; font-weight: 500;
-      display: inline-flex; align-items: center; justify-content: center;
-    }
+  
+  
+  
     .letter-entry { margin-bottom: 2.5rem; }
     .letter-q-heading {
       font-size: 11px; font-weight: 500; letter-spacing: 0.1em;
@@ -967,7 +1042,7 @@
       .garden-paper-content { padding: 0.875rem 0.875rem 1.25rem; }
       .sheet-content { padding: 1rem 0.875rem 1.25rem; }
       .home-body { padding: 1.25rem 0.875rem 5rem; }
-      .home-greeting { font-size: 22px; }
+      .home-greeting { font-size: clamp(22px, 4vw, 36px); }
       .issue-slot { padding: 8px 10px !important; }
       .journal-content { padding: 1.25rem 0.875rem; }
       .auth-card { padding: 1.25rem 1rem 1.5rem; }
@@ -976,108 +1051,21 @@
       .garden-paper { border-radius: 6px; }
     }
     @media (max-width: 380px) {
-      main { padding: 0.75rem 0.625rem 5rem; }
+main { padding: 0.75rem 0.625rem 5rem; }
       .tab-btn { padding: 6px 10px; font-size: 12px; }
       .garden-paper-content { padding: 0.75rem 0.625rem 1rem; }
       .sheet-content { padding: 0.875rem 0.75rem 1rem; }
-    }
-    @media (max-width: 380px) {
-      main { padding: 0.875rem 0.625rem 5rem; }
+main { padding: 0.875rem 0.625rem 5rem; }
       .tab-btn { padding: 6px 10px; font-size: 12px; }
-    }
-
-    @media (max-width: 600px) {
-      /* Header — on mobile tabs move to bottom bar */
-      header { padding: 0 1rem; height: 54px; grid-template-columns: 1fr auto; }
-      .logo-text { font-size: 20px; }
-      .header-tabs { display: none; }
-      .mobile-bottom-nav { display: flex; }
-      main { padding: 1.25rem 0.875rem 5.5rem; }
-
-      /* Main */
-      main { padding: 1.25rem 0.875rem 5rem; }
-      #questions, #letter { max-width: 100%; }
-
-      /* Section titles */
-      .section-title { font-size: 20px; }
-      .section-sub { font-size: 13px; margin-bottom: 1.25rem; }
-
-      /* Countdown */
-      .countdown-strip { padding: 0.875rem 1rem; gap: 0.75rem; flex-wrap: nowrap; }
-      .countdown-days { font-size: 26px; }
-      .countdown-main { font-size: 13px; }
-      .countdown-detail { font-size: 12px; }
-
-      /* Cards */
-      .card { padding: 1rem 1.125rem; border-radius: 12px; }
-
-      /* Garden paper */
-      .garden-paper { border-radius: 8px; }
-      .garden-paper-content { padding: 1.25rem 1rem 1.5rem; }
-      .garden-paper-title { font-size: 18px; }
-      .sheet-margin { display: none; }
-      .garden-paper .sheet-ruled { background-position: 0 56px; }
-
-      /* Garden add row */
-      .garden-add-row { flex-wrap: nowrap; gap: 6px; }
-      .garden-add-row input { font-size: 15px; padding: 10px 12px; }
-      .btn-ghost { padding: 10px 14px; font-size: 13px; }
-
-      /* AI generate button */
-      .gen-btn { font-size: 12px; padding: 6px 12px; }
-
-      /* Filter pills */
-      .garden-filters { gap: 5px; }
-      .filter-btn { font-size: 11px; padding: 4px 10px;   border-radius: 999px;
-    }
-
-      /* Garden stickies */
-      .garden-stickies { grid-template-columns: 1fr; gap: 10px; }
-      .garden-sticky { min-height: 90px; padding: 10px 10px 22px; }
-      .gs-text { font-size: 12px; line-height: 1.35; }
-      .gs-tag { font-size: 10px; }
-
-      /* Issue list */
-      .issue-slot { padding: 10px 12px; border-radius: 10px; }
-
-      /* Answer section */
-      .answer-section-header { padding: 0; }
-      .progress-wrap { max-width: 100%; }
-      .paper-sheet { border-radius: 8px; margin-bottom: 2rem; }
-      .sheet-content { padding: 1.25rem 1rem 1.5rem; }
-      .sheet-q-text { font-size: 17px; }
-      .sheet-q-label { font-size: 10px; }
-      .sheet-margin { display: none; }
-      .paper-sheet::before { display: none; }
-      .answers-sticky-grid { grid-template-columns: 1fr; gap: 12px; }
-      .sticky { min-height: 130px; }
-      .sticky-textarea { min-height: 80px; font-size: 14px; }
-
-      /* Auth + group cards */
-      .auth-card { padding: 1.5rem 1rem; border-radius: 14px; }
-      .auth-logo-text { font-size: 22px; }
-      .group-card { padding: 2rem 1.25rem; border-radius: 14px; }
-      .group-title { font-size: 20px; }
-
-      /* Zine */
-      .zine-wrap { border-radius: 0; }
-      .zine-spread-inner { grid-template-columns: 1fr; }
-      .zine-spread-left { border-right: none; border-bottom: 3px solid var(--border); padding: 1.5rem 1.25rem 1.25rem; }
-      .zine-spread-right { padding: 1.25rem; }
-      .zine-q-text { font-size: 20px; }
-      .zine-cover-title { font-size: 48px; }
-      .zine-stickies-area { grid-template-columns: 1fr; gap: 10px; }
-      .zine-sticky { min-height: auto; }
-      .zine-shelf-wrap { padding: 0.875rem 1rem; }
-      .zine-nav { padding: 0.875rem 1rem; }
-      .zine-current-label { padding: 0.5rem 1rem 0; font-size: 12px; }
-    }
-
-    @media (max-width: 380px) {
-      .garden-stickies { grid-template-columns: 1fr; }
+.garden-stickies { grid-template-columns: 1fr; }
       .tab-btn { font-size: 11px; padding: 6px 10px; }
       .auth-card { padding: 1.25rem 0.875rem; }
     }
+    
+
+    
+
+    
 
 
     /* ── SHELF ── */
@@ -1137,7 +1125,7 @@
     .zine-shelf-item:hover .zine-mini-cover { box-shadow: 3px 8px 20px rgba(30,42,26,0.3), inset -1px 0 0 rgba(255,255,255,0.6); }
     .zine-shelf-item.active-issue .zine-mini-cover { border-left-color: var(--green); box-shadow: 0 0 0 2px var(--green), 2px 4px 12px rgba(30,42,26,0.22); }
     .zine-mini-title { font-family: 'Playfair Display', serif; font-size: 19px; font-weight: 700; color: var(--ink); letter-spacing: -0.3px; line-height: 1.1; margin-bottom: 2px; }
-    .zine-mini-vol   { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 6px; }
+    .zine-mini-vol   { font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 6px; }
     .zine-mini-dots  { display: flex; gap: 3px; }
     .zine-mini-dot   { width: 7px; height: 7px; border-radius: 50%; }
     .zine-shelf-month { display: none; }
@@ -1283,13 +1271,7 @@
       color: rgba(28,43,32,0.5);
     }
 
-    @media (max-width: 600px) {
-      .journal-book { grid-template-columns: 1fr; height: auto; min-height: 500px; }
-      .journal-book::after { display: none; }
-      .journal-page-right { display: none; }
-      .journal-page-left { height: auto; min-height: 500px; }
-      .journal-flipper { display: none !important; }
-    }
+    
 
     /* ── PAGE CONTENT STYLES ── */
 
@@ -1379,7 +1361,7 @@
 
     .zine-q-text {
       font-family: 'Playfair Display', serif;
-      font-size: 18px; font-weight: 700; line-height: 1.45; color: var(--ink); flex: 1;
+      font-size: 18px; font-weight: 700; line-height: 1.45; color: var(--ink);
     }
 
     .zine-page-num {
@@ -1388,16 +1370,17 @@
       font-size: 13px; color: var(--ink-ghost);
     }
 
-    /* Stickies on the right page */
+    /* Stickies — responsive: auto-fill with min 120px, max 2 per row on narrow, up to 3 on wide */
     .zine-stickies-area {
-      display: grid; grid-template-columns: 1fr 1fr;
-      gap: 14px; align-items: start;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 140px), 1fr));
+      gap: 8px; align-items: start;
     }
 
     /* Zine stickies — use same improved style */
     .zine-sticky {
       border-radius: 2px;
-      aspect-ratio: 1 / 1;
+      min-height: 90px;
       box-shadow: 0 2px 4px rgba(28,43,32,0.10), 0 6px 16px rgba(28,43,32,0.08), 2px 8px 20px rgba(28,43,32,0.06);
       position: relative;
       opacity: 0;
@@ -1493,19 +1476,19 @@
 
 
     @media (max-width: 650px) {
-      .book-open { grid-template-columns: 1fr; }
+    
       .book-open::after { display: none; }
       .zine-cover { border-radius: 8px; }
       .zine-blank-right { display: none; }
-      .zine-spread-left { border-radius: 4px 4px 0 0; min-height: auto; }
+      .zine-spread-left { border-radius: 4px; min-height: auto; }
       .zine-spread-right { border-radius: 0 0 4px 4px; min-height: auto; }
       .zine-back-left { border-radius: 4px 4px 0 0; min-height: auto; }
       .zine-back-right { border-radius: 0 0 4px 4px; min-height: auto; }
       .zine-stickies-area { grid-template-columns: 1fr; }
-      .book-flipper { display: none; }
+    
       .zine-q-text { font-size: 20px; }
       .zine-cover-title { font-size: 48px; }
-      .book-scene { padding: 1rem 0.5rem 0; }
+    
       .zine-shelf-wrap { padding: 0 1rem; }
     }
 
@@ -1646,14 +1629,6 @@
   .group-back:hover { color: var(--ink-faint); }
 
   /* ── USER MENU ── */
-  .user-menu-btn {
-    width: 32px; height: 32px; border-radius: 50%;
-    border: 1.5px solid var(--border-mid); cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 11px; font-weight: 500; background: var(--green-light);
-    color: var(--green); transition: opacity 0.15s;
-  }
-  .user-menu-btn:hover { opacity: 0.8; }
 
   .user-dropdown {
     position: absolute; top: 50px; right: 1rem;
@@ -1693,7 +1668,7 @@
     z-index: 500; overflow-y: auto;
     display: flex; flex-direction: column;
   }
-  #home-screen.hidden { display: none; }
+  #home-screen.hidden { display: none !important; }
 
   .home-header {
     display: flex; align-items: center; justify-content: space-between;
@@ -1733,13 +1708,13 @@
 
   .home-body {
     max-width: 560px; margin: 0 auto;
-    padding: 3rem 1.5rem 6rem;
+    padding: 2rem 1.5rem 6rem;
     flex: 1;
   }
 
   .home-greeting {
     font-family: 'Playfair Display', serif;
-    font-size: 32px; font-weight: 700; color: var(--ink);
+    font-size: clamp(22px, 4vw, 36px); font-weight: 700; color: var(--ink);
     margin-bottom: 0.25rem; line-height: 1.2;
   }
   .home-sub {
@@ -1752,34 +1727,66 @@
     margin-bottom: 0.75rem;
   }
 
-  .group-card-home {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 14px; padding: 1.25rem 1.5rem;
-    margin-bottom: 10px; cursor: pointer;
-    transition: border-color 0.15s, box-shadow 0.15s;
-    display: flex; align-items: center; gap: 1rem;
+  /* ── GROUP POLAROID CARDS ── */
+  .home-groups-grid {
+    display: flex; flex-direction: column; gap: 16px;
   }
-  .group-card-home:hover {
-    border-color: var(--border-mid);
-    box-shadow: 0 4px 16px rgba(30,42,26,0.08);
+  .group-polaroid {
+    background: #fff;
+    padding: 12px 12px 36px;
+    box-shadow: 0 3px 10px rgba(28,43,32,0.14), 0 8px 24px rgba(28,43,32,0.08);
+    border-radius: 2px;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
   }
-  .group-card-icon {
-    width: 44px; height: 44px; border-radius: 50%;
-    background: var(--green-light); color: var(--green);
+  .group-polaroid:nth-child(odd)  { transform: rotate(-0.8deg); }
+  .group-polaroid:nth-child(even) { transform: rotate(0.6deg); }
+  .group-polaroid:hover {
+    transform: rotate(0deg) translateY(-4px) scale(1.01) !important;
+    box-shadow: 0 6px 20px rgba(28,43,32,0.18), 0 14px 36px rgba(28,43,32,0.10);
+    z-index: 2;
+  }
+  .group-polaroid-photo {
+    width: 100%; aspect-ratio: 4/3;
     display: flex; align-items: center; justify-content: center;
-    font-size: 18px; font-weight: 700; flex-shrink: 0;
+    margin-bottom: 0;
+    border-radius: 1px; overflow: hidden;
+    position: relative;
+  }
+  .group-polaroid-initial {
     font-family: 'Playfair Display', serif;
+    font-size: 64px; font-weight: 700;
+    opacity: 0.35;
   }
-  .group-card-info { flex: 1; }
-  .group-card-name {
-    font-size: 17px; font-weight: 600; color: var(--ink); margin-bottom: 2px;
+  .group-polaroid-meta {
+    padding: 10px 4px 0;
   }
-  .group-card-meta {
-    font-size: 13px; color: var(--ink-faint);
+  .group-polaroid-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px; font-weight: 700; color: var(--ink);
+    line-height: 1.2; margin-bottom: 5px;
   }
-  .group-card-arrow {
-    color: var(--ink-ghost);
+  .group-polaroid-desc {
+    font-size: 12px; color: var(--ink-faint); line-height: 1.5;
+    margin-bottom: 8px;
   }
+  .group-polaroid-members {
+    display: flex; gap: 4px; align-items: center; flex-wrap: wrap;
+  }
+  .group-polaroid-av {
+    width: 22px; height: 22px; border-radius: 50%;
+    font-size: 8px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    border: 2px solid #fff;
+    margin-left: -6px;
+  }
+  .group-polaroid-av:first-child { margin-left: 0; }
+  .group-polaroid-count {
+    font-size: 11px; color: var(--ink-ghost);
+    margin-left: 6px;
+  }
+  .group-card-home { display: none; } /* keep for compat */
 
   .home-empty {
     text-align: center; padding: 3rem 1rem;
@@ -1852,11 +1859,7 @@
   }
   .home-form-sub { font-size: 14px; color: var(--ink-faint); margin-bottom: 1.25rem; }
 
-  @media (max-width: 600px) {
-    .home-header { padding: 1rem; }
-    .home-body { padding: 2rem 1rem 5rem; }
-    .home-greeting { font-size: 26px; }
-  }
+  
   </style>
 </head>
 <body>
@@ -1928,42 +1931,20 @@
   <div class="home-body">
 
     <!-- Profile card — polaroid + info -->
-    <div class="home-profile-card" style="margin-bottom:2rem;">
-      <div class="home-polaroid" id="home-polaroid">
-        <div class="home-polaroid-photo" id="home-profile-avatar">?</div>
-        <div class="home-polaroid-label" id="home-polaroid-label">you</div>
-      </div>
-      <div style="flex:1;padding-top:4px;">
-        <div class="home-profile-name" id="home-profile-name">—</div>
-        <div class="home-profile-email" id="home-profile-email">—</div>
-      </div>
-      <div style="position:relative;">
-        <button onclick="toggleProfileMenu()" id="profile-menu-btn" style="width:32px;height:32px;border-radius:50%;border:1.5px solid var(--border);background:var(--surface);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ink-mid);font-size:18px;line-height:1;transition:background 0.15s,border-color 0.15s;" onmouseover="this.style.background='var(--green-light)';this.style.borderColor='var(--border-mid)'" onmouseout="this.style.background='var(--surface)';this.style.borderColor='var(--border)'">···</button>
-        <div id="profile-menu" style="display:none;position:absolute;right:0;top:38px;background:var(--surface);border:1px solid var(--border);border-radius:10px;box-shadow:0 4px 20px rgba(28,43,32,0.12);min-width:170px;z-index:100;overflow:hidden;">
-          <button onclick="promptChangeUsername();toggleProfileMenu();" style="display:block;width:100%;text-align:left;padding:11px 16px;background:none;border:none;border-bottom:1px solid var(--border);font-family:'Montserrat',sans-serif;font-size:13px;color:var(--ink);cursor:pointer;" onmouseover="this.style.background='var(--bg)'" onmouseout="this.style.background='none'">change name</button>
-          <button onclick="promptChangePassword();toggleProfileMenu();" style="display:block;width:100%;text-align:left;padding:11px 16px;background:none;border:none;border-bottom:1px solid var(--border);font-family:'Montserrat',sans-serif;font-size:13px;color:var(--ink);cursor:pointer;" onmouseover="this.style.background='var(--bg)'" onmouseout="this.style.background='none'">change password</button>
-          <button onclick="confirmDeleteAccount();toggleProfileMenu();" style="display:block;width:100%;text-align:left;padding:11px 16px;background:none;border:none;font-family:'Montserrat',sans-serif;font-size:13px;color:var(--bloom);cursor:pointer;" onmouseover="this.style.background='var(--bg)'" onmouseout="this.style.background='none'">delete account</button>
-        </div>
-      </div>
-    </div>
+<!-- profile now in nav panel -->
 
 
     <!-- Groups list -->
     <div id="home-groups-list"></div>
 
-    <!-- + button drawer — hidden behind plus icon -->
-    <!-- + dropdown menu -->
-    <div id="home-group-drawer" style="display:none;position:absolute;right:0;top:36px;background:var(--surface);border:1px solid var(--border);border-radius:12px;box-shadow:0 4px 20px rgba(28,43,32,0.12);min-width:200px;z-index:100;overflow:hidden;">
-      <button onclick="showGroupAction('create')" style="display:block;width:100%;text-align:left;padding:12px 16px;background:none;border:none;border-bottom:1px solid var(--border);font-family:'Montserrat',sans-serif;font-size:13px;color:var(--ink);cursor:pointer;transition:background 0.12s;" onmouseover="this.style.background='var(--bg)'" onmouseout="this.style.background='none'">+ create a group</button>
-      <button onclick="showGroupAction('join')" style="display:block;width:100%;text-align:left;padding:12px 16px;background:none;border:none;font-family:'Montserrat',sans-serif;font-size:13px;color:var(--ink);cursor:pointer;transition:background 0.12s;" onmouseover="this.style.background='var(--bg)'" onmouseout="this.style.background='none'">join with a code</button>
-    </div>
+
     <!-- action forms that appear below -->
     <div id="home-create-form" style="display:none;margin-top:12px;">
       <input type="text" id="home-group-name" placeholder="what's your group called?"
         style="width:100%;padding:11px 14px;border:1px solid var(--border);border-radius:999px;font-size:14px;background:var(--surface);color:var(--ink);font-family:'Montserrat',sans-serif;outline:none;margin-bottom:8px;box-sizing:border-box;transition:border-color 0.15s;" onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='var(--border)'" />
       <div style="display:flex;gap:8px;">
         <button class="auth-btn" style="width:auto;padding:9px 20px;" onclick="createGroupFromHome()">create</button>
-        <button class="btn-ghost" onclick="hideGroupDrawer()">cancel</button>
+        <button class="btn-ghost" onclick="closeGroupDrawer()">cancel</button>
       </div>
       <div class="auth-error" id="home-create-error"></div>
     </div>
@@ -2013,33 +1994,81 @@
   </div>
 </div>
 
-<!-- USER DROPDOWN -->
-<div class="user-dropdown" id="user-dropdown">
-  <div class="user-dropdown-name" id="user-dropdown-name">—</div>
-  <div id="user-dropdown-groups"></div>
-  <button class="user-dropdown-item" onclick="copyInviteCode()">copy invite code</button>
-  <button class="user-dropdown-item" onclick="showAddGroup()">+ create or join a group</button>
-  <button class="user-dropdown-item danger" onclick="signOut()">sign out</button>
-</div>
 
-<header>
-  <a class="logo" href="#" onclick="goHome(event)">
+<header id="main-header">
+  <div class="logo" style="display:flex;align-items:center;gap:4px;">
     <svg width="48" height="48" viewBox="0 0 26 26" fill="none"><path d="M13.00,13.00 C16.12,8.55 14.25,4.90 13.00,3.12 C11.75,4.90 9.88,8.55 13.00,13.00Z" fill="#CFE8D5" stroke="#2F5D50" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.00,13.00 C18.19,14.59 21.09,11.68 22.40,9.95 C20.32,9.31 16.26,8.66 13.00,13.00Z" fill="#CFE8D5" stroke="#2F5D50" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.00,13.00 C13.09,18.43 16.75,20.29 18.81,20.99 C18.77,18.82 18.14,14.76 13.00,13.00Z" fill="#CFE8D5" stroke="#2F5D50" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.00,13.00 C7.86,14.76 7.23,18.82 7.19,20.99 C9.25,20.29 12.91,18.43 13.00,13.00Z" fill="#CFE8D5" stroke="#2F5D50" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.00,13.00 C9.74,8.66 5.68,9.31 3.60,9.95 C4.91,11.68 7.81,14.59 13.00,13.00Z" fill="#CFE8D5" stroke="#2F5D50" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/><circle cx="13.00" cy="13.00" r="2.60" fill="#CFE8D5" stroke="#2F5D50" stroke-width="1.1"/></svg>
     <span class="logo-text">dumpdates</span>
-  </a>
+    <button id="mobile-nav-toggle" onclick="toggleMobileNav()" aria-label="navigation"
+      style="display:none;align-items:center;justify-content:center;
+             background:none;border:none;cursor:pointer;padding:4px;
+             color:var(--ink-mid);margin-left:2px;transition:transform 0.2s ease;">
+      <svg id="mobile-nav-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </div>
+  <!-- Mobile tab drawer — hidden by default, shown below header on mobile -->
+  <div id="mobile-nav-drawer" style="display:none;position:absolute;left:0;right:0;top:100%;
+       background:var(--surface);border-bottom:1px solid var(--border);
+       box-shadow:0 4px 16px rgba(28,43,32,0.10);z-index:50;padding:0.5rem 1rem;">
+    <button class="mobile-nav-item" onclick="switchTab('questions',document.querySelector('.tab-btn'));closeMobileNav()">question garden</button>
+    <button class="mobile-nav-item" onclick="switchTab('answer',document.querySelectorAll('.tab-btn')[1]);closeMobileNav()">your answers</button>
+    <button class="mobile-nav-item" onclick="switchTab('letter',document.querySelectorAll('.tab-btn')[2]);closeMobileNav()">read the zine</button>
+  </div>
   <!-- CENTERED TABS -->
   <div class="header-tabs">
     <button class="tab-btn active" onclick="switchTab('questions', this)">question garden</button>
     <button class="tab-btn" onclick="switchTab('answer', this)">your answers</button>
     <button class="tab-btn" onclick="switchTab('letter', this)">read the zine</button>
   </div>
-  <!-- header-right goes to col 3 -->
-  <div class="header-right" style="position:relative;justify-self:end;">
-    <div style="display:flex;align-items:center;gap:8px;">
-      <button id="group-settings-btn" onclick="toggleGroupSettings()" title="group settings" style="display:none;width:36px;height:36px;border-radius:50%;border:1.5px solid var(--border);background:var(--surface);cursor:pointer;display:none;align-items:center;justify-content:center;color:var(--ink-mid);transition:all 0.15s;" onmouseover="this.style.background='var(--green-light)';this.style.borderColor='var(--border-mid)'" onmouseout="this.style.background='var(--surface)';this.style.borderColor='var(--border)'">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+
+  <!-- Right: menu icon -->
+  <div style="justify-self:end;position:relative;">
+    <button id="nav-menu-btn" onclick="navMenuToggle(event)"
+      style="width:36px;height:36px;border-radius:50%;border:1.5px solid var(--border);
+             background:transparent;cursor:pointer;display:flex;align-items:center;
+             justify-content:center;color:var(--ink-mid);transition:all 0.15s;"
+      onmouseover="this.style.background='var(--green-light)';this.style.borderColor='var(--green)'"
+      onmouseout="this.style.background='transparent';this.style.borderColor='var(--border)'"
+      aria-label="menu">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <circle cx="8" cy="3" r="1.2" fill="currentColor"/>
+        <circle cx="8" cy="8" r="1.2" fill="currentColor"/>
+        <circle cx="8" cy="13" r="1.2" fill="currentColor"/>
+      </svg>
+    </button>
+
+    <div id="nav-menu" style="display:none;position:absolute;right:0;top:calc(100% + 8px);
+         background:var(--surface);border:1px solid var(--border);border-radius:14px;
+         box-shadow:0 8px 32px rgba(28,43,32,0.14);min-width:220px;z-index:9000;
+         overflow:hidden;">
+
+      <!-- User info -->
+      <button onclick="navMenuClose();navMenuAction('profile')"
+        style="display:flex;align-items:center;gap:12px;width:100%;padding:14px 16px 12px;
+               border-bottom:1px solid var(--border);background:none;border-left:none;
+               border-right:none;border-top:none;cursor:pointer;text-align:left;transition:background .1s;"
+        onmouseover="this.style.background='var(--bg)'" onmouseout="this.style.background='none'">
+        <div id="nm-avatar" style="width:40px;height:40px;border-radius:50%;background:var(--green-light);
+             color:var(--green);display:flex;align-items:center;justify-content:center;
+             font-size:14px;font-weight:700;flex-shrink:0;overflow:hidden;"></div>
+        <div style="flex:1;min-width:0;">
+          <div id="nm-name" style="font-size:14px;font-weight:600;color:var(--ink);font-family:'Montserrat',sans-serif;"></div>
+          <div style="font-size:11px;color:var(--ink-ghost);margin-top:1px;font-family:'Montserrat',sans-serif;">profile settings →</div>
+        </div>
       </button>
-      <button class="home-avatar" id="user-menu-btn" onclick="toggleUserMenu()" style="display:none;border:none;cursor:pointer;background:var(--green-light);color:var(--green);">?</button>
+
+      <!-- Switch groups — shown only if 2+ groups -->
+      <div id="nm-groups"></div>
+
+      <!-- Actions -->
+      <div id="nm-actions">
+        <button class="nm-item" id="nm-copy-link" onclick="navMenuAction('copy-link')">copy group invite code</button>
+        <button class="nm-item" onclick="navMenuAction('create')">+ create a group</button>
+        <button class="nm-item" onclick="navMenuAction('join')">join a group</button>
+        <button class="nm-item" style="color:var(--bloom);border-top:1px solid var(--border);" onclick="signOut()">sign out</button>
+      </div>
     </div>
   </div>
 </header>
@@ -2184,104 +2213,97 @@
   </div>
 
 
+
 <!-- GROUP SETTINGS PANEL -->
-<div id="group-settings-panel" style="display:none;position:fixed;top:0;right:0;bottom:0;width:min(380px,100vw);background:var(--surface);border-left:1px solid var(--border);z-index:200;box-shadow:-8px 0 32px rgba(28,43,32,0.12);overflow-y:auto;padding:2rem 1.5rem 4rem;transition:transform 0.3s ease;" role="dialog" aria-label="group settings">
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;">
-    <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--ink);">group settings</div>
-    <button onclick="closeGroupSettings()" style="width:32px;height:32px;border-radius:50%;border:1.5px solid var(--border);background:var(--surface);cursor:pointer;font-size:18px;color:var(--ink-mid);display:flex;align-items:center;justify-content:center;">×</button>
+<div id="group-settings-panel" style="display:none;position:fixed;top:0;right:0;bottom:0;width:min(520px,90vw);background:var(--surface);border-left:1px solid var(--border);z-index:9001;box-shadow:-8px 0 32px rgba(28,43,32,0.12);overflow-y:auto;padding:0;" role="dialog">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:1.5rem 1.5rem 1.25rem;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--surface);z-index:1;">
+    <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--ink);">group settings</div>
+    <button onclick="closeGroupSettings()" style="width:30px;height:30px;border-radius:50%;border:1.5px solid var(--border);background:transparent;cursor:pointer;font-size:18px;color:var(--ink-mid);display:flex;align-items:center;justify-content:center;line-height:1;">×</button>
   </div>
+  <div style="padding:1.5rem 1.5rem 4rem;display:flex;flex-direction:column;gap:2rem;">
 
-  <!-- Group name -->
-  <div style="margin-bottom:2rem;">
-    <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-ghost);margin-bottom:0.75rem;">group name</div>
-    <div style="display:flex;gap:8px;">
-      <input id="gs-group-name" type="text" style="flex:1;padding:9px 14px;border:1.5px solid var(--border);border-radius:999px;font-size:14px;font-family:'Montserrat',sans-serif;background:var(--bg);color:var(--ink);outline:none;" onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='var(--border)'"/>
-      <button class="auth-btn" style="width:auto;padding:9px 16px;font-size:13px;" onclick="saveGroupName()">save</button>
+    <!-- Polaroid photo — centered, large -->
+    <div style="display:flex;flex-direction:column;align-items:center;gap:0.75rem;">
+      <div id="gs-group-photo-wrap" onclick="triggerGroupPhoto()"
+           style="background:#fff;padding:10px 10px 44px;box-shadow:0 4px 16px rgba(28,43,32,0.18);
+                  border-radius:2px;cursor:pointer;position:relative;
+                  transform:rotate(-1deg);transition:transform 0.2s,box-shadow 0.2s;width:200px;"
+           onmouseover="this.style.transform='rotate(0deg) scale(1.03)';this.style.boxShadow='0 8px 28px rgba(28,43,32,0.22)'"
+           onmouseout="this.style.transform='rotate(-1deg)';this.style.boxShadow='0 4px 16px rgba(28,43,32,0.18)'">
+        <div id="gs-group-photo" style="width:100%;aspect-ratio:4/3;background:var(--green-light);
+             display:flex;align-items:center;justify-content:center;border-radius:1px;overflow:hidden;
+             font-family:'Playfair Display',serif;font-size:48px;font-weight:700;color:var(--green);opacity:0.4;"></div>
+        <div style="position:absolute;bottom:10px;left:0;right:0;text-align:center;
+             font-size:10px;font-family:'Montserrat',sans-serif;color:rgba(28,43,32,0.35);">tap to change photo</div>
+      </div>
+      <input type="file" id="gs-photo-input" accept="image/*" style="display:none;" onchange="onGroupPhotoChange(this)"/>
+
+      <!-- Name + description below polaroid -->
+      <div style="width:100%;display:flex;flex-direction:column;gap:8px;">
+        <input id="gs-group-name" type="text" placeholder="group name"
+          style="width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;
+                 font-size:16px;font-family:'Playfair Display',serif;font-weight:700;
+                 background:var(--bg);color:var(--ink);outline:none;box-sizing:border-box;text-align:center;"
+          onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='var(--border)'" oninput="gsMarkDirty()"/>
+        <textarea id="gs-group-desc" placeholder="add a description…" rows="2"
+          style="width:100%;padding:9px 14px;border:1.5px solid var(--border);border-radius:10px;
+                 font-size:13px;font-family:'Montserrat',sans-serif;background:var(--bg);color:var(--ink);
+                 outline:none;resize:none;box-sizing:border-box;text-align:center;"
+          onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='var(--border)'" oninput="gsMarkDirty()"></textarea>
+        <button id="gs-save-btn" class="auth-btn"
+          style="width:100%;padding:10px;font-size:13px;display:none;
+                 position:sticky;bottom:1rem;z-index:5;box-shadow:0 4px 16px rgba(28,43,32,0.18);"
+          onclick="saveGroupDetails()">save changes</button>
+      </div>
     </div>
-  </div>
 
-  <!-- Invite code -->
-  <div style="margin-bottom:2rem;">
-    <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-ghost);margin-bottom:0.75rem;">invite code</div>
-    <div style="display:flex;gap:8px;align-items:center;">
-      <div id="gs-invite-code" style="flex:1;padding:9px 14px;border:1.5px solid var(--border);border-radius:999px;font-size:14px;font-family:'Montserrat',sans-serif;background:var(--bg);color:var(--ink);letter-spacing:0.1em;"></div>
-      <button class="btn-ghost" onclick="copyInviteCode()" style="font-size:13px;padding:9px 16px;flex-shrink:0;">copy</button>
+    <!-- Members -->
+    <div>
+      <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-ghost);margin-bottom:0.75rem;">members</div>
+      <div id="gs-members-list"></div>
+      <!-- Invite code -->
+      <div style="margin-top:1rem;display:flex;gap:8px;align-items:center;">
+        <div id="gs-invite-code" style="flex:1;padding:9px 14px;border:1.5px solid var(--border);border-radius:10px;
+             font-size:14px;font-family:'Montserrat',sans-serif;background:var(--bg);color:var(--ink);
+             letter-spacing:0.12em;font-weight:600;"></div>
+        <button class="btn-ghost" onclick="copyInviteCode()" style="font-size:13px;padding:9px 16px;flex-shrink:0;">copy invite</button>
+      </div>
     </div>
-  </div>
 
-  <!-- Theme -->
-  <div style="margin-bottom:2rem;">
-    <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-ghost);margin-bottom:0.75rem;">theme</div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;">
-      ${['#2F5D50','#5B4A8A','#7A2E42','#1A3A5C','#3D5A2A'].map((c,i) => `
-        <button onclick="setGroupTheme('${c}')" style="width:36px;height:36px;border-radius:50%;background:${c};border:3px solid transparent;cursor:pointer;transition:transform 0.15s,border-color 0.15s;" onmouseover="this.style.transform='scale(1.15)'" onmouseout="this.style.transform=''"></button>
-      `).join('')}
+    <!-- Frequency -->
+    <div>
+      <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-ghost);margin-bottom:0.75rem;">publishing</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem;" id="gs-frequency-btns">
+        <button onclick="setFrequency('monthly',this)" class="btn-ghost" style="font-size:12px;padding:6px 14px;">monthly</button>
+        <button onclick="setFrequency('bi-weekly',this)" class="btn-ghost" style="font-size:12px;padding:6px 14px;">bi-weekly</button>
+        <button onclick="setFrequency('weekly',this)" class="btn-ghost" style="font-size:12px;padding:6px 14px;">weekly</button>
+      </div>
+      <div id="gs-frequency-details" style="background:var(--bg);border-radius:10px;padding:12px 14px;font-size:13px;color:var(--ink-faint);line-height:1.6;"></div>
     </div>
-    <div style="font-size:12px;color:var(--ink-ghost);margin-top:8px;">changes the accent colour for everyone in the group</div>
-  </div>
 
-  <!-- Issue frequency -->
-  <div style="margin-bottom:2rem;">
-    <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-ghost);margin-bottom:0.75rem;">issue frequency</div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;">
-      ${['monthly','bi-weekly','weekly'].map(f => `<button onclick="setFrequency('${f}')" class="btn-ghost" style="font-size:13px;padding:7px 14px;">${f}</button>`).join('')}
+    <!-- Danger zone -->
+    <div style="padding-top:0.5rem;border-top:1px solid var(--border);">
+      <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--bloom);margin-bottom:0.75rem;">danger zone</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <button class="btn-ghost" onclick="leaveGroup()" style="color:var(--bloom);border-color:rgba(155,91,114,0.25);font-size:13px;text-align:left;">leave group</button>
+        <button class="btn-ghost" onclick="deleteGroup()" style="color:var(--bloom);border-color:rgba(155,91,114,0.25);font-size:13px;text-align:left;">delete group</button>
+      </div>
     </div>
-  </div>
 
-  <!-- Notifications -->
-  <div style="margin-bottom:2rem;">
-    <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-ghost);margin-bottom:0.75rem;">notifications</div>
-    ${[['deadline-reminder','remind me 3 days before close'],['new-issue','when a new issue is published'],['new-member','when someone joins the group']].map(([id,label]) => `
-      <label style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer;">
-        <span style="font-size:13px;color:var(--ink-faint);">${label}</span>
-        <input type="checkbox" id="notif-${id}" checked style="width:16px;height:16px;accent-color:var(--green);cursor:pointer;" />
-      </label>`).join('')}
-  </div>
-
-  <!-- Members -->
-  <div style="margin-bottom:2rem;">
-    <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-ghost);margin-bottom:0.75rem;">members</div>
-    <div id="gs-members-list"></div>
-  </div>
-
-  <!-- Danger zone -->
-  <div style="margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid var(--border);">
-    <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--bloom);margin-bottom:0.75rem;">danger zone</div>
-    <button class="btn-ghost" onclick="leaveGroup()" style="color:var(--bloom);border-color:rgba(155,91,114,0.3);font-size:13px;width:100%;margin-bottom:8px;">leave group</button>
-    <button class="btn-ghost" onclick="deleteGroup()" style="color:var(--bloom);border-color:rgba(155,91,114,0.3);font-size:13px;width:100%;">delete group (admin only)</button>
   </div>
 </div>
-<div id="group-settings-overlay" onclick="closeGroupSettings()" style="display:none;position:fixed;inset:0;background:rgba(28,43,32,0.25);z-index:199;backdrop-filter:blur(2px);"></div>
-
-</main>
-
-<!-- Mobile bottom nav -->
-<nav class="mobile-bottom-nav" id="mobile-bottom-nav">
-  <button class="mobile-nav-btn active" onclick="switchTabMobile('questions', this)">
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
-      <path d="M3 4h14M3 8h10M3 12h12M3 16h8"/>
-    </svg>
-    garden
-  </button>
-  <button class="mobile-nav-btn" onclick="switchTabMobile('answer', this)">
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
-      <rect x="3" y="3" width="14" height="14" rx="2"/>
-      <path d="M7 8h6M7 12h4"/>
-    </svg>
-    answers
-  </button>
-  <button class="mobile-nav-btn" onclick="switchTabMobile('letter', this)">
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
-      <path d="M4 5h12v12H4zM8 5V3h4v2M9 9h6M9 12h4"/>
-    </svg>
-    zine
-  </button>
-</nav>
+<div id="group-settings-overlay" onclick="closeGroupSettings()" style="display:none;position:fixed;inset:0;background:rgba(28,43,32,0.2);z-index:9000;backdrop-filter:blur(2px);"></div>
 
 <input type="file" class="input-hidden" id="file-input" accept="image/*" multiple />
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+  let currentUser = null;
+  let currentGroup = null;
+  let currentMember = null;
+  let currentIssue = null;
+  let authMode = 'login';
+
 
   // Issue list — ordered array of garden item ids, no limit
   let issueList = [];
@@ -2345,29 +2367,25 @@
   // ── HELPERS ───────────────────────────────────────────────
 
   function goHome(e) {
-    e.preventDefault();
-    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-    document.getElementById('home-screen').classList.remove('hidden');
+    if (e && e.preventDefault) e.preventDefault();
+    // No home screen — go back to first group or group-screen
+    if (allMemberships && allMemberships.length > 0) {
+      const first = allMemberships[0];
+      if (first.group_id === 'preview-group-1') enterPreviewGroup();
+      else if (first.group_id === 'preview-group-2') enterPreviewGroup2();
+      else enterGroup(first.group_id);
+    } else {
+      document.getElementById('group-screen')?.classList.remove('hidden');
+    }
   }
 
-  function switchTabMobile(id, mobileBtn) {
-    // sync desktop tabs
-    const desktopBtn = document.querySelector(`.tab-btn[onclick*="${id}"]`);
-    switchTab(id, desktopBtn || mobileBtn);
-    // sync mobile tabs
-    document.querySelectorAll('.mobile-nav-btn').forEach(b => b.classList.remove('active'));
-    mobileBtn.classList.add('active');
-  }
 
   function switchTab(id, btn) {
     document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.getElementById(id).classList.add('active');
+    updateMobileNavActive(id);
     if (btn) btn.classList.add('active');
-    // sync mobile nav
-    document.querySelectorAll('.mobile-nav-btn').forEach(b => {
-      b.classList.toggle('active', b.getAttribute('onclick')?.includes(id));
-    });
     if (id === 'letter') {
       renderShelf();
       const data = activeZineKey === 'current' ? zineData : (pastZines.find(p=>p.key===activeZineKey)||{data:[]}).data;
@@ -2490,19 +2508,15 @@
             <div style="display:flex;gap:4px;">
               <button
                 class="gs-btn add"
-                onclick="${inIssue ? `focusAnswer(${item.id})` : `addToIssue(${item.id})`}"
-                title="${inIssue ? 'go to my answer' : 'add to this issue'}"
+                onclick="${inIssue ? `removeFromIssue(${item.id})` : `addToIssue(${item.id})`}"
+                title="${inIssue ? 'remove from issue' : 'add to this issue'}"
 >
                 ${inIssue
                   ? `<svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L3.5 7L10 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`
-                  : `<svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M5.5 1v9M1 5.5h9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>`
+                  : `<svg width="13" height="13" viewBox="0 0 11 11" fill="none"><path d="M5.5 1v9M1 5.5h9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`
                 }
               </button>
-              <button class="gs-btn del" onclick="deleteFromGarden(${item.id})" title="remove">
-                <svg width="9" height="9" viewBox="0 0 9 9" fill="none">
-                  <path d="M1 1L8 8M8 1L1 8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
-                </svg>
-              </button>
+
             </div>
           </div>
         </div>`;
@@ -2839,25 +2853,27 @@
     return el;
   }
 
-  function miniCover(title, vol, dots, style='', date='') {
+  function miniCover(title, vol, dots, style='', date='', badge='') {
     const dotHtml = dots.map(c => `<div class="zine-mini-dot" style="background:${c};"></div>`).join('');
     const isGreen = style.includes('green');
     const tc = isGreen ? '#fff' : 'var(--ink)';
     const sc = isGreen ? 'rgba(255,255,255,0.55)' : 'var(--ink-faint)';
+    const badgeHtml = badge ? `<div style="display:inline-block;background:${isGreen?'rgba(255,255,255,0.18)':'var(--green-light)'};color:${isGreen?'rgba(255,255,255,0.85)':'var(--green)'};font-size:8px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;padding:2px 6px;border-radius:999px;margin-bottom:6px;font-family:Montserrat,sans-serif;">${badge}</div>` : '';
 
     if (date) {
-      // Dated cover: "dumpdates" big + date underneath, dots at bottom
       return `<div class="zine-mini-cover" style="justify-content:space-between;flex-direction:column;padding:10px 10px 10px;" ${style}>
         <div>
-          <div style="font-size:14px;font-weight:700;letter-spacing:-0.3px;color:${tc};font-family:'Playfair Display',serif;line-height:1.1;margin-bottom:3px;">${title}</div>
+          ${badgeHtml}
+          <div style="font-size:16px;font-weight:700;letter-spacing:-0.4px;color:${tc};font-family:'Playfair Display',serif;line-height:1.05;margin-bottom:3px;">${title}</div>
           <div style="font-size:11px;color:${sc};font-family:'Montserrat',sans-serif;font-weight:500;line-height:1.3;">${date}</div>
         </div>
         <div class="zine-mini-dots">${dotHtml}</div>
       </div>`;
     }
 
-    // No date (guide, draft): keep original bottom-aligned style
+    // No date (guide, draft): bottom-aligned
     return `<div class="zine-mini-cover" ${style}>
+      ${badgeHtml}
       <div class="zine-mini-title"${isGreen ? ' style="color:rgba(255,255,255,0.85);"' : ''}>${title}</div>
       <div class="zine-mini-vol"${isGreen ? ' style="color:rgba(255,255,255,0.5);"' : ''}>${vol}</div>
       <div class="zine-mini-dots">${dotHtml}</div>
@@ -2875,11 +2891,11 @@
     if (pastZines.length > 0) {
       const issueLabel = currentIssue?.month || 'current';
       shelf.appendChild(makeShelfItem('current',
-        miniCover('dumpdates', issueList.length ? issueList.length + ' q' : 'open', ['#CFE8D5','#F1D4DC','#C9C3D9'], '', issueLabel),
+        miniCover('dumpdates', issueList.length ? issueList.length + ' q' : 'open', ['#CFE8D5','#F1D4DC','#C9C3D9'], '', issueLabel, 'in progress'),
         '', true));
-      pastZines.slice(0, 3).forEach(pz =>
+      pastZines.slice(0, 3).forEach((pz, pi) =>
         shelf.appendChild(makeShelfItem(pz.key,
-          miniCover('dumpdates', pz.vol, pz.dotColors, 'style="border-left-color:var(--ink-faint);background:#f5f0ea;"', pz.month),
+          miniCover('dumpdates', pz.vol, pz.dotColors, 'style="border-left-color:var(--ink-faint);background:#f5f0ea;"', pz.month, pi === 0 ? 'last issue' : ''),
           '', true)));
     }
 
@@ -2934,19 +2950,7 @@
 
 
   // ── Load ──────────────────────────────────────────────────
-  function loadZine(key) {
-    activeZineKey = key;
-    zinePage = 0;
-    const lbl = document.getElementById('zine-current-label');
-    if (key === 'instructions' || key === 'current') {
-      if (lbl) lbl.textContent = '';
-      renderZine(key === 'current' ? zineData : []);
-    } else {
-      const pz = pastZines.find(p => p.key === key);
-      if (lbl) lbl.textContent = pz ? `${pz.month} · ${pz.vol}` : '';
-      if (pz) renderZine(pz.data);
-    }
-  }
+  
 
   // ── Page builders ─────────────────────────────────────────
   function buildCoverPage() {
@@ -2967,15 +2971,44 @@
     };
   }
 
-  function buildIssueCover(data) {
+  function buildIssueCover(data, badge='') {
     const mo = currentIssue?.month || 'this month';
-    const friendsHtml = (currentGroup ? [] : [
-      {bg:'#CFE8D5',fg:'#2F5D50',init:'AL'},{bg:'#BFA0B8',fg:'#5A2E50',init:'JM'},
-      {bg:'#E3B8C2',fg:'#7A2E42',init:'RP'},{bg:'#C9C3D9',fg:'#3C3560',init:'SK'}
-    ]).map(f=>`<span class="zc-friend" style="background:${f.bg};color:${f.fg};">${f.init}</span>`).join('');
+    const badgeHtml = badge ? `<div style="display:inline-block;background:var(--green-light);color:var(--green);font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:4px 12px;border-radius:999px;margin-bottom:1.5rem;font-family:Montserrat,sans-serif;">${badge}</div>` : '';
+
+    // Group polaroid
+    const gPhoto = currentGroup ? groupPhotos[currentGroup.id] : null;
+    const gInitial = currentGroup?.name?.[0]?.toUpperCase() || '?';
+    const groupPolaroidHtml = `<div style="background:#fff;padding:6px 6px 28px;box-shadow:0 2px 8px rgba(28,43,32,0.18);border-radius:2px;display:inline-block;transform:rotate(-1.5deg);margin-bottom:1.25rem;">
+      <div style="width:80px;height:60px;background:var(--green-light);display:flex;align-items:center;justify-content:center;border-radius:1px;overflow:hidden;">
+        ${gPhoto ? `<img src="${gPhoto}" style="width:100%;height:100%;object-fit:cover;"/>` : `<span style="font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--green);opacity:0.5;">${gInitial}</span>`}
+      </div>
+      <div style="text-align:center;font-size:10px;font-family:'Montserrat',sans-serif;color:rgba(28,43,32,0.4);margin-top:4px;">${currentGroup?.name || 'dumpdates'}</div>
+    </div>`;
+
+    // Member polaroids on right page
+    const mems = (members && members.length) ? members : [
+      {display_name:'alex',initials:'AL',color:'#CFE8D5'},{display_name:'jamie',initials:'JM',color:'#F1D4DC'},
+      {display_name:'river',initials:'RI',color:'#C9C3D9'},{display_name:'you',initials:'YO',color:'#FBF0C0'}
+    ];
+    const memberPolaroids = mems.slice(0,6).map((m, i) => {
+      const rots = [-2, 1.5, -1, 2.5, -1.8, 1];
+      const rot = rots[i % rots.length];
+      const init = (m.initials || (m.display_name||'?').slice(0,2)).toUpperCase();
+      const bg = m.color || ['#CFE8D5','#F1D4DC','#C9C3D9','#FBF0C0','#E3B8C2'][i%5];
+      return `<div style="background:#fff;padding:5px 5px 20px;box-shadow:0 2px 6px rgba(28,43,32,0.14);border-radius:2px;transform:rotate(${rot}deg);display:inline-block;">
+        <div style="width:56px;height:42px;background:${bg};display:flex;align-items:center;justify-content:center;border-radius:1px;">
+          <span style="font-size:16px;font-weight:700;color:rgba(28,43,32,0.5);">${init}</span>
+        </div>
+        <div style="text-align:center;font-size:9px;font-family:'Montserrat',sans-serif;color:rgba(28,43,32,0.35);margin-top:3px;">${m.display_name || '?'}</div>
+      </div>`;
+    }).join('');
+
     return {
-      left: `<div class="zine-cover"><div class="zine-cover-inner"><div class="zine-cover-vol">${mo}</div><div class="zine-cover-deco">${flowerSvg(80,'#2F5D50','#CFE8D5',1.5)}</div><h1 class="zine-cover-title">dumpdates</h1><div class="zine-cover-sub">a monthly catch-up for friends</div>${friendsHtml?`<div class="zine-cover-friends">${friendsHtml}</div>`:''}<div class="zine-cover-qs">${data.length} question${data.length!==1?'s':''} inside</div></div></div>`,
-      right: `<div class="zine-blank-right"></div>`
+      left: `<div class="zine-cover"><div class="zine-cover-inner">${badgeHtml}${groupPolaroidHtml}<div class="zine-cover-vol">${mo}</div><h1 class="zine-cover-title">dumpdates</h1><div class="zine-cover-sub">a monthly catch-up for friends</div><div class="zine-cover-qs">${data.length} question${data.length!==1?'s':''} inside</div></div></div>`,
+      right: `<div class="zine-blank-right" style="display:flex;flex-direction:column;justify-content:center;align-items:center;padding:2rem;">
+        <div style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-ghost);margin-bottom:1.25rem;">the crew</div>
+        <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;align-items:flex-end;">${memberPolaroids}</div>
+      </div>`
     };
   }
 
@@ -3026,20 +3059,21 @@
       };
     }
 
-    // Text answers — split across both pages
+    // Text answers — on narrow screens all stickies on left, on wide split across both pages
     const answers = section.answers;
-    const half = Math.ceil(answers.length / 2);
+    const isMobile = typeof window !== 'undefined' && window.innerWidth <= 600;
+    const half = isMobile ? answers.length : Math.ceil(answers.length / 2);
     const leftStickies  = answers.slice(0, half).map((a, si) => stickyHtml(a, si)).join('');
     const rightStickies = answers.slice(half).map((a, si)  => stickyHtml(a, si + half)).join('');
 
     return {
       left: `<div class="zine-spread-left" style="display:flex;flex-direction:column;">
         <div class="zine-q-num">q.${String(idx+1).padStart(2,'0')}</div>
-        <div class="zine-q-text" style="margin-bottom:1rem;">${section.q}</div>
-        <div class="zine-stickies-area" style="grid-template-columns:1fr 1fr;gap:8px;">${leftStickies}</div>
+        <div class="zine-q-text" style="margin-bottom:0.5rem;">${section.q}</div>
+        <div class="zine-stickies-area">${leftStickies}</div>
       </div>`,
       right: `<div class="zine-spread-right">
-        <div class="zine-stickies-area" style="grid-template-columns:1fr 1fr;gap:8px;">${rightStickies || ''}</div>
+        <div class="zine-stickies-area">${rightStickies || ''}</div>
       </div>`
     };
   }
@@ -3109,7 +3143,8 @@
     if (!data || data.length === 0) {
       return [buildCoverPage(), buildStepsPage(), buildGuidePage3()];
     }
-    const pages = [buildIssueCover(data)];
+    const badge = activeZineKey === 'current' ? 'in progress' : pastZines.findIndex(p=>p.key===activeZineKey)===0 ? 'last issue' : '';
+    const pages = [buildIssueCover(data, badge)];
     data.forEach((section, i) => pages.push(buildAnswerSpread(section, i)));
     pages.push(buildBackCover());
     return pages;
@@ -3237,6 +3272,11 @@
     // Populate panel
     const nameInput = document.getElementById('gs-group-name');
     if (nameInput) nameInput.value = currentGroup?.name || '';
+    const descInput = document.getElementById('gs-group-desc');
+    if (descInput) descInput.value = currentGroup?.description || '';
+    // Render group photo
+    const existingPhoto = currentGroup ? groupPhotos[currentGroup.id] : null;
+    renderGroupPhoto(existingPhoto || null);
     const codeEl = document.getElementById('gs-invite-code');
     if (codeEl && currentGroup) codeEl.textContent = currentGroup.id.replace(/-/g,'').slice(0,8).toUpperCase();
 
@@ -3252,6 +3292,11 @@
         </div>`).join('') : '<div style="font-size:13px;color:var(--ink-ghost);">no members yet</div>';
     }
 
+    // Frequency details
+    updateFrequencyDetails(currentGroup?.frequency || 'monthly');
+
+    const saveBtn = document.getElementById('gs-save-btn');
+    if (saveBtn) saveBtn.style.display = 'none';
     panel.style.display = '';
     overlay.style.display = '';
     document.body.style.overflow = 'hidden';
@@ -3265,12 +3310,57 @@
     document.body.style.overflow = '';
   }
 
-  async function saveGroupName() {
-    const val = document.getElementById('gs-group-name')?.value.trim();
-    if (!val || !currentGroup) return;
-    currentGroup.name = val;
+
+  // Group image stored locally (would go to storage in production)
+  const groupPhotos = {};
+  const profilePhotos = {}; // keyed by "me"
+
+  function triggerGroupPhoto() {
+    document.getElementById('gs-photo-input')?.click();
+  }
+
+  function onGroupPhotoChange(input) {
+    const file = input.files?.[0];
+    if (!file || !currentGroup) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      groupPhotos[currentGroup.id] = e.target.result;
+      renderGroupPhoto(e.target.result);
+      // Also update the polaroid card on home screen
+      renderHomeGroups(allMemberships);
+    };
+    reader.readAsDataURL(file);
+    input.value = '';
+  }
+
+  function renderGroupPhoto(src) {
+    const el = document.getElementById('gs-group-photo');
+    if (!el) return;
+    if (src) {
+      el.innerHTML = '';
+      el.style.fontSize = ''; el.style.opacity = '1';
+      var img = document.createElement('img');
+      img.src = src; img.style.cssText = 'width:100%;height:100%;object-fit:cover;';
+      el.appendChild(img);
+    } else {
+      const initial = currentGroup?.name?.[0]?.toUpperCase() || '?';
+      el.textContent = initial;
+    }
+  }
+
+  async function saveGroupDetails() {
+    const saveBtn = document.getElementById('gs-save-btn');
+    if (saveBtn) saveBtn.style.display = 'none';
+    const name = document.getElementById('gs-group-name')?.value.trim();
+    const desc = document.getElementById('gs-group-desc')?.value.trim();
+    if (!currentGroup) return;
+    if (name) currentGroup.name = name;
+    if (desc !== undefined) currentGroup.description = desc;
     if (currentGroup.id !== 'preview-group-1') {
-      await sb.from('groups').update({ name: val }).eq('id', currentGroup.id);
+      const upd = {};
+      if (name) upd.name = name;
+      if (desc !== undefined) upd.description = desc;
+      await sb.from('groups').update(upd).eq('id', currentGroup.id);
     }
     closeGroupSettings();
   }
@@ -3282,9 +3372,77 @@
     document.querySelectorAll('.gs-theme-btn').forEach(b => b.style.borderColor = 'transparent');
   }
 
-  function setFrequency(freq) {
-    // Store preference — would persist to DB in production
-    console.log('frequency set to', freq);
+  function gsMarkDirty() {
+    const btn = document.getElementById('gs-save-btn');
+    if (btn) btn.style.display = '';
+  }
+
+  function setFrequency(freq, btn) {
+    if (currentGroup) currentGroup.frequency = freq;
+    document.querySelectorAll('#gs-frequency-btns .btn-ghost').forEach(b => { b.style.background=''; b.style.borderColor=''; b.style.color=''; });
+    if (btn) { btn.style.background='var(--green-light)'; btn.style.borderColor='var(--green)'; btn.style.color='var(--green)'; }
+    updateFrequencyDetails(freq);
+  }
+
+  function updateFrequencyDetails(freq) {
+    const el = document.getElementById('gs-frequency-details');
+    if (!el) return;
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth(); // 0-indexed
+
+    function fmtDate(d) {
+      return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    }
+    function lastDayOfMonth(y, m) { return new Date(y, m + 1, 0); }
+    function firstOfMonth(y, m) { return new Date(y, m, 1); }
+    function ordinal(n) { const s=['th','st','nd','rd'], v=n%100; return n+(s[(v-20)%10]||s[v]||s[0]); }
+
+    let description = '', publishDay = '', next = null, prev = null;
+
+    if (freq === 'monthly') {
+      const nextPub = lastDayOfMonth(year, month);
+      const prevPub = lastDayOfMonth(year, month - 1);
+      description = 'published on the last day of every month';
+      publishDay = 'the last day of the month';
+      next = nextPub >= now ? nextPub : lastDayOfMonth(year, month + 1);
+      prev = prevPub < now ? prevPub : lastDayOfMonth(year, month - 1);
+    } else if (freq === 'bi-weekly') {
+      // Every 2 weeks from the 1st
+      const anchor = firstOfMonth(year, month);
+      let candidate = new Date(anchor);
+      while (candidate <= now) candidate = new Date(candidate.getTime() + 14 * 86400000);
+      next = candidate;
+      prev = new Date(candidate.getTime() - 14 * 86400000);
+      description = 'published every two weeks';
+      publishDay = 'every other ' + next.toLocaleDateString('en-US', { weekday: 'long' });
+    } else {
+      // Weekly — every Monday
+      const dayOfWeek = now.getDay(); // 0=sun
+      const daysToNext = (1 - dayOfWeek + 7) % 7 || 7;
+      next = new Date(now.getTime() + daysToNext * 86400000);
+      prev = new Date(next.getTime() - 7 * 86400000);
+      description = 'published every week';
+      publishDay = 'every monday';
+    }
+    next.setHours(12, 0, 0, 0);
+    prev.setHours(12, 0, 0, 0);
+
+    el.innerHTML =
+      '<div style="margin-bottom:6px;color:var(--ink);font-weight:500;">' + description + '</div>' +
+      '<div style="color:var(--ink-faint);font-size:12px;">publishes <strong>' + publishDay + '</strong></div>' +
+      '<div style="margin-top:8px;display:flex;flex-direction:column;gap:3px;font-size:12px;">' +
+        '<div>⬡ <span style="color:var(--ink-ghost);">last issue:</span> <strong>' + fmtDate(prev) + '</strong></div>' +
+        '<div>◈ <span style="color:var(--ink-ghost);">next issue:</span> <strong style="color:var(--green);">' + fmtDate(next) + '</strong></div>' +
+      '</div>';
+
+    // Highlight the active frequency button
+    document.querySelectorAll('#gs-frequency-btns .btn-ghost').forEach(b => {
+      const match = b.getAttribute('onclick')?.includes("'" + freq + "'");
+      b.style.background = match ? 'var(--green-light)' : '';
+      b.style.borderColor = match ? 'var(--green)' : '';
+      b.style.color = match ? 'var(--green)' : '';
+    });
   }
 
   function removeMember(userId) {
@@ -3453,7 +3611,6 @@
 
   // ── DEMO MODE ─────────────────────────────────────────────
   // Add ?demo to the URL to see the app with dummy data, no login required
-  const isDemo = new URLSearchParams(window.location.search).has('demo');
 
   const demoZineData = [
     {
@@ -3484,41 +3641,6 @@
     }
   ];
 
-  if (isDemo) {
-    // Hide auth, show the app
-    document.getElementById('auth-screen').classList.add('hidden');
-
-    // Load demo data
-    issueList = [1, 2, 3];
-    answers = ["genuinely the best decision i've made all month.", "", ""];
-    document.getElementById('current-month-badge').textContent = 'april 2026';
-
-    // Show demo banner
-    const banner = document.createElement('div');
-    banner.style.cssText = `
-      position: fixed; top: 62px; left: 0; right: 0; z-index: 90;
-      background: #FFF9C4; border-bottom: 1px solid #e8d800;
-      padding: 8px 1.5rem; display: flex; align-items: center;
-      justify-content: space-between; font-size: 13px;
-      color: #5a4e00; font-family: 'Montserrat', sans-serif;`;
-    banner.innerHTML = `
-      <span>
-        <strong style="font-weight:500;">demo mode</strong>
-        — this is dummy data, nothing saves.
-        <a href="${window.location.pathname}" style="color:#2F5D50;margin-left:8px;font-weight:500;">sign in →</a>
-      </span>
-      <button onclick="this.parentElement.remove()" style="background:none;border:none;cursor:pointer;font-size:16px;color:#8a7a00;padding:0 0 0 12px;">×</button>`;
-    document.body.appendChild(banner);
-
-    // Push main content down to account for banner
-    document.querySelector('main').style.paddingTop = '3.5rem';
-
-    renderSlots();
-    renderFilters();
-    renderGarden();
-    renderAnswers();
-    renderZine(demoZineData);
-  }
 
   function enterPreview() {
     document.getElementById('auth-screen').classList.add('hidden');
@@ -3532,20 +3654,26 @@
     };
 
     const dummyMemberships = [
-      { group_id: 'preview-group-1', groups: { name: 'the usual suspects' } },
+      { group_id: 'preview-group-1', groups: { name: 'the usual suspects', description: 'monthly updates from the people who matter' } },
+      { group_id: 'preview-group-2', groups: { name: 'book club ✦', description: 'we read (sometimes). we always chat.' } },
     ];
     allMemberships = dummyMemberships;
 
-    showHomeScreen(dummyMemberships);
+    allMemberships = dummyMemberships;
+    showHomeScreen = function() {}; // no-op
+    enterPreviewGroup();
   }
 
   // Called when preview user taps their dummy group
+
+
+
   function enterPreviewGroup() {
     document.getElementById('home-screen').classList.add('hidden');
     document.body.classList.remove('auth-open');
 
     // Set up group state
-    currentGroup = { id: 'preview-group-1', name: 'the usual suspects', invite_code: 'PREVW001' };
+    currentGroup = { id: 'preview-group-1', name: 'the usual suspects', description: 'monthly updates from the people who matter', invite_code: 'PREVW001' };
     currentIssue = { id: 'preview-issue-1', month: 'april 2026' };
     members = [
       { user_id: 'preview-user',  display_name: 'you',   initials: 'YO', color: '#CFE8D5' },
@@ -3555,21 +3683,16 @@
     ];
 
     issueList = [1, 2, 6, 19];
-    const badge = document.getElementById('current-month-badge');
-    if (badge) badge.textContent = 'april 2026';
 
     // Show the main app
     document.getElementById('main-header')?.classList.remove('hidden');
-    const settingsBtn = document.getElementById('group-settings-btn');
-    if (settingsBtn) { settingsBtn.style.display = 'flex'; }
     document.querySelector('main')?.classList.remove('hidden');
-    document.getElementById('mobile-bottom-nav')?.classList.remove('hidden');
 
     // Add a dummy past issue
     pastZines.length = 0;
     pastZines.push({
       key: 'march-2026',
-      month: 'mar',
+      month: 'march 2026',
       vol: 'vol. 01',
       dotColors: ['#F1D4DC', '#C9C3D9', '#FBF0C0'],
       data: [
@@ -3628,9 +3751,32 @@
     updateGroupSwitcher();
   }
 
-  // ── PREVIEW MODE (URL shortcut still works too) ────────────
+  function enterPreviewGroup2() {
+    document.getElementById('home-screen').classList.add('hidden');
+    document.body.classList.remove('auth-open');
+
+    currentGroup = { id: 'preview-group-2', name: 'book club ✦', description: 'we read (sometimes). we always chat.', invite_code: 'BOOK0042' };
+    currentIssue = { id: 'preview-issue-2', month: 'april 2026' };
+    members = [
+      { user_id: 'preview-user',  display_name: 'you',    initials: 'YO', color: '#CFE8D5' },
+      { user_id: 'preview-user5', display_name: 'margot', initials: 'MA', color: '#F1D4DC' },
+      { user_id: 'preview-user6', display_name: 'theo',   initials: 'TH', color: '#C9C3D9' },
+    ];
+
+    issueList = [25, 10, 6];
+    pastZines.length = 0;
+
+    document.getElementById('main-header')?.classList.remove('hidden');
+    document.querySelector('main')?.classList.remove('hidden');
+
+
+    renderSlots(); renderFilters(); renderGarden(); renderAnswers();
+    renderShelf(); renderZine([]);
+    switchTab('questions', document.querySelector('.tab-btn'));
+    updateGroupSwitcher();
+  }
   const isPreview = new URLSearchParams(window.location.search).has('preview');
-  if (isPreview && !isDemo) enterPreview();
+  if (isPreview) enterPreview();
 
 
   // ── HOME SCREEN ────────────────────────────────────────────
@@ -3644,22 +3790,17 @@
     // Greet by name
     const name = currentUser?.user_metadata?.display_name || currentUser?.email?.split('@')[0] || 'bestie';
 
-    // Profile card
     const initials = name.slice(0,2).toUpperCase();
     const avatarEl = document.getElementById('home-profile-avatar');
-    avatarEl.textContent = initials;
-    avatarEl.style.background = '#CFE8D5';
-    avatarEl.style.color = '#2F5D50';
-    document.getElementById('home-profile-name').textContent = name;
+    if (avatarEl) { avatarEl.textContent = initials; avatarEl.style.background = '#CFE8D5'; avatarEl.style.color = '#2F5D50'; }
+    const nameEl = document.getElementById('home-profile-name');
+    if (nameEl) nameEl.textContent = name;
     const lbl = document.getElementById('home-polaroid-label');
     if (lbl) lbl.textContent = name;
-    // hide greeting/sub since removed from DOM
-    ['home-greeting','home-sub'].forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
-    document.getElementById('home-profile-email').textContent = currentUser?.email || '';
+    const emailEl = document.getElementById('home-profile-email');
+    if (emailEl) emailEl.textContent = currentUser?.email || '';
 
     // Header avatar
-    const headerAvatar = document.getElementById('user-menu-btn');
-    if (headerAvatar) { headerAvatar.textContent = initials; }
 
     // Home menu name
     const menuName = document.getElementById('home-menu-name');
@@ -3672,116 +3813,103 @@
   function renderHomeGroups(memberships) {
     const container = document.getElementById('home-groups-list');
     const sub = document.getElementById('home-sub');
-
-    const actions = document.getElementById('home-actions');
+    if (!container) return;
     if (!memberships || memberships.length === 0) {
       container.innerHTML = `
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;">
           <div class="home-section-label" style="margin-bottom:0;">your groups</div>
-          <button onclick="toggleGroupDrawer()" id="home-add-group-btn" style="width:30px;height:30px;border-radius:50%;border:1.5px solid var(--border);background:var(--surface);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ink-mid);font-size:16px;letter-spacing:1px;line-height:1;transition:background 0.15s,border-color 0.15s;" onmouseover="this.style.background='var(--green-light)';this.style.borderColor='var(--border-mid)'" onmouseout="this.style.background='var(--surface)';this.style.borderColor='var(--border)'">···</button>
+          <div style="position:relative;flex-shrink:0;">
+            <button onclick="toggleGroupDrawer()" id="home-add-group-btn" style="width:30px;height:30px;border-radius:50%;border:1.5px solid var(--border);background:var(--surface);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ink-mid);font-size:16px;letter-spacing:1px;line-height:1;transition:background 0.15s,border-color 0.15s;" onmouseover="this.style.background='var(--green-light)';this.style.borderColor='var(--border-mid)'" onmouseout="this.style.background='var(--surface)';this.style.borderColor='var(--border)'">···</button>
+            <div id="home-group-drawer" style="display:none;position:absolute;right:0;top:36px;background:var(--surface);border:1px solid var(--border);border-radius:12px;box-shadow:0 4px 20px rgba(28,43,32,0.12);min-width:200px;z-index:100;overflow:hidden;"><button onclick="showGroupAction('create')" style="display:block;width:100%;text-align:left;padding:12px 16px;background:none;border:none;border-bottom:1px solid var(--border);font-family:'Montserrat',sans-serif;font-size:13px;color:var(--ink);cursor:pointer;" onmouseover="this.style.background='var(--bg)';" onmouseout="this.style.background='none';">+ create a group</button><button onclick="showGroupAction('join')" style="display:block;width:100%;text-align:left;padding:12px 16px;background:none;border:none;font-family:'Montserrat',sans-serif;font-size:13px;color:var(--ink);cursor:pointer;" onmouseover="this.style.background='var(--bg)';" onmouseout="this.style.background='none';">join with a code</button></div>
+          </div>
         </div>
         <div class="home-empty">
           <div class="home-empty-title">start your first dumpdates</div>
         </div>`;
-      if (actions) { actions.style.display = 'none'; }
       return;
     }
-    if (actions) actions.style.display = 'flex';
 
 
     const colors = ['#CFE8D5','#F1D4DC','#C9C3D9','#FBF0C0','#E3B8C2','#FAD9BC'];
     const textColors = ['#2F5D50','#7A2E42','#3C3560','#5C4A18','#6A2A3A','#7A4020'];
 
-    document.getElementById('home-section-label') // might not exist yet
+    const photoBgs = ['#CFE8D5','#F1D4DC','#C9C3D9','#FBF0C0','#E3B8C2','#FAD9BC'];
+    const photoFgs = ['#2F5D50','#7A2E42','#3C3560','#5C4A18','#6A2A3A','#7A4020'];
+    const memberColors = ['#CFE8D5','#F1D4DC','#C9C3D9','#FBF0C0','#E3B8C2','#FAD9BC'];
+    const memberFg = ['#2F5D50','#7A2E42','#3C3560','#5C4A18','#6A2A3A','#7A4020'];
+
     container.innerHTML = `
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;">
         <div class="home-section-label" style="margin-bottom:0;">your groups</div>
-        <button onclick="toggleGroupDrawer()" id="home-add-group-btn" style="width:30px;height:30px;border-radius:50%;border:1.5px solid var(--border);background:var(--surface);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ink-mid);font-size:16px;letter-spacing:1px;line-height:1;transition:background 0.15s,border-color 0.15s;" onmouseover="this.style.background='var(--green-light)';this.style.borderColor='var(--border-mid)'" onmouseout="this.style.background='var(--surface)';this.style.borderColor='var(--border)'">···</button>
+        <div style="position:relative;flex-shrink:0;">
+          <button onclick="toggleGroupDrawer()" id="home-add-group-btn" style="width:30px;height:30px;border-radius:50%;border:1.5px solid var(--border);background:var(--surface);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ink-mid);font-size:16px;letter-spacing:1px;line-height:1;transition:background 0.15s,border-color 0.15s;" onmouseover="this.style.background='var(--green-light)';this.style.borderColor='var(--border-mid)'" onmouseout="this.style.background='var(--surface)';this.style.borderColor='var(--border)'">···</button>
+          <div id="home-group-drawer" style="display:none;position:absolute;right:0;top:36px;background:var(--surface);border:1px solid var(--border);border-radius:12px;box-shadow:0 4px 20px rgba(28,43,32,0.12);min-width:200px;z-index:100;overflow:hidden;"><button onclick="showGroupAction('create')" style="display:block;width:100%;text-align:left;padding:12px 16px;background:none;border:none;border-bottom:1px solid var(--border);font-family:'Montserrat',sans-serif;font-size:13px;color:var(--ink);cursor:pointer;" onmouseover="this.style.background='var(--bg)'" onmouseout="this.style.background='none'">+ create a group</button><button onclick="showGroupAction('join')" style="display:block;width:100%;text-align:left;padding:12px 16px;background:none;border:none;font-family:'Montserrat',sans-serif;font-size:13px;color:var(--ink);cursor:pointer;" onmouseover="this.style.background='var(--bg)'" onmouseout="this.style.background='none'">join with a code</button></div>
+        </div>
       </div>
+      <div class="home-groups-grid">
       ${memberships.map((m, i) => {
         const name = m.groups?.name || 'unnamed group';
         const initial = name[0].toUpperCase();
-        const bg = colors[i % colors.length];
-        const fg = textColors[i % textColors.length];
-        return `<div class="group-card-home" onclick="${m.group_id === 'preview-group-1' ? 'enterPreviewGroup()' : `enterGroup('${m.group_id}')`}">
-          <div class="group-card-icon" style="background:${bg};color:${fg};">${initial}</div>
-          <div class="group-card-info">
-            <div class="group-card-name">${name}</div>
-            <div class="group-card-meta">tap to open</div>
-          </div>
-          <div class="group-card-arrow">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-        </div>`;
-      }).join('')}`;
+        const bg  = photoBgs[i % photoBgs.length];
+        const fg  = photoFgs[i % photoFgs.length];
+        const desc = m.groups?.description || '';
+        const mems = (m.groups?.members || []).slice(0, 5);
+        const memHtml = mems.map((mem, mi) =>
+          `<div class="group-polaroid-av" style="background:${memberColors[mi%memberColors.length]};color:${memberFg[mi%memberFg.length]};">${(mem.display_name||'?').slice(0,2).toUpperCase()}</div>`
+        ).join('');
+        const extraCount = (m.groups?.member_count || mems.length) - mems.length;
+        const onclick = m.group_id === 'preview-group-1' ? 'enterPreviewGroup()' : m.group_id === 'preview-group-2' ? 'enterPreviewGroup2()' : ("enterGroup('" + m.group_id + "')");
+        const gPhoto = groupPhotos[m.group_id];
+        const photoInner = gPhoto
+          ? '<img src="' + gPhoto + '" style="width:100%;height:100%;object-fit:cover;border-radius:1px;"/>'
+          : '<div class="group-polaroid-initial" style="color:' + fg + ';">' + initial + '</div>';
+        return '<div class="group-polaroid" onclick="' + onclick + '">' +
+          '<div class="group-polaroid-photo" style="background:' + (gPhoto ? '#f5f5f5' : bg) + ';">' +
+            photoInner +
+          '</div>' +
+          '<div class="group-polaroid-meta">' +
+            '<div class="group-polaroid-name">' + name + '</div>' +
+            (desc ? '<div class="group-polaroid-desc">' + desc + '</div>' : '') +
+            '<div class="group-polaroid-members">' + memHtml +
+              (extraCount > 0 ? '<span class="group-polaroid-count">+' + extraCount + ' more</span>' : '') +
+            '</div>' +
+            '<div style="font-size:11px;color:var(--ink-ghost);margin-top:4px;">' + mems.map(m => m.display_name||'').filter(Boolean).join(', ') + (extraCount > 0 ? ' +' + extraCount : '') + '</div>' +
+          '</div>' +
+        '</div>';
+      }).join('')}
+      </div>`;
   }
 
 
-  function toggleProfileMenu() {
-    const m = document.getElementById('profile-menu');
-    if (!m) return;
-    const open = m.style.display !== 'none';
-    m.style.display = open ? 'none' : 'block';
-    if (!open) {
-      const close = e => { if (!document.getElementById('profile-menu-btn')?.contains(e.target)) { m.style.display='none'; document.removeEventListener('click',close); } };
-      setTimeout(() => document.addEventListener('click', close), 10);
-    }
-  }
 
-  function promptChangeUsername() {
-    const name = prompt('enter a new display name:', currentUser?.user_metadata?.display_name || '');
-    if (!name || !name.trim()) return;
-    sb.auth.updateUser({ data: { display_name: name.trim() } }).then(({ error }) => {
-      if (error) { alert('could not update name: ' + error.message); return; }
-      document.getElementById('home-profile-name').textContent = name.trim();
-      document.getElementById('home-greeting').textContent = `${document.getElementById('home-greeting').textContent.split(',')[0]}, ${name.trim()}`;
-      const menuName = document.getElementById('home-menu-name');
-      if (menuName) menuName.textContent = name.trim() + ' · ' + currentUser?.email;
-    });
-  }
 
-  function promptChangePassword() {
-    const pw = prompt('enter a new password (min 6 characters):');
-    if (!pw || pw.length < 6) { if (pw !== null) alert('password must be at least 6 characters'); return; }
-    sb.auth.updateUser({ password: pw }).then(({ error }) => {
-      if (error) alert('could not update password: ' + error.message);
-      else alert('password updated!');
-    });
-  }
 
-  function confirmDeleteAccount() {
-    if (!confirm('are you sure you want to delete your account? this cannot be undone.')) return;
-    // Supabase doesn't expose deleteUser from the client — direct user to contact support
-    alert("to delete your account, please email support@dumpdates.app and we will take care of it.");
-  }
 
-  async function enterGroup(groupId) {
-    document.getElementById('home-screen').classList.add('hidden');
-    document.body.classList.remove('auth-open');
-    await loadGroup(groupId);
-  }
+
+
+
+
 
   function toggleGroupDrawer() {
     const drawer = document.getElementById('home-group-drawer');
-    const btn    = document.getElementById('home-add-group-btn');
     if (!drawer) return;
     const open = drawer.style.display === 'block';
     drawer.style.display = open ? 'none' : 'block';
     if (!open) {
-      // close when clicking outside
-      const close = e => {
-        if (!btn?.contains(e.target) && !drawer?.contains(e.target)) {
-          drawer.style.display = 'none';
-                document.removeEventListener('click', close);
-        }
-      };
-      setTimeout(() => document.addEventListener('click', close), 10);
-    } else {
-      hideGroupDrawer();
+      const btn = document.getElementById('home-add-group-btn');
+      setTimeout(() => {
+        const close = e => {
+          if (!btn?.contains(e.target) && !drawer?.contains(e.target)) {
+            drawer.style.display = 'none';
+            document.removeEventListener('click', close);
+          }
+        };
+        document.addEventListener('click', close);
+      }, 10);
     }
   }
+
+
 
   function showGroupAction(type) {
     document.getElementById('home-group-drawer').style.display = 'none';
@@ -3886,11 +4014,6 @@
       </div>`;
   }
 
-  let currentUser = null;
-  let currentGroup = null;
-  let currentMember = null;
-  let currentIssue = null;
-  let authMode = 'login';
 
   // ── AUTH UI ───────────────────────────────────────────────
 
@@ -4007,13 +4130,7 @@
     location.reload();
   }
 
-  function toggleUserMenu() {
-    document.getElementById('user-dropdown').classList.toggle('open');
-  }
   document.addEventListener('click', e => {
-    if (!e.target.closest('#user-dropdown') && !e.target.closest('#user-menu-btn')) {
-      document.getElementById('user-dropdown').classList.remove('open');
-    }
   });
 
   // ── GROUP UI ──────────────────────────────────────────────
@@ -4109,7 +4226,6 @@
   }
 
   function showAddGroup() {
-    document.getElementById('user-dropdown').classList.remove('open');
     document.getElementById('group-screen').classList.remove('hidden');
     document.getElementById('group-choose').innerHTML = `
       <div class="group-title">add a group</div>
@@ -4126,7 +4242,6 @@
   }
 
   function updateGroupSwitcher() {
-    const container = document.getElementById('user-dropdown-groups');
     if (!container || !allMemberships.length) return;
     if (allMemberships.length <= 1) { container.innerHTML = ''; return; }
     container.innerHTML = `
@@ -4143,10 +4258,9 @@
     if (!currentGroup) return;
     const code = currentGroup.id.replace(/-/g,'').slice(0,8).toUpperCase();
     await navigator.clipboard.writeText(code);
-    const btn = document.querySelector('.user-dropdown-item');
+    // old user-dropdown-item ref removed
     btn.textContent = 'copied!';
     setTimeout(() => btn.textContent = 'copy invite code', 2000);
-    document.getElementById('user-dropdown').classList.remove('open');
   }
 
   // ── APP BOOTSTRAP ─────────────────────────────────────────
@@ -4171,10 +4285,7 @@
     document.getElementById('home-screen').classList.add('hidden');
 
     // Update user menu
-    const btn = document.getElementById('user-menu-btn');
-    btn.style.display = 'flex';
     btn.textContent = (member?.display_name || '?').slice(0,2).toUpperCase();
-    document.getElementById('user-dropdown-name').textContent = (member?.display_name || '?') + ' · ' + (group?.name || '');
 
     // Run remaining fetches in parallel
     const now = new Date();
@@ -4271,32 +4382,6 @@
     switchTab('letter', document.querySelector('.tab-btn[onclick*="letter"]'));
     renderShelf();
     renderZine(myPreviewData || []);
-  }
-
-  let myAnswersPublished = false;
-
-  async function publishMyAnswers() {
-    const btn = document.getElementById('publish-btn');
-    if (btn) { btn.textContent = 'publishing…'; btn.disabled = true; }
-
-    // Mark all current answers as published in DB
-    if (currentIssue && currentUser) {
-      for (let i = 0; i < issueList.length; i++) {
-        if (answers[i]) await saveAnswer(i);
-      }
-      // Set published flag on the user-issue record
-      await sb.from('answers')
-        .update({ published: true })
-        .eq('user_id', currentUser.id)
-        .in('issue_question_id',
-          (await sb.from('issue_questions').select('id').eq('issue_id', currentIssue.id)).data?.map(r => r.id) || []);
-    }
-
-    myAnswersPublished = true;
-    if (btn) { btn.textContent = 'published ✓'; btn.style.background = '#4a8f78'; }
-
-    // Show a preview of their own answers in the zine
-    renderZine(buildMyPreviewZine());
   }
 
   function buildMyPreviewZine() {
@@ -4406,6 +4491,327 @@
   renderGarden();
   setIssueDateCopy();
 
+
+
+
+
+
+
+
+  // Profile panel (lightweight inline modal)
+
+
+
+
+  let _mobileNavOpen = false;
+
+  function toggleMobileNav() {
+    _mobileNavOpen ? closeMobileNav() : openMobileNav();
+  }
+
+  function openMobileNav() {
+    _mobileNavOpen = true;
+    const drawer = document.getElementById('mobile-nav-drawer');
+    const chevron = document.getElementById('mobile-nav-chevron');
+    if (drawer) drawer.style.display = 'block';
+    if (chevron) chevron.style.transform = 'rotate(180deg)';
+    setTimeout(() => document.addEventListener('click', _mobileNavOutside, { once: true }), 0);
+  }
+
+  function closeMobileNav() {
+    _mobileNavOpen = false;
+    const drawer = document.getElementById('mobile-nav-drawer');
+    const chevron = document.getElementById('mobile-nav-chevron');
+    if (drawer) drawer.style.display = 'none';
+    if (chevron) chevron.style.transform = '';
+  }
+
+  function _mobileNavOutside(e) {
+    if (!document.getElementById('main-header')?.contains(e.target)) closeMobileNav();
+  }
+
+  // Keep active state in sync
+  function updateMobileNavActive(id) {
+    document.querySelectorAll('.mobile-nav-item').forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('onclick')?.includes("'" + id + "'"));
+    });
+  }
+
+
+  // ── NAV MENU ──────────────────────────────────────────────────────────────
+  let _nmOpen = false;
+
+  function navMenuToggle(e) {
+    e.stopPropagation();
+    _nmOpen ? navMenuClose() : navMenuOpen();
+  }
+
+  function navMenuOpen() {
+    const menu = document.getElementById('nav-menu');
+    if (!menu) return;
+
+    // Identity
+    const name = currentUser?.user_metadata?.display_name
+      || currentUser?.email?.split('@')[0] || '';
+    const el = document.getElementById('nm-name');
+    if (el) el.textContent = name;
+    const av = document.getElementById('nm-avatar');
+    if (av) {
+      const photo = profilePhotos['me'];
+      if (photo) {
+        av.innerHTML = '';
+        var img = document.createElement('img');
+        img.src = photo; img.style.cssText = 'width:100%;height:100%;object-fit:cover;';
+        av.appendChild(img);
+      } else {
+        av.textContent = name.slice(0,2).toUpperCase();
+      }
+    }
+
+    // Group-specific items
+    const hasGroup = !!currentGroup;
+    const cl = document.getElementById('nm-copy-link');
+    if (cl) cl.style.display = hasGroup ? '' : 'none';
+
+    // Groups switcher — show only if 2+ groups
+    const gmEl = document.getElementById('nm-groups');
+    if (gmEl) {
+      const bgs = ['#CFE8D5','#F1D4DC','#C9C3D9','#FBF0C0','#E3B8C2','#FAD9BC'];
+      const fgs = ['#2F5D50','#7A2E42','#3C3560','#5C4A18','#6A2A3A','#7A4020'];
+      gmEl.innerHTML = '';
+      if (allMemberships && allMemberships.length > 1) {
+        const hdr = document.createElement('div');
+        hdr.style.cssText = 'padding:8px 16px 4px;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-ghost);';
+        hdr.textContent = 'switch group';
+        gmEl.appendChild(hdr);
+        allMemberships.forEach(function(m, i) {
+          const gName = (m.groups && m.groups.name) || 'group';
+          const isCurrent = !!(currentGroup && m.group_id === currentGroup.id);
+          const row = document.createElement('button');
+          row.className = 'nm-group-row';
+          if (isCurrent) { row.style.background='var(--green-light)'; row.style.color='var(--green)'; row.style.fontWeight='600'; }
+          const av = '<div style="width:22px;height:22px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;background:' + bgs[i%bgs.length] + ';color:' + fgs[i%fgs.length] + ';">' + gName[0].toUpperCase() + '</div>';
+          const ck = isCurrent ? '<svg width="11" height="9" viewBox="0 0 11 9" fill="none" style="margin-left:auto;margin-right:4px;flex-shrink:0;opacity:.6;"><path d="M1 4.5L3.5 7L10 1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>' : '';
+          // Settings cog — always shown, opens group settings for that group
+          const cogBtn = document.createElement('button');
+          cogBtn.style.cssText = 'flex-shrink:0;background:none;border:none;padding:4px;cursor:pointer;color:var(--ink-ghost);border-radius:50%;display:flex;align-items:center;justify-content:center;transition:background 0.1s,color 0.1s;margin-left:auto;';
+          cogBtn.title = 'group settings';
+          cogBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>';
+          cogBtn.onmouseover = function(){ this.style.background='var(--bg)'; this.style.color='var(--green)'; };
+          cogBtn.onmouseout = function(){ this.style.background='none'; this.style.color='var(--ink-ghost)'; };
+          cogBtn.onclick = function(e) {
+            e.stopPropagation();
+            navMenuClose();
+            // If this isn't the current group, switch first then open settings
+            if (!isCurrent) {
+              if (m.group_id === 'preview-group-1') { enterPreviewGroup(); setTimeout(toggleGroupSettings, 200); }
+              else if (m.group_id === 'preview-group-2') { enterPreviewGroup2(); setTimeout(toggleGroupSettings, 200); }
+              else { enterGroup(m.group_id).then ? enterGroup(m.group_id).then(() => toggleGroupSettings()) : setTimeout(toggleGroupSettings, 300); }
+            } else {
+              toggleGroupSettings();
+            }
+          };
+          row.innerHTML = av + '<span style="flex:1;">' + gName + '</span>' + (isCurrent ? ck : '');
+          row.appendChild(cogBtn);
+          row.onclick = function(e) {
+            if (e.target.closest('button') && e.target.closest('button') !== row) return;
+            navMenuClose();
+            if (m.group_id === 'preview-group-1') enterPreviewGroup();
+            else if (m.group_id === 'preview-group-2') enterPreviewGroup2();
+            else enterGroup(m.group_id);
+          };
+          gmEl.appendChild(row);
+        });
+        gmEl.style.borderBottom = '1px solid var(--border)';
+      }
+    }
+
+    menu.style.display = 'block';
+    _nmOpen = true;
+    setTimeout(function() {
+      document.addEventListener('click', navMenuClose, { once: true });
+    }, 0);
+  }
+
+  function navMenuClose() {
+    _nmOpen = false;
+    const menu = document.getElementById('nav-menu');
+    if (menu) menu.style.display = 'none';
+  }
+
+  function navMenuAction(type) {
+    navMenuClose();
+    if (type === 'copy-link')     { copyInviteCode(); return; }
+    if (type === 'profile')       { navMenuOpenProfile(); return; }
+    // create / join — go home then show form
+    goHome({ preventDefault: () => {} });
+    setTimeout(function() {
+      const cf = document.getElementById('home-create-form');
+      const jf = document.getElementById('home-join-form');
+      if (type === 'create') {
+        if (cf) { cf.style.display = ''; if (jf) jf.style.display = 'none'; }
+        const inp = document.getElementById('home-group-name'); if (inp) inp.focus();
+      } else {
+        if (jf) { jf.style.display = ''; if (cf) cf.style.display = 'none'; }
+        const inp = document.getElementById('home-group-code'); if (inp) inp.focus();
+      }
+    }, 80);
+  }
+
+  function navMenuOpenProfile() {
+    const existing = document.getElementById('profile-flyout');
+    if (existing) { existing.remove(); document.getElementById('profile-flyout-overlay')?.remove(); return; }
+    const name = currentUser?.user_metadata?.display_name || currentUser?.email?.split('@')[0] || 'you';
+    const initials = name.slice(0,2).toUpperCase();
+
+    const overlay = document.createElement('div');
+    overlay.id = 'profile-flyout-overlay';
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(28,43,32,.2);z-index:9100;backdrop-filter:blur(2px);';
+
+    const panel = document.createElement('div');
+    panel.id = 'profile-flyout';
+    panel.style.cssText = 'position:fixed;top:0;right:0;bottom:0;width:min(400px,90vw);background:var(--surface);border-left:1px solid var(--border);z-index:9101;box-shadow:-8px 0 32px rgba(28,43,32,0.14);overflow-y:auto;display:flex;flex-direction:column;';
+
+    function close() { panel.remove(); overlay.remove(); }
+    overlay.onclick = close;
+
+    // Header
+    var hdr = document.createElement('div');
+    hdr.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:1.5rem 1.5rem 1.25rem;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--surface);z-index:1;';
+    var htitle = document.createElement('div');
+    htitle.style.cssText = 'font-family:Playfair Display,serif;font-size:20px;font-weight:700;color:var(--ink);';
+    htitle.textContent = 'your profile';
+    var hclose = document.createElement('button');
+    hclose.style.cssText = 'width:30px;height:30px;border-radius:50%;border:1.5px solid var(--border);background:transparent;cursor:pointer;font-size:18px;line-height:1;color:var(--ink-mid);';
+    hclose.textContent = '×'; hclose.onclick = close;
+    hdr.appendChild(htitle); hdr.appendChild(hclose);
+
+    // Body
+    var body = document.createElement('div');
+    body.style.cssText = 'padding:1.5rem;display:flex;flex-direction:column;gap:1.5rem;';
+
+    // Photo + name row
+    var photoRow = document.createElement('div');
+    photoRow.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:1rem;';
+
+    var photoWrap = document.createElement('div');
+    photoWrap.style.cssText = 'position:relative;width:80px;height:80px;cursor:pointer;';
+    var photoEl = document.createElement('div');
+    photoEl.id = 'pf-photo';
+    photoEl.style.cssText = 'width:80px;height:80px;border-radius:50%;background:var(--green-light);color:var(--green);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;overflow:hidden;';
+    var existingPhoto = profilePhotos['me'];
+    if (existingPhoto) {
+      var pi = document.createElement('img'); pi.src = existingPhoto;
+      pi.style.cssText = 'width:100%;height:100%;object-fit:cover;'; photoEl.appendChild(pi);
+    } else { photoEl.textContent = initials; }
+    var photoOverlay = document.createElement('div');
+    photoOverlay.style.cssText = 'position:absolute;inset:0;border-radius:50%;background:rgba(0,0,0,0.35);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;cursor:pointer;';
+    photoOverlay.innerHTML = '<svg width="18" height="18" viewBox="0 0 20 20" fill="white" style="opacity:.9;"><path d="M10 6a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm0-3a4 4 0 1 1 0 8A4 4 0 0 1 10 3zm0 9c-4.41 0-8 1.79-8 4v1h16v-1c0-2.21-3.59-4-8-4z"/></svg>';
+    photoWrap.onmouseover = function(){ photoOverlay.style.opacity = '1'; };
+    photoWrap.onmouseout = function(){ photoOverlay.style.opacity = '0'; };
+    var photoInput = document.createElement('input');
+    photoInput.type = 'file'; photoInput.accept = 'image/*'; photoInput.style.display = 'none';
+    photoInput.onchange = function() {
+      var file = this.files[0]; if (!file) return;
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        profilePhotos['me'] = e.target.result;
+        photoEl.innerHTML = '';
+        var ni = document.createElement('img'); ni.src = e.target.result;
+        ni.style.cssText = 'width:100%;height:100%;object-fit:cover;'; photoEl.appendChild(ni);
+      };
+      reader.readAsDataURL(file);
+    };
+    photoWrap.onclick = function() { photoInput.click(); };
+    photoWrap.appendChild(photoEl); photoWrap.appendChild(photoOverlay); photoWrap.appendChild(photoInput);
+
+    var nameDisp = document.createElement('div');
+    nameDisp.style.cssText = 'font-family:Playfair Display,serif;font-size:20px;font-weight:700;color:var(--ink);';
+    nameDisp.textContent = name;
+    photoRow.appendChild(photoWrap); photoRow.appendChild(nameDisp);
+
+    // Display name input
+    function _section(labelText) {
+      var sec = document.createElement('div');
+      var lbl = document.createElement('div');
+      lbl.style.cssText = 'font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-ghost);margin-bottom:.6rem;';
+      lbl.textContent = labelText;
+      sec.appendChild(lbl);
+      return sec;
+    }
+    function _input(id, val, placeholder, type) {
+      var row = document.createElement('div'); row.style.cssText = 'display:flex;gap:8px;';
+      var inp = document.createElement('input');
+      inp.id = id; inp.value = val || ''; inp.placeholder = placeholder || ''; inp.type = type || 'text';
+      inp.style.cssText = 'flex:1;padding:9px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;background:var(--bg);color:var(--ink);outline:none;';
+      inp.onfocus = function(){ this.style.borderColor = 'var(--green)'; };
+      inp.onblur = function(){ this.style.borderColor = 'var(--border)'; };
+      return { row, inp };
+    }
+
+    var nameSec = _section('display name');
+    var { row: nameRow, inp: nameInp } = _input('pf-name', name, 'your name');
+    var nameBtn = document.createElement('button'); nameBtn.className = 'auth-btn';
+    nameBtn.style.cssText = 'width:auto;padding:9px 16px;font-size:13px;';
+    nameBtn.textContent = 'save';
+    nameBtn.onclick = async function() {
+      var val = document.getElementById('pf-name')?.value.trim(); if (!val) return;
+      if (currentUser) { try { await sb.auth.updateUser({ data: { display_name: val } }); } catch(e) {} }
+      nameDisp.textContent = val;
+      document.getElementById('nm-name') && (document.getElementById('nm-name').textContent = val);
+    };
+    nameRow.appendChild(nameInp); nameRow.appendChild(nameBtn);
+    nameSec.appendChild(nameRow);
+
+    var pwSec = _section('password');
+    var { row: pwRow, inp: pwInp } = _input('pf-pw', '', 'new password (6+ chars)', 'password');
+    var pwBtn = document.createElement('button'); pwBtn.className = 'btn-ghost';
+    pwBtn.style.cssText = 'font-size:13px;padding:9px 16px;';
+    pwBtn.textContent = 'update';
+    pwBtn.onclick = async function() {
+      var pw = document.getElementById('pf-pw')?.value;
+      if (!pw || pw.length < 6) { alert('6+ characters required'); return; }
+      try { await sb.auth.updateUser({ password: pw }); alert('password updated!'); } catch(e) {}
+      document.getElementById('pf-pw').value = '';
+    };
+    pwRow.appendChild(pwInp); pwRow.appendChild(pwBtn);
+    pwSec.appendChild(pwRow);
+
+    var signOutBtn = document.createElement('button');
+    signOutBtn.className = 'btn-ghost'; signOutBtn.textContent = 'sign out';
+    signOutBtn.style.cssText = 'font-size:13px;width:100%;'; signOutBtn.onclick = signOut;
+
+    var danger = document.createElement('div');
+    danger.style.cssText = 'border-top:1px solid var(--border);padding-top:1rem;';
+    var dLbl = document.createElement('div');
+    dLbl.style.cssText = 'font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--bloom);margin-bottom:.6rem;';
+    dLbl.textContent = 'danger zone';
+    var delBtn = document.createElement('button'); delBtn.className = 'btn-ghost';
+    delBtn.style.cssText = 'color:var(--bloom);border-color:rgba(155,91,114,.25);font-size:13px;';
+    delBtn.textContent = 'delete account'; delBtn.onclick = confirmDeleteAccount;
+    danger.appendChild(dLbl); danger.appendChild(delBtn);
+
+    [photoRow, nameSec, pwSec, signOutBtn, danger].forEach(function(el){ body.appendChild(el); });
+    panel.appendChild(hdr); panel.appendChild(body);
+    document.body.appendChild(overlay); document.body.appendChild(panel);
+  }
+
+  async function navMenuSaveName() {
+    const val = document.getElementById('pm-name')?.value.trim();
+    if (!val) return;
+    if (currentUser) { try { await sb.auth.updateUser({ data: { display_name: val } }); } catch(e) {} }
+    document.getElementById('profile-modal')?.remove();
+    document.getElementById('profile-modal-overlay')?.remove();
+  }
+
+  async function navMenuSavePw() {
+    const pw = document.getElementById('pm-pw')?.value;
+    if (!pw || pw.length < 6) { alert('password must be at least 6 characters'); return; }
+    try { await sb.auth.updateUser({ password: pw }); } catch(e) {}
+    const inp = document.getElementById('pm-pw'); if (inp) inp.value = '';
+    alert('password updated!');
+  }
+
   async function boot() {
     if (!sb) return;
     const { data: { session } } = await sb.auth.getSession();
@@ -4442,7 +4848,20 @@
     } catch(e) { console.error(e); }
     document.getElementById('auth-screen').classList.add('hidden');
     document.body.classList.remove('auth-open');
-    showHomeScreen(memberships);
+    if (memberships && memberships.length > 0) {
+      allMemberships = memberships;
+      // Go straight into the first group
+      const first = memberships[0];
+      const initials = name.slice(0,2).toUpperCase();
+      document.getElementById('auth-screen')?.classList.add('hidden');
+      document.body.classList.remove('auth-open');
+      await enterGroup(first.group_id);
+    } else {
+      // No groups yet — show group creation screen
+      document.getElementById('auth-screen')?.classList.add('hidden');
+      document.body.classList.remove('auth-open');
+      document.getElementById('group-screen')?.classList.remove('hidden');
+    }
   }
 
   boot();
