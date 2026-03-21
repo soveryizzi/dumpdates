@@ -2370,6 +2370,7 @@ main { padding: 0.875rem 0.625rem 5rem; }
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   let currentUser = null;
+  let members = [];
   let sb = null;
   let currentGroup = null;
   let currentMember = null;
@@ -2452,11 +2453,43 @@ main { padding: 0.875rem 0.625rem 5rem; }
   }
 
 
+  // ── MOBILE NAV ────────────────────────────────────────────────────────────
+  let _mobileNavOpen = false;
+
+  function toggleMobileNav() { _mobileNavOpen ? closeMobileNav() : openMobileNav(); }
+
+  function openMobileNav() {
+    _mobileNavOpen = true;
+    const drawer = document.getElementById('mobile-nav-drawer');
+    const chevron = document.getElementById('mobile-nav-chevron');
+    if (drawer) drawer.style.display = 'block';
+    if (chevron) chevron.style.transform = 'rotate(180deg)';
+    setTimeout(() => document.addEventListener('click', _mobileNavOutside, { once: true }), 0);
+  }
+
+  function closeMobileNav() {
+    _mobileNavOpen = false;
+    const drawer = document.getElementById('mobile-nav-drawer');
+    const chevron = document.getElementById('mobile-nav-chevron');
+    if (drawer) drawer.style.display = 'none';
+    if (chevron) chevron.style.transform = '';
+  }
+
+  function _mobileNavOutside(e) {
+    if (!document.getElementById('main-header')?.contains(e.target)) closeMobileNav();
+  }
+
+  function updateMobileNavActive(id) {
+    document.querySelectorAll('.mobile-nav-item').forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('onclick')?.includes("'" + id + "'"));
+    });
+  }
+
   function switchTab(id, btn) {
     document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.getElementById(id).classList.add('active');
-    updateMobileNavActive(id);
+    if (typeof updateMobileNavActive === 'function') updateMobileNavActive(id);
     if (btn) btn.classList.add('active');
     if (id === 'letter') {
       renderShelf();
@@ -2900,14 +2933,14 @@ main { padding: 0.875rem 0.625rem 5rem; }
 
   // ── ZINE ──────────────────────────────────────────────────
 
-  const zineData    = [];
+  let zineData    = [];
   let zinePage      = 0;
   let zinePages     = [];
   let isFlipping    = false;
 
 
   let activeZineKey = 'instructions';
-  const pastZines   = [];
+  let pastZines   = [];
   let myPreviewData = null; // set when user previews their answers
 
   function makeShelfItem(key, innerHtml, label, showDate=false) {
@@ -3428,10 +3461,11 @@ main { padding: 0.875rem 0.625rem 5rem; }
     if (!currentGroup) return;
     if (name) currentGroup.name = name;
     if (desc !== undefined) currentGroup.description = desc;
-    if (currentGroup.id !== 'preview-group-1') {
+    if (!currentGroup.id.startsWith('preview')) {
       const upd = {};
       if (name) upd.name = name;
       if (desc !== undefined) upd.description = desc;
+      if (currentGroup.frequency) upd.frequency = currentGroup.frequency;
       await sb.from('groups').update(upd).eq('id', currentGroup.id);
     }
     closeGroupSettings();
@@ -3517,24 +3551,8 @@ main { padding: 0.875rem 0.625rem 5rem; }
     });
   }
 
-  function removeMember(userId) {
-    if (!confirm('remove this member from the group?')) return;
-    members = (members||[]).filter(m => m.user_id !== userId);
-    toggleGroupSettings(); toggleGroupSettings(); // refresh panel
-  }
 
-  function leaveGroup() {
-    if (!confirm('leave this group? you can rejoin later with the invite code.')) return;
-    closeGroupSettings();
-    document.getElementById('home-screen').classList.remove('hidden');
-    document.querySelector('main')?.classList.add('hidden');
-    document.getElementById('main-header')?.classList.add('hidden');
-  }
 
-  function deleteGroup() {
-    if (!confirm('delete this group permanently? all issues and answers will be lost.')) return;
-    closeGroupSettings();
-  }
 
   // ── POLL QUESTION ─────────────────────────────────────────
 
@@ -3820,7 +3838,6 @@ main { padding: 0.875rem 0.625rem 5rem; }
     renderSlots(); renderFilters(); renderGarden(); renderAnswers();
     renderShelf(); renderZine(zineData);
     switchTab('questions', document.querySelector('.tab-btn'));
-    updateGroupSwitcher();
   }
 
   function enterPreviewGroup2() {
@@ -3845,7 +3862,6 @@ main { padding: 0.875rem 0.625rem 5rem; }
     renderSlots(); renderFilters(); renderGarden(); renderAnswers();
     renderShelf(); renderZine([]);
     switchTab('questions', document.querySelector('.tab-btn'));
-    updateGroupSwitcher();
   }
   const isPreview = new URLSearchParams(window.location.search).has('preview');
   if (isPreview) enterPreview();
@@ -4008,53 +4024,7 @@ main { padding: 0.875rem 0.625rem 5rem; }
     document.getElementById('home-join-form').style.display = 'none';
   }
 
-  async function createGroupFromHome() {
-    const name = document.getElementById('home-group-name').value.trim();
-    const err = document.getElementById('home-create-error');
-    err.textContent = '';
-    if (!name) { err.textContent = 'please enter a group name'; return; }
-    try {
-      const { data: group, error: ge } = await sb.from('groups').insert({
-        name, created_by: currentUser.id
-      }).select().single();
-      if (ge) throw ge;
-      const displayName = currentUser.user_metadata?.display_name || currentUser.email.split('@')[0];
-      const { error: me } = await sb.from('group_members').insert({
-        group_id: group.id, user_id: currentUser.id,
-        display_name: displayName, avatar_color: '#CFE8D5'
-      });
-      if (me) throw me;
-      hideHomeForms();
-      await enterGroup(group.id);
-    } catch (e) {
-      document.getElementById('home-create-error').textContent = e.message;
-    }
-  }
 
-  async function joinGroupFromHome() {
-    const code = document.getElementById('home-group-code').value.trim().toUpperCase().replace(/-/g,'');
-    const err = document.getElementById('home-join-error');
-    err.textContent = '';
-    if (!code) { err.textContent = 'please enter an invite code'; return; }
-    try {
-      const { data: groups } = await sb.from('groups').select('*');
-      const group = groups.find(g => g.id.replace(/-/g,'').slice(0,8).toUpperCase() === code);
-      if (!group) { err.textContent = 'invite code not found — check with your friend'; return; }
-      const displayName = currentUser.user_metadata?.display_name || currentUser.email.split('@')[0];
-      const { data: members } = await sb.from('group_members').select('*').eq('group_id', group.id);
-      const colors = ['#CFE8D5','#F1D4DC','#C9C3D9','#FBF0C0','#E3B8C2'];
-      const color = colors[members.length % colors.length];
-      const { error: me } = await sb.from('group_members').insert({
-        group_id: group.id, user_id: currentUser.id,
-        display_name: displayName, avatar_color: color
-      });
-      if (me) throw me;
-      hideHomeForms();
-      await enterGroup(group.id);
-    } catch (e) {
-      document.getElementById('home-join-error').textContent = e.message;
-    }
-  }
 
   function toggleHomeMenu() {
     document.getElementById('home-avatar-menu').classList.toggle('open');
@@ -4115,66 +4085,6 @@ main { padding: 0.875rem 0.625rem 5rem; }
     }, 150);
   }
 
-  async function handleAuth() {
-    const email = document.getElementById('auth-email').value.trim();
-    const password = document.getElementById('auth-password').value;
-    const btn = document.getElementById('auth-submit-btn');
-    const err = document.getElementById('auth-error');
-    err.textContent = '';
-    btn.disabled = true;
-
-    if (authMode === 'signup') {
-      btn.innerHTML = `<span style="display:inline-flex;align-items:center;gap:8px;justify-content:center;">
-        <svg style="animation:spin 0.8s linear infinite;" width="14" height="14" viewBox="0 0 14 14" fill="none">
-          <circle cx="7" cy="7" r="5.5" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
-          <path d="M7 1.5A5.5 5.5 0 0 1 12.5 7" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
-        creating account…
-      </span>`;
-    } else {
-      btn.innerHTML = `<span style="display:inline-flex;align-items:center;gap:8px;justify-content:center;">
-        <svg style="animation:spin 0.8s linear infinite;" width="14" height="14" viewBox="0 0 14 14" fill="none">
-          <circle cx="7" cy="7" r="5.5" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
-          <path d="M7 1.5A5.5 5.5 0 0 1 12.5 7" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
-        logging you in…
-      </span>`;
-    }
-
-    try {
-      if (authMode === 'signup') {
-        const displayName = document.getElementById('auth-displayname').value.trim();
-        if (!displayName) {
-          err.textContent = 'please enter a display name';
-          btn.disabled = false; btn.textContent = 'sign up'; return;
-        }
-        const { data, error } = await sb.auth.signUp({ email, password, options: { data: { display_name: displayName } } });
-        if (error) throw error;
-        btn.innerHTML = `<span style="display:inline-flex;align-items:center;gap:8px;justify-content:center;">
-          <svg width="14" height="12" viewBox="0 0 14 12" fill="none">
-            <path d="M1 6L5 10L13 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          account created!
-        </span>`;
-        if (data?.user) await onSignedIn(data.user);
-      } else {
-        const { data, error } = await sb.auth.signInWithPassword({ email, password });
-        if (error) throw error;
-        btn.innerHTML = `<span style="display:inline-flex;align-items:center;gap:8px;justify-content:center;">
-          <svg style="animation:spin 0.8s linear infinite;" width="14" height="14" viewBox="0 0 14 14" fill="none">
-            <circle cx="7" cy="7" r="5.5" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
-            <path d="M7 1.5A5.5 5.5 0 0 1 12.5 7" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
-          </svg>
-          loading your garden…
-        </span>`;
-        if (data?.user) await onSignedIn(data.user);
-      }
-    } catch (e) {
-      err.textContent = e.message;
-      btn.disabled = false;
-      btn.textContent = authMode === 'login' ? 'log in' : 'sign up';
-    }
-  }
 
   // Enter key on auth fields
   ['auth-email','auth-password','auth-displayname'].forEach(id => {
@@ -4182,57 +4092,13 @@ main { padding: 0.875rem 0.625rem 5rem; }
     if (el) el.addEventListener('keydown', e => { if (e.key === 'Enter') handleAuth(); });
   });
 
-  async function signOut() {
-    await sb.auth.signOut();
-    location.reload();
-  }
 
   document.addEventListener('click', e => {
   });
 
   // ── GROUP UI ──────────────────────────────────────────────
 
-  function showGroupForm(type) {
-    document.getElementById('group-choose').style.display = type ? 'none' : '';
-    document.getElementById('group-create-form').style.display = type === 'create' ? '' : 'none';
-    document.getElementById('group-join-form').style.display = type === 'join' ? '' : 'none';
-    if (type === 'create') document.getElementById('group-name-input')?.focus();
-    if (type === 'join') document.getElementById('group-code-input')?.focus();
-  }
 
-  async function createGroup() {
-    const nameEl = document.getElementById('group-name-input');
-    const name = nameEl?.value.trim();
-    const desc = document.getElementById('group-desc-input')?.value.trim() || '';
-    const btn = document.querySelector('#group-create-form .auth-btn');
-    const err = document.getElementById('group-error');
-    err.textContent = '';
-    if (!name) { err.textContent = 'please enter a group name'; return; }
-    if (btn) { btn.textContent = 'creating…'; btn.disabled = true; }
-
-    try {
-      const { data: group, error: ge } = await sb.from('groups').insert({
-        name, description: desc, created_by: currentUser.id
-      }).select().single();
-      if (ge) throw ge;
-
-      const displayName = currentUser.user_metadata?.display_name || currentUser.email.split('@')[0];
-      const { error: me } = await sb.from('group_members').insert({
-        group_id: group.id, user_id: currentUser.id,
-        display_name: displayName, avatar_color: '#CFE8D5'
-      });
-      if (me) throw me;
-
-      await loadGroup(group.id);
-
-      // Show the invite code right after creation
-      const code = group.id.replace(/-/g,'').slice(0,8).toUpperCase();
-      setTimeout(() => showGroupInvitePrompt(code), 500);
-    } catch (e) {
-      err.textContent = e.message || 'something went wrong';
-      if (btn) { btn.textContent = 'create group'; btn.disabled = false; }
-    }
-  }
 
   function showGroupInvitePrompt(code) {
     const modal = document.createElement('div');
@@ -4341,6 +4207,165 @@ main { padding: 0.875rem 0.625rem 5rem; }
       menu.classList.remove('open');
     }
   });
+
+
+  // ── ANSWER AUTOSAVE ───────────────────────────────────────────────────────
+  async function saveAnswer(i) {
+    if (!currentIssue || !currentUser) return;
+    const qId = issueList[i];
+    if (qId === undefined) return;
+    const val = answers[i] || '';
+    const el = document.getElementById('saved-' + i);
+    try {
+      await sb.from('answers').upsert({
+        issue_id: currentIssue.id,
+        question_id: qId,
+        user_id: currentUser.id,
+        text: val
+      }, { onConflict: 'issue_id,question_id,user_id' });
+      if (el) { el.textContent = 'saved'; setTimeout(() => { if (el) el.textContent = ''; }, 1500); }
+    } catch(e) {
+      if (el) el.textContent = 'save failed';
+      console.error('saveAnswer error:', e);
+    }
+  }
+
+  // ── QUESTION GARDEN → ISSUE ───────────────────────────────────────────────
+  async function plantQuestion() {
+    const inp = document.getElementById('garden-input');
+    const text = inp?.value.trim();
+    if (!text) return;
+
+    const isPoll = document.getElementById('poll-toggle-checkbox')?.checked;
+    let pollOptions = [];
+    if (isPoll) {
+      pollOptions = Array.from(document.querySelectorAll('.poll-inline-input'))
+        .map(el => el.value.trim()).filter(Boolean);
+    }
+
+    const newItem = {
+      id: nextId++, text,
+      tag: 'mine', mine: true,
+      type: isPoll ? 'poll' : 'text',
+      options: isPoll ? pollOptions : undefined
+    };
+    garden.unshift(newItem);
+    issueList.push(newItem.id);
+    answers.push('');
+    photosByQ.push([]);
+    if (inp) inp.value = '';
+    renderFilters(); renderGarden(); renderSlots(); renderAnswers();
+
+    // Save to DB
+    if (currentIssue && !currentGroup?.id?.startsWith('preview')) {
+      try {
+        const { data: q } = await sb.from('questions').insert({
+          group_id: currentGroup.id,
+          text,
+          type: isPoll ? 'poll' : 'text',
+          options: isPoll ? pollOptions : null,
+          added_by: currentUser.id,
+          tag: 'mine'
+        }).select().single();
+        if (q) {
+          newItem.dbId = q.id;
+          await sb.from('issue_questions').insert({
+            issue_id: currentIssue.id,
+            question_id: q.id,
+            added_by: currentUser.id
+          });
+        }
+      } catch(e) { console.error('plantQuestion DB error:', e); }
+    }
+  }
+
+  async function addToIssue(gardenId) {
+    if (isInIssue(gardenId)) return;
+    issueList.push(gardenId);
+    answers.push('');
+    photosByQ.push([]);
+    renderSlots(); renderGarden(); renderAnswers();
+
+    if (currentIssue && !currentGroup?.id?.startsWith('preview')) {
+      const item = getItemById(gardenId);
+      const dbId = item?.dbId || gardenId;
+      try {
+        await sb.from('issue_questions').insert({
+          issue_id: currentIssue.id,
+          question_id: dbId,
+          added_by: currentUser.id
+        });
+      } catch(e) { console.error('addToIssue DB error:', e); }
+    }
+  }
+
+  async function removeFromIssue(gardenId) {
+    const idx = issueList.indexOf(gardenId);
+    if (idx === -1) return;
+    issueList.splice(idx, 1);
+    answers.splice(idx, 1);
+    photosByQ.splice(idx, 1);
+    renderSlots(); renderGarden(); renderAnswers();
+
+    if (currentIssue && !currentGroup?.id?.startsWith('preview')) {
+      const item = getItemById(gardenId);
+      const dbId = item?.dbId || gardenId;
+      try {
+        await sb.from('issue_questions')
+          .delete()
+          .eq('issue_id', currentIssue.id)
+          .eq('question_id', dbId);
+      } catch(e) { console.error('removeFromIssue DB error:', e); }
+    }
+  }
+
+  // ── MEMBER / GROUP MANAGEMENT ─────────────────────────────────────────────
+  async function removeMember(userId) {
+    if (!confirm('remove this member from the group?')) return;
+    if (!currentGroup?.id?.startsWith('preview')) {
+      try {
+        await sb.from('group_members')
+          .delete()
+          .eq('group_id', currentGroup.id)
+          .eq('user_id', userId);
+      } catch(e) { console.error('removeMember error:', e); }
+    }
+    members = (members || []).filter(m => m.user_id !== userId);
+    toggleGroupSettings(); toggleGroupSettings();
+  }
+
+  async function leaveGroup() {
+    if (!confirm('leave this group? you can rejoin later with the invite code.')) return;
+    if (!currentGroup?.id?.startsWith('preview')) {
+      try {
+        await sb.from('group_members')
+          .delete()
+          .eq('group_id', currentGroup.id)
+          .eq('user_id', currentUser.id);
+      } catch(e) { console.error('leaveGroup error:', e); }
+    }
+    closeGroupSettings();
+    currentGroup = null; currentIssue = null; members = [];
+    // Reload to reset state
+    location.reload();
+  }
+
+  async function deleteGroup() {
+    if (!confirm('delete this group permanently? all issues and answers will be lost.')) return;
+    if (!currentGroup?.id?.startsWith('preview')) {
+      try {
+        // Delete in order: answers → issue_questions → issues → group_members → group
+        await sb.from('answers').delete().eq('issue_id', currentIssue?.id);
+        await sb.from('issue_questions').delete().in('issue_id',
+          (await sb.from('issues').select('id').eq('group_id', currentGroup.id)).data?.map(r=>r.id) || []);
+        await sb.from('issues').delete().eq('group_id', currentGroup.id);
+        await sb.from('group_members').delete().eq('group_id', currentGroup.id);
+        await sb.from('groups').delete().eq('id', currentGroup.id);
+      } catch(e) { console.error('deleteGroup error:', e); }
+    }
+    closeGroupSettings();
+    location.reload();
+  }
 
   // ── SUPABASE ──────────────────────────────────────────────
 
