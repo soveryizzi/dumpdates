@@ -6,10 +6,10 @@ Build strictly in order. A step is done only when its verification checks pass (
 
 ## Phase 0 — Foundations (no features yet)
 
-- [ ] **0.1** Create fresh `dumpdates` repo · Vite scaffold · `base: '/dumpdates/'` in Vite config
-- [ ] **0.2** Secrets setup: `.env`, `.gitignore` (includes `.env`), `.env.example`
-- [ ] **0.3** Add docs to repo root: `CLAUDE.md`, `HANDOFF.md`, `dumpdates_PRD.md`, `ROADMAP.md`, `question_bank_seed.sql`
-- [ ] **0.4** Deploy a hello-world page to GitHub Pages — proves the deploy pipeline before any real code exists
+- [x] **0.1** Create fresh `dumpdates` repo · Vite scaffold · `base: '/dumpdates/'` in Vite config
+- [x] **0.2** Secrets setup: `.env`, `.gitignore` (includes `.env`), `.env.example`
+- [x] **0.3** Add docs to repo root: `CLAUDE.md`, `HANDOFF.md`, `dumpdates_PRD.md`, `ROADMAP.md`, `question_bank_seed.sql`
+- [x] **0.4** Deploy a hello-world page to GitHub Pages — proves the deploy pipeline before any real code exists
 
 ## Phase 1 — Data model
 
