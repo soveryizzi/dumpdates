@@ -19,8 +19,8 @@ Build strictly in order. A step is done only when its verification checks pass (
 
 ## Phase 2 — Service layer
 
-- [ ] **2.1** `supabase.js` with `dbQuery()` helper (raw fetch, explicit token) — built and tested FIRST
-- [ ] **2.2** Query functions for groups/members on top of `dbQuery()`
+- [x] **2.1** `supabase.js` with `dbQuery()` helper (raw fetch, explicit token) — built and tested FIRST
+- [x] **2.2** Query functions for groups/members on top of `dbQuery()`
 
 ## Phase 3 — Auth
 
