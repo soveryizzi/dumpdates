@@ -29,9 +29,9 @@ Build strictly in order. A step is done only when its verification checks pass (
 
 ## Phase 4 — Groups & membership
 
-- [ ] **4.1** Create group (creator = admin) · invite code generated
-- [ ] **4.2** Join via invite code
-- [ ] **4.3** Member list view
+- [x] **4.1** Create group (creator = admin) · invite code generated
+- [x] **4.2** Join via invite code
+- [x] **4.3** Member list view
 
 ## Phase 5 — Cycle engine (dates, ET)
 

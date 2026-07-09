@@ -333,3 +333,96 @@ create policy answers_update on answers for update
       where q.id = answers.question_id
     ) = 'answering'
   );
+
+-- =========================================================
+-- RPC FUNCTIONS (Phase 4 — create/join a group)
+-- Both are security definer: they intentionally bypass the RLS policies above
+-- (groups_select restricts to existing members; members_insert restricts to
+-- the group's own admin), because creating a group and joining one by invite
+-- code are exactly the two moments where that restriction doesn't apply yet.
+-- =========================================================
+
+-- Creates the group and the creator's own membership row in one transaction,
+-- retrying a fresh invite code on the rare unique-constraint collision.
+-- Output columns are prefixed "out_" on purpose — RETURNS TABLE column names
+-- become plpgsql variables inside the function body, and an unprefixed name
+-- like "group_id" would collide with the real members.group_id column and
+-- make any query that references it ambiguous.
+drop function if exists create_group(text, text);
+create function create_group(p_name text, p_username text)
+returns table (out_group_id uuid, out_group_name text, out_invite_code text)
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_group_id uuid;
+  v_code text;
+  v_chars text := 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+  v_attempt int := 0;
+begin
+  loop
+    v_code := '';
+    for i in 1..6 loop
+      v_code := v_code || substr(v_chars, 1 + floor(random() * length(v_chars))::int, 1);
+    end loop;
+
+    begin
+      insert into groups (name, invite_code, admin_id)
+      values (p_name, v_code, auth.uid())
+      returning id into v_group_id;
+      exit;
+    exception when unique_violation then
+      v_attempt := v_attempt + 1;
+      if v_attempt >= 5 then
+        raise exception 'could not generate a unique invite code, try again';
+      end if;
+    end;
+  end loop;
+
+  insert into members (group_id, user_id, username)
+  values (v_group_id, auth.uid(), p_username);
+
+  return query select v_group_id, p_name, v_code;
+end;
+$$;
+
+revoke execute on function create_group(text, text) from public;
+grant execute on function create_group(text, text) to authenticated;
+
+-- Looks up the group by invite code and adds the caller as a member.
+drop function if exists join_group(text, text);
+create function join_group(p_invite_code text, p_username text)
+returns table (out_group_id uuid, out_group_name text)
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_group_id uuid;
+  v_group_name text;
+begin
+  select id, name into v_group_id, v_group_name
+  from groups
+  where invite_code = p_invite_code;
+
+  if v_group_id is null then
+    raise exception 'invalid invite code';
+  end if;
+
+  if exists (
+    select 1 from members
+    where members.group_id = v_group_id and members.user_id = auth.uid()
+  ) then
+    raise exception 'you''re already in this group';
+  end if;
+
+  insert into members (group_id, user_id, username)
+  values (v_group_id, auth.uid(), p_username);
+
+  return query select v_group_id, v_group_name;
+end;
+$$;
+
+revoke execute on function join_group(text, text) from public;
+grant execute on function join_group(text, text) to authenticated;
