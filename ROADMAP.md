@@ -24,8 +24,8 @@ Build strictly in order. A step is done only when its verification checks pass (
 
 ## Phase 3 — Auth
 
-- [ ] **3.1** Email/password signup, login, logout
-- [ ] **3.2** Confirmation redirect URL configured in Supabase → Pages URL
+- [x] **3.1** Email/password signup, login, logout
+- [x] **3.2** Confirmation redirect URL configured in Supabase → Pages URL
 
 ## Phase 4 — Groups & membership
 
