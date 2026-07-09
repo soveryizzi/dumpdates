@@ -17,18 +17,13 @@ Resources:`;for(let t of c){if(!t||typeof t!=`string`)throw Error(`@supabase/aut
       <button type="button" id="signup-btn">sign up</button>
     </form>
     <p id="status"></p>
-  `;let t=e.querySelector(`#auth-form`),n=e.querySelector(`#email`),r=e.querySelector(`#password`),i=e.querySelector(`#status`);t.addEventListener(`submit`,async e=>{e.preventDefault(),i.textContent=`logging in...`;let{error:t}=await Yi(n.value,r.value);t&&(i.textContent=t.message)}),e.querySelector(`#signup-btn`).addEventListener(`click`,async()=>{if(!n.value||!r.value){i.textContent=`enter an email and password first`;return}i.textContent=`signing up...`;let{error:e}=await Ji(n.value,r.value);i.textContent=e?e.message:`check your email to confirm your account`})}function $i(){return Q(`groups?select=*`)}function ea({name:e,username:t}){return Q(`rpc/create_group`,{method:`POST`,body:{p_name:e,p_username:t}})}function ta({inviteCode:e,username:t}){return Q(`rpc/join_group`,{method:`POST`,body:{p_invite_code:e,p_username:t}})}function na(e){return Q(`members?group_id=eq.${e}&select=*`)}function ra(e){return Q(`cycles?group_id=eq.${e}&select=*&order=month.desc`)}function ia(e){return Q(`rpc/sync_group_cycles`,{method:`POST`,body:{p_group_id:e}})}var aa=`America/New_York`;function oa(e=new Date){let t=new Intl.DateTimeFormat(`en-US`,{timeZone:aa,year:`numeric`,month:`2-digit`,day:`2-digit`}),n=Object.fromEntries(t.formatToParts(e).map(e=>[e.type,e.value]));return{year:Number(n.year),month:Number(n.month),day:Number(n.day)}}function sa(e,t){return`${e}-${String(t).padStart(2,`0`)}-01`}function ca(e=new Date){let{year:t,month:n}=oa(e);return sa(t,n)}function la(){return Q(`question_bank?select=*&order=id.asc`)}function ua(e){return Q(`nominations?cycle_id=eq.${e}&select=*,question_bank(text)&order=created_at.asc`)}function da({cycleId:e,memberId:t,text:n}){return Q(`nominations`,{method:`POST`,body:{cycle_id:e,member_id:t,custom_text:n}})}function fa({cycleId:e,memberId:t,questionBankId:n}){return Q(`nominations`,{method:`POST`,body:{cycle_id:e,member_id:t,question_bank_id:Number(n)}})}function pa(e){return Q(`nominations?id=eq.${e}`,{method:`DELETE`})}function $(e){return String(e).replaceAll(`&`,`&amp;`).replaceAll(`<`,`&lt;`).replaceAll(`>`,`&gt;`).replaceAll(`"`,`&quot;`).replaceAll(`'`,`&#39;`)}function ma(e){return e.question_bank?.text||e.custom_text}async function ha(e,{cycleId:t,cycleStatus:n,memberId:r}){let i=await ua(t);if(n!==`nominating`){e.innerHTML=`
-      <h4>question pool (${$(n)})</h4>
-      <ul>
-        ${i.map(e=>`<li>${$(ma(e))}</li>`).join(``)||`<li>no questions yet</li>`}
-      </ul>
-    `;return}let a=await la(),o=i.filter(e=>e.member_id===r),s=o.length>=3;e.innerHTML=`
+  `;let t=e.querySelector(`#auth-form`),n=e.querySelector(`#email`),r=e.querySelector(`#password`),i=e.querySelector(`#status`);t.addEventListener(`submit`,async e=>{e.preventDefault(),i.textContent=`logging in...`;let{error:t}=await Yi(n.value,r.value);t&&(i.textContent=t.message)}),e.querySelector(`#signup-btn`).addEventListener(`click`,async()=>{if(!n.value||!r.value){i.textContent=`enter an email and password first`;return}i.textContent=`signing up...`;let{error:e}=await Ji(n.value,r.value);i.textContent=e?e.message:`check your email to confirm your account`})}function $i(){return Q(`groups?select=*`)}function ea({name:e,username:t}){return Q(`rpc/create_group`,{method:`POST`,body:{p_name:e,p_username:t}})}function ta({inviteCode:e,username:t}){return Q(`rpc/join_group`,{method:`POST`,body:{p_invite_code:e,p_username:t}})}function na(e){return Q(`members?group_id=eq.${e}&select=*`)}function ra(e){return Q(`cycles?group_id=eq.${e}&select=*&order=month.desc`)}function ia(e){return Q(`rpc/sync_group_cycles`,{method:`POST`,body:{p_group_id:e}})}var aa=`America/New_York`;function oa(e=new Date){let t=new Intl.DateTimeFormat(`en-US`,{timeZone:aa,year:`numeric`,month:`2-digit`,day:`2-digit`}),n=Object.fromEntries(t.formatToParts(e).map(e=>[e.type,e.value]));return{year:Number(n.year),month:Number(n.month),day:Number(n.day)}}function sa(e,t){return`${e}-${String(t).padStart(2,`0`)}-01`}function ca(e=new Date){let{year:t,month:n}=oa(e);return sa(t,n)}function la(){return Q(`question_bank?select=*&order=id.asc`)}function ua(e){return Q(`nominations?cycle_id=eq.${e}&select=*,question_bank(text)&order=created_at.asc`)}function da({cycleId:e,memberId:t,text:n}){return Q(`nominations`,{method:`POST`,body:{cycle_id:e,member_id:t,custom_text:n}})}function fa({cycleId:e,memberId:t,questionBankId:n}){return Q(`nominations`,{method:`POST`,body:{cycle_id:e,member_id:t,question_bank_id:Number(n)}})}function pa(e){return Q(`nominations?id=eq.${e}`,{method:`DELETE`})}function $(e){return String(e).replaceAll(`&`,`&amp;`).replaceAll(`<`,`&lt;`).replaceAll(`>`,`&gt;`).replaceAll(`"`,`&quot;`).replaceAll(`'`,`&#39;`)}function ma(e){return e.question_bank?.text||e.custom_text}async function ha(e,{cycleId:t,memberId:n}){let r=await ua(t),i=await la(),a=r.filter(e=>e.member_id===n),o=a.length>=3;e.innerHTML=`
     <h4>question garden — nominate up to 3</h4>
     <ul>
-      ${i.map(e=>{let t=e.member_id===r;return`<li>${$(ma(e))} ${t?`<button data-remove="${e.id}">x</button>`:``}</li>`}).join(``)||`<li>no questions yet</li>`}
+      ${r.map(e=>{let t=e.member_id===n;return`<li>${$(ma(e))} ${t?`<button data-remove="${e.id}">x</button>`:``}</li>`}).join(``)||`<li>no questions yet</li>`}
     </ul>
-    <p>${o.length}/3 nominations used</p>
-    ${s?`<p>you've used your 3 nominations</p>`:`
+    <p>${a.length}/3 nominations used</p>
+    ${o?`<p>you've used your 3 nominations</p>`:`
           <form id="custom-form">
             <input type="text" id="custom-text" placeholder="write your own question" maxlength="140" required />
             <button type="submit">add</button>
@@ -36,13 +31,26 @@ Resources:`;for(let t of c){if(!t||typeof t!=`string`)throw Error(`@supabase/aut
           <form id="bank-form">
             <select id="bank-select" required>
               <option value="" disabled selected>pick from the bank</option>
-              ${a.map(e=>`<option value="${e.id}">${$(e.text)}</option>`).join(``)}
+              ${i.map(e=>`<option value="${e.id}">${$(e.text)}</option>`).join(``)}
             </select>
             <button type="submit">add</button>
           </form>
         `}
     <p id="nom-status"></p>
-  `;let c=()=>ha(e,{cycleId:t,cycleStatus:n,memberId:r}),l=e.querySelector(`#nom-status`);e.querySelectorAll(`[data-remove]`).forEach(e=>{e.addEventListener(`click`,async()=>{try{await pa(e.dataset.remove),await c()}catch(e){l.textContent=e.message}})}),e.querySelector(`#custom-form`)?.addEventListener(`submit`,async n=>{n.preventDefault();let i=e.querySelector(`#custom-text`).value;try{await da({cycleId:t,memberId:r,text:i}),await c()}catch(e){l.textContent=e.message}}),e.querySelector(`#bank-form`)?.addEventListener(`submit`,async n=>{n.preventDefault();let i=e.querySelector(`#bank-select`).value;try{await fa({cycleId:t,memberId:r,questionBankId:i}),await c()}catch(e){l.textContent=e.message}})}async function ga(e,t){e.innerHTML=`
+  `;let s=()=>ha(e,{cycleId:t,memberId:n}),c=e.querySelector(`#nom-status`);e.querySelectorAll(`[data-remove]`).forEach(e=>{e.addEventListener(`click`,async()=>{try{await pa(e.dataset.remove),await s()}catch(e){c.textContent=e.message}})}),e.querySelector(`#custom-form`)?.addEventListener(`submit`,async r=>{r.preventDefault();let i=e.querySelector(`#custom-text`).value;try{await da({cycleId:t,memberId:n,text:i}),await s()}catch(e){c.textContent=e.message}}),e.querySelector(`#bank-form`)?.addEventListener(`submit`,async r=>{r.preventDefault();let i=e.querySelector(`#bank-select`).value;try{await fa({cycleId:t,memberId:n,questionBankId:i}),await s()}catch(e){c.textContent=e.message}})}function ga(e){return Q(`questions?cycle_id=eq.${e}&select=*&order=created_at.asc`)}function _a(e,t){return t.length===0?Promise.resolve([]):Q(`answers?member_id=eq.${e}&question_id=in.(${t.join(`,`)})&select=*`)}function va({questionId:e,memberId:t,text:n}){return Q(`answers?on_conflict=question_id,member_id`,{method:`POST`,headers:{Prefer:`resolution=merge-duplicates,return=representation`},body:{question_id:e,member_id:t,text:n}})}var ya=600;async function ba(e,{cycleId:t,cycleStatus:n,memberId:r}){let i=await ga(t);if(i.length===0){e.innerHTML=`<p>the pool hasn't locked yet</p>`;return}let a=await _a(r,i.map(e=>e.id)),o=Object.fromEntries(a.map(e=>[e.question_id,e])),s=n===`answering`;e.innerHTML=`
+    <h4>your answers${s?` — saves automatically`:``}</h4>
+    ${i.map(e=>{let t=o[e.id];return`
+          <div>
+            <p>${$(e.text)}</p>
+            <textarea
+              data-question="${e.id}"
+              ${s?``:`readonly`}
+              placeholder="your answer"
+            >${$(t?.text||``)}</textarea>
+            <span data-save-status="${e.id}"></span>
+          </div>
+        `}).join(``)}
+  `,s&&e.querySelectorAll(`textarea[data-question]`).forEach(t=>{let n=t.dataset.question,i=e.querySelector(`[data-save-status="${n}"]`),a;t.addEventListener(`input`,()=>{clearTimeout(a),i.textContent=`typing...`,a=setTimeout(async()=>{i.textContent=`saving...`;try{await va({questionId:n,memberId:r,text:t.value}),i.textContent=`saved`}catch(e){i.textContent=e.message}},ya)})})}async function xa(e,t){e.innerHTML=`
     <h1>dumpdates</h1>
     <p>logged in as ${$(t.user.email)}</p>
     <button id="logout-btn">log out</button>
@@ -74,6 +82,6 @@ Resources:`;for(let t of c){if(!t||typeof t!=`string`)throw Error(`@supabase/aut
             <ul>
               ${e.members.map(e=>`<li>${$(e.username)}</li>`).join(``)}
             </ul>
-            <div data-nominations-for="${e.id}"></div>
+            <div data-panel-for="${e.id}"></div>
           </div>
-        `).join(``);for(let e of a)!e.currentCycle||!e.myMembership||ha(n.querySelector(`[data-nominations-for="${e.id}"]`),{cycleId:e.currentCycle.id,cycleStatus:e.currentCycle.status,memberId:e.myMembership.id})}await r()}var _a=document.querySelector(`#app`);Zi(e=>{e?ga(_a,e):Qi(_a)});
+        `).join(``);for(let e of a){if(!e.currentCycle||!e.myMembership)continue;let t=n.querySelector(`[data-panel-for="${e.id}"]`),{id:r,status:i}=e.currentCycle,a=e.myMembership.id;i===`nominating`?ha(t,{cycleId:r,memberId:a}):ba(t,{cycleId:r,cycleStatus:i,memberId:a})}}await r()}var Sa=document.querySelector(`#app`);Zi(e=>{e?xa(Sa,e):Qi(Sa)});
