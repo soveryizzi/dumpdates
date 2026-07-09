@@ -35,7 +35,7 @@ Build strictly in order. A step is done only when its verification checks pass (
 
 ## Phase 5 — Cycle engine (dates, ET)
 
-- [ ] **5.1** ET date helpers: current phase from today's date (nominating / answering / publish-due)
+- [x] **5.1** ET date helpers: current phase from today's date (nominating / answering / publish-due)
 - [ ] **5.2** Cycle rows created/advanced correctly; two active cycles per group supported
 - [ ] **5.3** Pool lock at end of the 15th · empty-pool fallback pulls 5 random bank questions
 
