@@ -1,6 +1,9 @@
 import { signOut } from '../auth.js'
 import { createGroup, joinGroupByCode, getMyGroups } from '../db/groups.js'
 import { getGroupMembers } from '../db/members.js'
+import { syncGroupCycles, getCyclesForGroup } from '../db/cycles.js'
+import { getCurrentCycleMonth } from '../cycle-dates.js'
+import { renderNominationsPanel } from '../components/nominations-panel.js'
 import { escapeHtml } from '../utils.js'
 
 export async function renderGroupsPage(container, session) {
@@ -74,11 +77,28 @@ export async function renderGroupsPage(container, session) {
       return
     }
 
-    const withMembers = await Promise.all(
-      groups.map(async (group) => ({ ...group, members: await getGroupMembers(group.id) }))
+    // keep each group's cycle rows in sync (creates/locks as the date requires)
+    // before reading them
+    await Promise.all(groups.map((group) => syncGroupCycles(group.id).catch(() => {})))
+
+    const currentMonth = getCurrentCycleMonth()
+
+    const withDetails = await Promise.all(
+      groups.map(async (group) => {
+        const [members, cycles] = await Promise.all([
+          getGroupMembers(group.id),
+          getCyclesForGroup(group.id),
+        ])
+        return {
+          ...group,
+          members,
+          currentCycle: cycles.find((c) => c.month === currentMonth),
+          myMembership: members.find((m) => m.user_id === session.user.id),
+        }
+      })
     )
 
-    listEl.innerHTML = withMembers
+    listEl.innerHTML = withDetails
       .map(
         (group) => `
           <div>
@@ -87,10 +107,21 @@ export async function renderGroupsPage(container, session) {
             <ul>
               ${group.members.map((m) => `<li>${escapeHtml(m.username)}</li>`).join('')}
             </ul>
+            <div data-nominations-for="${group.id}"></div>
           </div>
         `
       )
       .join('')
+
+    for (const group of withDetails) {
+      if (!group.currentCycle || !group.myMembership) continue
+      const panelEl = listEl.querySelector(`[data-nominations-for="${group.id}"]`)
+      renderNominationsPanel(panelEl, {
+        cycleId: group.currentCycle.id,
+        cycleStatus: group.currentCycle.status,
+        memberId: group.myMembership.id,
+      })
+    }
   }
 
   await loadGroups()

@@ -41,10 +41,10 @@ Build strictly in order. A step is done only when its verification checks pass (
 
 ## Phase 6 — Nominations ★ first complete end-to-end feature
 
-- [ ] **6.1** Nominate a question (max 3 per member, enforced in DB)
-- [ ] **6.2** View the current pool
-- [ ] **6.3** Full loop verified: create group → join via code → nominate → see pool
-- [ ] **MILESTONE: the whole stack works.** Only now does UI broaden.
+- [x] **6.1** Nominate a question (max 3 per member, enforced in DB)
+- [x] **6.2** View the current pool
+- [x] **6.3** Full loop verified: create group → join via code → nominate → see pool
+- [x] **MILESTONE: the whole stack works.** Only now does UI broaden.
 
 ## Phase 7 — Answers (text)
 
