@@ -426,3 +426,97 @@ $$;
 
 revoke execute on function join_group(text, text) from public;
 grant execute on function join_group(text, text) to authenticated;
+
+-- =========================================================
+-- RPC FUNCTIONS (Phase 5 — cycle engine)
+-- Cycles/questions have no client write policy (Phase 1, on purpose) — the
+-- only way rows get created here is through these two functions.
+-- =========================================================
+
+-- Real logic, parameterized on "as of when" so it can be tested by simulating
+-- a future date without waiting for the calendar. NOT granted to
+-- authenticated/anon — only callable by the table owner (e.g. from the SQL
+-- Editor) or internally by sync_group_cycles() below. This is deliberate: if
+-- any member could pass their own p_as_of, they could force their group's
+-- nomination window to close early.
+--
+-- No membership check in here on purpose — that belongs in the public
+-- wrapper below. auth.uid() is null when this is called directly from the
+-- SQL Editor (no logged-in session), so a check here would block manual
+-- testing; this function is already locked down by the revoke below instead.
+create or replace function sync_group_cycles_at(p_group_id uuid, p_as_of timestamptz)
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_et timestamp;
+  v_current_month date;
+  v_current_cycle_id uuid;
+  v_current_status text;
+  v_nomination_count int;
+begin
+  v_et := p_as_of at time zone 'America/New_York';
+  v_current_month := date_trunc('month', v_et)::date;
+
+  -- make sure this month's cycle exists
+  insert into cycles (group_id, month, status)
+  values (p_group_id, v_current_month, 'nominating')
+  on conflict (group_id, month) do nothing;
+
+  -- past the 15th (ET): lock this cycle's pool, if it hasn't locked yet
+  if extract(day from v_et) > 15 then
+    select c.id, c.status into v_current_cycle_id, v_current_status
+    from cycles c
+    where c.group_id = p_group_id and c.month = v_current_month;
+
+    if v_current_status = 'nominating' then
+      select count(*) into v_nomination_count
+      from nominations n
+      where n.cycle_id = v_current_cycle_id;
+
+      if v_nomination_count > 0 then
+        insert into questions (cycle_id, text, source, nominated_by)
+        select n.cycle_id, coalesce(qb.text, n.custom_text), 'nominated', n.member_id
+        from nominations n
+        left join question_bank qb on qb.id = n.question_bank_id
+        where n.cycle_id = v_current_cycle_id;
+      else
+        insert into questions (cycle_id, text, source)
+        select v_current_cycle_id, qb.text, 'bank_fallback'
+        from question_bank qb
+        order by random()
+        limit 5;
+      end if;
+
+      update cycles c
+      set status = 'answering', pool_locked_at = now()
+      where c.id = v_current_cycle_id;
+    end if;
+  end if;
+end;
+$$;
+
+revoke execute on function sync_group_cycles_at(uuid, timestamptz) from public;
+
+-- Thin public wrapper: always real "now", and this is where the membership
+-- check actually lives. This is the one the app calls, e.g. whenever a
+-- member opens their group — safe for any member to call on their own group
+-- as often as they like, since it's a no-op once things are already in sync.
+create or replace function sync_group_cycles(p_group_id uuid)
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  if not is_group_member(p_group_id) then
+    raise exception 'not a member of this group';
+  end if;
+  perform sync_group_cycles_at(p_group_id, now());
+end;
+$$;
+
+revoke execute on function sync_group_cycles(uuid) from public;
+grant execute on function sync_group_cycles(uuid) to authenticated;
