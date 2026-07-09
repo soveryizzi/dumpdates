@@ -1,10 +1,8 @@
 -- dumpdates — question bank seed (45 questions, final)
 -- Run this AFTER schema.sql creates the question_bank table.
--- Assumed minimal table shape (adjust the column name if schema.sql differs):
---   create table question_bank (
---     id serial primary key,
---     text text not null
---   );
+-- Table shape (see schema.sql): id serial primary key, text text not null unique.
+-- The unique constraint + "on conflict do nothing" below make this safe to
+-- re-run — it won't create duplicate rows if run twice by accident.
 -- Fallback logic: when a cycle's nomination pool locks empty,
 -- pick 5 at random, e.g.:
 --   select text from question_bank order by random() limit 5;
@@ -54,4 +52,5 @@ insert into question_bank (text) values
   ('What''s changed for you since last month?'),
   ('What''s a small thing you want to say to the group?'),
   ('What''s been living in your camera roll this month?'),
-  ('What''s something you''re curious about right now?');
+  ('What''s something you''re curious about right now?')
+on conflict (text) do nothing;

@@ -13,9 +13,9 @@ Build strictly in order. A step is done only when its verification checks pass (
 
 ## Phase 1 — Data model
 
-- [ ] **1.1** `schema.sql`: groups, members, cycles, questions, nominations, answers, question_bank
-- [ ] **1.2** RLS on every table (incl. own-answers-only pre-publish; no writes after lock)
-- [ ] **1.3** Run `question_bank_seed.sql` → 45 rows
+- [x] **1.1** `schema.sql`: groups, members, cycles, questions, nominations, answers, question_bank
+- [x] **1.2** RLS on every table (incl. own-answers-only pre-publish; no writes after lock)
+- [x] **1.3** Run `question_bank_seed.sql` → 45 rows
 
 ## Phase 2 — Service layer
 
