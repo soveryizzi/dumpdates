@@ -57,12 +57,12 @@ Resources:`;for(let t of c){if(!t||typeof t!=`string`)throw Error(`@supabase/aut
                   `).join(``)}
             </div>
             ${s&&n.length<3?`
-                  <input type="file" accept="image/*" data-add-image="${e.id}" />
+                  <input type="file" accept="image/*" multiple data-add-image="${e.id}" />
                   <span data-image-status="${e.id}"></span>
                 `:``}
           </div>
         `}).join(``)}
-  `,!s)return;e.querySelectorAll(`textarea[data-question]`).forEach(t=>{let n=t.dataset.question,i=e.querySelector(`[data-save-status="${n}"]`),a;t.addEventListener(`input`,()=>{clearTimeout(a),i.textContent=`typing...`,a=setTimeout(async()=>{i.textContent=`saving...`;try{await va({questionId:n,memberId:r,text:t.value}),i.textContent=`saved`}catch(e){i.textContent=e.message}},Da)})});let l=()=>Oa(e,{cycleId:t,cycleStatus:n,memberId:r});e.querySelectorAll(`input[data-add-image]`).forEach(n=>{let i=n.dataset.addImage,a=e.querySelector(`[data-image-status="${i}"]`);n.addEventListener(`change`,async()=>{let e=n.files[0];if(e){a.textContent=`uploading...`;try{await Ta({questionId:i,memberId:r,cycleId:t,file:e}),await l()}catch(e){a.textContent=e.message}}})}),e.querySelectorAll(`[data-remove-image]`).forEach(t=>{t.addEventListener(`click`,async()=>{try{await Ea({questionId:t.dataset.removeImageQuestion,memberId:r,imagePath:t.dataset.removeImage}),await l()}catch(n){let r=t.dataset.removeImageQuestion,i=e.querySelector(`[data-image-status="${r}"]`);i&&(i.textContent=n.message)}})})}async function ka(e,t){e.innerHTML=`
+  `,!s)return;e.querySelectorAll(`textarea[data-question]`).forEach(t=>{let n=t.dataset.question,i=e.querySelector(`[data-save-status="${n}"]`),a;t.addEventListener(`input`,()=>{clearTimeout(a),i.textContent=`typing...`,a=setTimeout(async()=>{i.textContent=`saving...`;try{await va({questionId:n,memberId:r,text:t.value}),i.textContent=`saved`}catch(e){i.textContent=e.message}},Da)})});let l=()=>Oa(e,{cycleId:t,cycleStatus:n,memberId:r});e.querySelectorAll(`input[data-add-image]`).forEach(n=>{let i=n.dataset.addImage,a=e.querySelector(`[data-image-status="${i}"]`);n.addEventListener(`change`,async()=>{let e=Array.from(n.files);if(e.length!==0)try{for(let[n,o]of e.entries())a.textContent=`uploading ${n+1}/${e.length}...`,await Ta({questionId:i,memberId:r,cycleId:t,file:o})}catch(e){a.textContent=e.message}finally{await l()}})}),e.querySelectorAll(`[data-remove-image]`).forEach(t=>{t.addEventListener(`click`,async()=>{try{await Ea({questionId:t.dataset.removeImageQuestion,memberId:r,imagePath:t.dataset.removeImage}),await l()}catch(n){let r=t.dataset.removeImageQuestion,i=e.querySelector(`[data-image-status="${r}"]`);i&&(i.textContent=n.message)}})})}async function ka(e,t){e.innerHTML=`
     <h1>dumpdates</h1>
     <p>logged in as ${$(t.user.email)}</p>
     <button id="logout-btn">log out</button>
