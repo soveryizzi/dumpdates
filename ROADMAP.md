@@ -61,9 +61,9 @@ Build strictly in order. A step is done only when its verification checks pass (
 ## Phase 9 — Publish & the zine
 
 - [x] **9.1** Zine view: published cycle readable by all members, usernames + initials avatars, placeholders for unanswered
-- [ ] **9.2** Edge Function: publish logic (idempotent — no-op if already published)
-- [ ] **9.3** Cron schedule: hourly through the 1st (ET) = built-in retry
-- [ ] **9.4** Admin manual publish button → same code path, locks answers immediately
+- [x] **9.2** ~~Edge Function~~ Database function: publish logic (idempotent — no-op if already published). Built as a plain Postgres function called directly by cron instead of a separate Edge Function — same one-code-path guarantee, chosen deliberately for less moving parts (see schema.sql comments). Revisit if/when backlog features (email notifications, AI question gen) need real Edge Function infra anyway.
+- [x] **9.3** Cron schedule: hourly, every day (not just the 1st) = built-in retry, and sidesteps ET/UTC DST cron math since the date check lives in the function itself
+- [x] **9.4** Admin manual publish button → same code path, locks answers immediately
 
 ## Phase 10 — Archive & admin tools
 

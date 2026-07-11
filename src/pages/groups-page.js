@@ -1,7 +1,7 @@
 import { signOut } from '../auth.js'
 import { createGroup, joinGroupByCode, getMyGroups } from '../db/groups.js'
 import { getGroupMembers } from '../db/members.js'
-import { syncGroupCycles, getCyclesForGroup } from '../db/cycles.js'
+import { syncGroupCycles, getCyclesForGroup, adminPublishGroup } from '../db/cycles.js'
 import { getCurrentCycleMonth } from '../cycle-dates.js'
 import { renderNominationsPanel } from '../components/nominations-panel.js'
 import { renderAnswersPanel } from '../components/answers-panel.js'
@@ -104,8 +104,10 @@ export async function renderGroupsPage(container, session) {
     )
 
     listEl.innerHTML = withDetails
-      .map(
-        (group) => `
+      .map((group) => {
+        const isAdmin = group.admin_id === session.user.id
+        const canPublishNow = isAdmin && group.currentCycle?.status === 'answering'
+        return `
           <div>
             <h3>${escapeHtml(group.name)}</h3>
             <p>invite code: ${escapeHtml(group.invite_code)}</p>
@@ -113,10 +115,18 @@ export async function renderGroupsPage(container, session) {
               ${group.members.map((m) => `<li>${escapeHtml(m.username)}</li>`).join('')}
             </ul>
             <div data-panel-for="${group.id}"></div>
+            ${
+              canPublishNow
+                ? `
+                  <button data-publish-now="${group.id}">publish now (admin)</button>
+                  <span data-publish-status="${group.id}"></span>
+                `
+                : ''
+            }
             <div data-zine-for="${group.id}"></div>
           </div>
         `
-      )
+      })
       .join('')
 
     for (const group of withDetails) {
@@ -137,6 +147,21 @@ export async function renderGroupsPage(container, session) {
         renderZinePanel(zineEl, { cycleId: group.latestPublishedCycle.id, members: group.members })
       }
     }
+
+    listEl.querySelectorAll('[data-publish-now]').forEach((btn) => {
+      const groupId = btn.dataset.publishNow
+      const statusEl = listEl.querySelector(`[data-publish-status="${groupId}"]`)
+      btn.addEventListener('click', async () => {
+        statusEl.textContent = 'publishing...'
+        try {
+          await adminPublishGroup(groupId)
+          statusEl.textContent = 'published'
+          await loadGroups()
+        } catch (err) {
+          statusEl.textContent = err.message
+        }
+      })
+    })
   }
 
   await loadGroups()

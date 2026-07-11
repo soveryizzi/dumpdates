@@ -13,3 +13,12 @@ export function syncGroupCycles(groupId) {
     body: { p_group_id: groupId },
   })
 }
+
+// Admin-only escape hatch: publishes the group's current cycle immediately,
+// regardless of date — see admin_publish_group() in schema.sql.
+export function adminPublishGroup(groupId) {
+  return dbQuery('rpc/admin_publish_group', {
+    method: 'POST',
+    body: { p_group_id: groupId },
+  })
+}

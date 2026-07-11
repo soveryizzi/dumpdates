@@ -520,3 +520,163 @@ $$;
 
 revoke execute on function sync_group_cycles(uuid) from public;
 grant execute on function sync_group_cycles(uuid) to authenticated;
+
+-- =========================================================
+-- Phase 8 — image answers: cap at 3 per answer, enforced in the DB
+-- (same "product rule enforced in DB" pattern as the 3-nomination cap)
+-- =========================================================
+
+alter table answers drop constraint if exists answers_max_3_images;
+alter table answers add constraint answers_max_3_images
+  check (array_length(image_urls, 1) is null or array_length(image_urls, 1) <= 3);
+
+-- =========================================================
+-- STORAGE (Phase 8 — image answers)
+-- Path convention: {cycle_id}/{member_id}/{filename} — visibility depends only
+-- on the cycle + which member uploaded it, the same rule as the answers table
+-- itself (own until publish, everyone's after), so that's all the path needs
+-- to carry. storage.foldername(name) splits the path into that array.
+-- =========================================================
+
+insert into storage.buckets (id, name, public)
+values ('answer-images', 'answer-images', false)
+on conflict (id) do nothing;
+
+drop policy if exists answer_images_select on storage.objects;
+create policy answer_images_select on storage.objects for select
+  using (
+    bucket_id = 'answer-images'
+    and (
+      (storage.foldername(name))[2] = (
+        my_member_id((select group_id from cycles where id = ((storage.foldername(name))[1])::uuid))
+      )::text
+      or (
+        select status from cycles where id = ((storage.foldername(name))[1])::uuid
+      ) = 'published'
+    )
+  );
+
+drop policy if exists answer_images_insert on storage.objects;
+create policy answer_images_insert on storage.objects for insert
+  with check (
+    bucket_id = 'answer-images'
+    and (storage.foldername(name))[2] = (
+      my_member_id((select group_id from cycles where id = ((storage.foldername(name))[1])::uuid))
+    )::text
+    and (
+      select status from cycles where id = ((storage.foldername(name))[1])::uuid
+    ) = 'answering'
+  );
+
+drop policy if exists answer_images_delete on storage.objects;
+create policy answer_images_delete on storage.objects for delete
+  using (
+    bucket_id = 'answer-images'
+    and (storage.foldername(name))[2] = (
+      my_member_id((select group_id from cycles where id = ((storage.foldername(name))[1])::uuid))
+    )::text
+    and (
+      select status from cycles where id = ((storage.foldername(name))[1])::uuid
+    ) = 'answering'
+  );
+
+-- =========================================================
+-- RPC FUNCTIONS (Phase 9 — publish & the zine)
+-- One shared mechanic (publish_cycle) behind two entry points: the scheduled
+-- sweep (publish_due_cycles, called hourly by pg_cron) and the admin's
+-- manual escape hatch (admin_publish_group) — "one code path that publishes
+-- a zine," per the PRD.
+-- =========================================================
+
+-- The actual publish mechanic. Idempotent: only touches cycles still in
+-- 'answering', so calling it twice on the same cycle is a safe no-op.
+create or replace function publish_cycle(p_cycle_id uuid)
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  update cycles
+  set status = 'published', published_at = now()
+  where id = p_cycle_id and status = 'answering';
+end;
+$$;
+
+revoke execute on function publish_cycle(uuid) from public;
+
+-- Testable core: publishes every group's cycle that's past its answer
+-- window, as of an explicit timestamp. NOT granted to authenticated/anon —
+-- same reasoning as sync_group_cycles_at (Phase 5): letting a caller supply
+-- their own "now" would let them force an early publish.
+create or replace function publish_due_cycles_at(p_as_of timestamptz)
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_current_month date;
+  r record;
+begin
+  v_current_month := date_trunc('month', (p_as_of at time zone 'America/New_York'))::date;
+
+  for r in
+    select id from cycles where status = 'answering' and month < v_current_month
+  loop
+    perform publish_cycle(r.id);
+  end loop;
+end;
+$$;
+
+revoke execute on function publish_due_cycles_at(timestamptz) from public;
+
+-- Real "now" wrapper — this is the one pg_cron calls, hourly, every day.
+-- Running it on days that aren't the 1st is harmless (nothing will be due),
+-- and it sidesteps the ET/UTC DST-offset math a fixed once-a-month cron
+-- schedule would otherwise need — the date check inside is already
+-- ET-correct, so the schedule itself can just be dumb and frequent.
+-- System-wide (touches all groups), so this stays admin-only —
+-- i.e. nobody; only pg_cron running as postgres can call it.
+create or replace function publish_due_cycles()
+returns void
+language sql
+security definer
+set search_path = public
+as $$
+  select publish_due_cycles_at(now());
+$$;
+
+revoke execute on function publish_due_cycles() from public;
+
+-- Admin manual publish: locks/publishes their own group's current cycle
+-- immediately, regardless of date, via the same publish_cycle() mechanic.
+create or replace function admin_publish_group(p_group_id uuid)
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_cycle_id uuid;
+begin
+  if not is_group_admin(p_group_id) then
+    raise exception 'only the group admin can publish manually';
+  end if;
+
+  select id into v_cycle_id
+  from cycles
+  where group_id = p_group_id and status = 'answering'
+  order by month desc
+  limit 1;
+
+  if v_cycle_id is null then
+    raise exception 'no cycle ready to publish for this group';
+  end if;
+
+  perform publish_cycle(v_cycle_id);
+end;
+$$;
+
+revoke execute on function admin_publish_group(uuid) from public;
+grant execute on function admin_publish_group(uuid) to authenticated;
