@@ -4,6 +4,8 @@ import { getGroupMembers } from '../db/members.js'
 import { syncGroupCycles, getCyclesForGroup } from '../db/cycles.js'
 import { getCurrentCycleMonth } from '../cycle-dates.js'
 import { renderNominationsPanel } from '../components/nominations-panel.js'
+import { renderAnswersPanel } from '../components/answers-panel.js'
+import { renderZinePanel } from '../components/zine-panel.js'
 import { escapeHtml } from '../utils.js'
 
 export async function renderGroupsPage(container, session) {
@@ -93,6 +95,9 @@ export async function renderGroupsPage(container, session) {
           ...group,
           members,
           currentCycle: cycles.find((c) => c.month === currentMonth),
+          // cycles is already ordered month.desc, so the first 'published'
+          // row is the most recent issue
+          latestPublishedCycle: cycles.find((c) => c.status === 'published'),
           myMembership: members.find((m) => m.user_id === session.user.id),
         }
       })
@@ -107,20 +112,30 @@ export async function renderGroupsPage(container, session) {
             <ul>
               ${group.members.map((m) => `<li>${escapeHtml(m.username)}</li>`).join('')}
             </ul>
-            <div data-nominations-for="${group.id}"></div>
+            <div data-panel-for="${group.id}"></div>
+            <div data-zine-for="${group.id}"></div>
           </div>
         `
       )
       .join('')
 
     for (const group of withDetails) {
-      if (!group.currentCycle || !group.myMembership) continue
-      const panelEl = listEl.querySelector(`[data-nominations-for="${group.id}"]`)
-      renderNominationsPanel(panelEl, {
-        cycleId: group.currentCycle.id,
-        cycleStatus: group.currentCycle.status,
-        memberId: group.myMembership.id,
-      })
+      if (group.currentCycle && group.myMembership) {
+        const panelEl = listEl.querySelector(`[data-panel-for="${group.id}"]`)
+        const { id: cycleId, status: cycleStatus } = group.currentCycle
+        const memberId = group.myMembership.id
+
+        if (cycleStatus === 'nominating') {
+          renderNominationsPanel(panelEl, { cycleId, memberId })
+        } else {
+          renderAnswersPanel(panelEl, { cycleId, cycleStatus, memberId })
+        }
+      }
+
+      if (group.latestPublishedCycle) {
+        const zineEl = listEl.querySelector(`[data-zine-for="${group.id}"]`)
+        renderZinePanel(zineEl, { cycleId: group.latestPublishedCycle.id, members: group.members })
+      }
     }
   }
 

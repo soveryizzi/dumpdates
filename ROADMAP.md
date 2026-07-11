@@ -48,19 +48,19 @@ Build strictly in order. A step is done only when its verification checks pass (
 
 ## Phase 7 — Answers (text)
 
-- [ ] **7.1** Answer view: this cycle's questions, text input
-- [ ] **7.2** Autosave (type → refresh → still there)
-- [ ] **7.3** Editable until deadline; RLS blocks edits after lock even via console
-- [ ] **7.4** Pre-publish privacy verified: A cannot see B's answers
+- [x] **7.1** Answer view: this cycle's questions, text input
+- [x] **7.2** Autosave (type → refresh → still there)
+- [x] **7.3** Editable until deadline; RLS blocks edits after lock even via console
+- [x] **7.4** Pre-publish privacy verified: A cannot see B's answers
 
 ## Phase 8 — Answers (image)
 
-- [ ] **8.1** Supabase Storage bucket + access rules
-- [ ] **8.2** Image upload (up to 3 per answer); files land in bucket; display back to owner
+- [x] **8.1** Supabase Storage bucket + access rules
+- [x] **8.2** Image upload (up to 3 per answer); files land in bucket; display back to owner
 
 ## Phase 9 — Publish & the zine
 
-- [ ] **9.1** Zine view: published cycle readable by all members, usernames + initials avatars, placeholders for unanswered
+- [x] **9.1** Zine view: published cycle readable by all members, usernames + initials avatars, placeholders for unanswered
 - [ ] **9.2** Edge Function: publish logic (idempotent — no-op if already published)
 - [ ] **9.3** Cron schedule: hourly through the 1st (ET) = built-in retry
 - [ ] **9.4** Admin manual publish button → same code path, locks answers immediately
